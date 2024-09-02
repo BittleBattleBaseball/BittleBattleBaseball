@@ -157,7 +157,7 @@
                     <tr>
                         <td>
                             <div style="max-height: 80px; overflow-y: auto; ">
-                                <ng-container *ngFor="let pbp of Game.PlayByPlays">
+                                <ng-container *ngFor="let pbp of Game.PlayByPlays.slice().reverse()">
                                     <span>{{pbp}}</span>
                                     <hr />
                                 </ng-container>
