@@ -818,15 +818,17 @@ export class GameplayComponent implements OnInit {
     if (this.Game.CurrentInning.IsBottomOfInning) {
       this.Game.CurrentInning.HomeOuts += this.newOuts;
       if (this.Game.CurrentInning.InningNumber >= 9 && this.Game.AwayTeamRuns != this.Game.HomeTeamRuns && this.Game.CurrentInning.HomeOuts == 3) {
-        // swal({
-        //   title: "Game Over!",
-        //   text: this.Game.HomeTeam.TeamSeason + " " + this.Game.HomeTeam.TeamName + " " + this.Game.HomeTeamRuns + " to " + this.Game.AwayTeam.TeamSeason + " " + this.Game.AwayTeam.TeamName + " " + this.Game.AwayTeamRuns,
-        //   icon: "success",
-        //   dangerMode: true,
-        // })
-        //   .then(() => {
-            this.Game.IsGameInProgress = false;
-         // });
+        let position = "toast-top-center";
+        let msg = this.Game.HomeTeam.TeamSeason + " " + this.Game.HomeTeam.TeamName + " " + this.Game.HomeTeamRuns + " to " + this.Game.AwayTeam.TeamSeason + " " + this.Game.AwayTeam.TeamName + " " + this.Game.AwayTeamRuns;
+        this.toastr.success("Game Over!", msg, {
+          timeOut: 0,
+          extendedTimeOut: 0,
+          positionClass: position,
+          messageClass: "toast-message"
+        });
+
+        this.Game.PlayByPlays.push(msg);
+        this.Game.IsGameInProgress = false;
       }
       else {
         if (this.Game.CurrentInning.HomeOuts == 3) {
@@ -849,15 +851,17 @@ export class GameplayComponent implements OnInit {
       if (this.Game.CurrentInning.AwayOuts == 3) {
 
         if (this.Game.CurrentInning.InningNumber >= 9 && this.Game.AwayTeamRuns < this.Game.HomeTeamRuns) {
-          // swal({
-          //   title: "Game Over!",
-          //   text: this.Game.HomeTeam.TeamSeason + " " + this.Game.HomeTeam.TeamName + " " + this.Game.HomeTeamRuns + " to " + this.Game.AwayTeam.TeamSeason + " " + this.Game.AwayTeam.TeamName + " " + this.Game.AwayTeamRuns,
-          //   icon: "success",
-          //   dangerMode: true,
-          // })
-          //   .then(() => {
-              this.Game.IsGameInProgress = false;
-         //   });
+          let position = "toast-top-center";
+          let msg = this.Game.HomeTeam.TeamSeason + " " + this.Game.HomeTeam.TeamName + " " + this.Game.HomeTeamRuns + " to " + this.Game.AwayTeam.TeamSeason + " " + this.Game.AwayTeam.TeamName + " " + this.Game.AwayTeamRuns;
+          this.toastr.success("Game Over!", msg, {
+            timeOut: 0,
+            extendedTimeOut: 0,
+            positionClass: position,
+            messageClass: "toast-message"
+          });
+
+          this.Game.PlayByPlays.push(msg);
+          this.Game.IsGameInProgress = false;
         } else {
 
           this.Game.CurrentInning.IsBottomOfInning = true;
