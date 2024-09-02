@@ -2,9 +2,9 @@
     style="text-align: center; margin: 0px; padding: 0px; background-color: transparent; color: white;">
 
     <div class="row" style="margin: 0px; padding: 0px;">
-        <div class="col-md-2">
+        <div class="desktopOnly col-md-2">
             <table *ngIf="Game && Game.AwayTeam && Game.IsGameInProgress"
-                class="table table-bordered table-dark table-hover table-condensed"
+                class="desktopOnly table table-bordered table-dark table-hover table-condensed"
                 style="margin-top: 20px; opacity: 0.9;">
                 <thead>
                     <tr>
@@ -40,7 +40,7 @@
                 </tbody>
             </table>
         </div>
-        <div class="col-md-8">
+        <div class="col-lg-8 col-md-12">
             <div>
                 <table [style.visibility]="IsPlayInProgress ? 'hidden' : 'visible'"
                     class="table table-bordered table-dark table-hover table-condensed table-responsive-md"
@@ -104,9 +104,9 @@
 
 
         </div>
-        <div class="col-md-2">
+        <div class="desktopOnly col-md-2">
             <table *ngIf="Game && Game.HomeTeam && Game.IsGameInProgress"
-                class="table table-bordered table-dark table-hover table-condensed"
+                class="desktopOnly table table-bordered table-dark table-hover table-condensed"
                 style="margin-top: 20px; opacity: 0.9;">
                 <thead>
                     <tr>
