@@ -21,58 +21,52 @@
     </div>
     <div *ngIf="( GameSetup.HomeTeamSelection || GameSetup.AwayTeamSelection)" class="row">
         <div class="col-md-6">
-            <div *ngIf="GameSetup.HomeTeamSelection" class="alert alert-danger" style="padding: 17px;">
-                <strong>Home Team Selected!</strong> {{GameSetup.HomeTeamSelection.season}} -
-                {{GameSetup.HomeTeamSelection.fullTeamName}}
-                <button class="btn btn-danger" style="float: right;" (click)="GameSetup.SetHomeTeamSelection(null);"><i
-                        class="fa fa-times" aria-hidden="true"></i></button>
-            </div>
+          <button *ngIf="GameSetup.HomeTeamSelection" class="btn btn-danger" style="width: 100%; padding: 20px 5px 20px 5px;" (click)="GameSetup.SetHomeTeamSelection(null);">    <strong>Home - </strong> {{GameSetup.HomeTeamSelection.season}}
+            {{GameSetup.HomeTeamSelection.fullTeamName}} <i
+                  class="fa fa-times" aria-hidden="true" style="margin-left: 5px;"></i></button>
         </div>
         <div class="col-md-6">
-            <div *ngIf="GameSetup.AwayTeamSelection" class="alert alert-primary" style="padding: 17px;">
-                <strong>Away Team Selected!</strong> {{GameSetup.AwayTeamSelection.season}} -
-                {{GameSetup.AwayTeamSelection.fullTeamName}}
-                <button class="btn btn-primary" style="float: right;" (click)="GameSetup.AwayTeamSelection = null;"><i
-                        class="fa fa-times" aria-hidden="true"></i></button>
-            </div>
+          <button *ngIf="GameSetup.AwayTeamSelection" class="btn btn-primary" style="width: 100%; padding: 20px 5px 20px 5px;" (click)="GameSetup.AwayTeamSelection = null;">    <strong>Away - </strong> {{GameSetup.AwayTeamSelection.season}}
+            {{GameSetup.AwayTeamSelection.fullTeamName}} <i
+                  class="fa fa-times" aria-hidden="true" style="margin-left: 5px;"></i></button>
+
         </div>
     </div>
     <div class="row">
         <div class="col-md-6">
-            <h4>Home Team</h4>
+
         </div>
         <div class="col-md-6">
-            <h4>Away Team</h4>
+
         </div>
     </div>
     <div class="row">
-        <div class="col-md-3">
+        <div class="col-md-6">
+          <h4>Home Team</h4>
             <select class="form-control" (change)="SearchTeams(true, $event.target.value)">
                 <option selected value="-1">--SELECT--</option>
                 <option *ngFor="let year of SearchableSeasons" value={{year}}>{{year}}</option>
             </select>
             <br />
-        </div>
-        <div class="col-md-3">
             <button class="btn btn-danger"><i class="fa fa-search"></i>
-                Season</button>
+              Season</button>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-6">
+          <h4>Away Team</h4>
             <select class="form-control" (change)="SearchTeams(false, $event.target.value)">
                 <option selected value="-1">--SELECT--</option>
                 <option *ngFor="let year of SearchableSeasons" value={{year}}>{{year}}</option>
             </select>
             <br />
-        </div>
-        <div class="col-md-3">
             <button class="btn btn-primary"><i class="fa fa-search"></i> Season</button>
         </div>
     </div>
 
     <div *ngIf="HomeSearchResults || AwaySearchResults" class="row">
+      <div class="col-md-12">
+        <div *ngIf="SearchingHomeTeams || SearchingAwayTeams" class="loader"></div>
+      </div>
         <div class="col-md-6">
-            <div *ngIf="SearchingHomeTeams" class="loader"></div>
-
             <table
                 *ngIf="!SearchingHomeTeams && !GameSetup.HomeTeamSelection && HomeSearchResults && HomeSearchResults.length > 0"
                 class="table table-bordered table-dark table-hover table-responsive-sm"
@@ -98,7 +92,6 @@
         </div>
 
         <div class="col-md-6">
-            <div *ngIf="SearchingAwayTeams" class="loader"></div>
             <table
                 *ngIf="!SearchingAwayTeams && !GameSetup.AwayTeamSelection && AwaySearchResults && AwaySearchResults.length > 0"
                 class="table table-bordered table-dark table-hover table-responsive-sm"
