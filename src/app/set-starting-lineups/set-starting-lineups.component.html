@@ -1,6 +1,6 @@
 <div class="container-fluid" style="padding: 5px; margin: 5px; background-color: transparent; color: white;">
     <div style="text-align: center;">
-        <h3>{{NewGameSetup.HomeTeamSelection.ballpark}} - Set Starting Lineups </h3>
+        <h4>{{NewGameSetup.HomeTeamSelection.ballpark}} - Set Starting Lineups </h4>
     </div>
     <hr />
     <div class="row" *ngIf="(Game.HomeTeam.IsRosterSet && Game.AwayTeam.IsRosterSet)">
@@ -21,11 +21,11 @@
     <div class="row">
         <div class="col-lg-6">
             <ng-container *ngIf="!HomeTeamDataLoading">
-                <h3><img [src]="NewGameSetup.HomeTeamSelection.logoUrl"
+                <h4><img [src]="NewGameSetup.HomeTeamSelection.logoUrl"
                         style="height: 75px; border: 3px solid white;" /> Home
                     Lineup -
                     {{NewGameSetup.HomeTeamSelection.season}} {{NewGameSetup.HomeTeamSelection.name}}
-                </h3>
+                </h4>
                 <div class="row">
                     <table class="table table-bordered table-dark table-hover table-condensed"
                         style="margin-top: 20px; opacity: 0.9;">
@@ -128,9 +128,9 @@
         </div>
         <div class="col-lg-6">
             <ng-container *ngIf="!AwayTeamDataLoading">
-                <h3><img [src]="NewGameSetup.AwayTeamSelection.logoUrl"
+                <h4><img [src]="NewGameSetup.AwayTeamSelection.logoUrl"
                         style="height: 75px; border: 3px solid white;" /> Away Lineup -
-                    {{NewGameSetup.AwayTeamSelection.season}} {{NewGameSetup.AwayTeamSelection.name}}</h3>
+                    {{NewGameSetup.AwayTeamSelection.season}} {{NewGameSetup.AwayTeamSelection.name}}</h4>
                 <div class="row">
                     <table class="table table-bordered table-dark table-hover table-condensed"
                         style="margin-top: 20px; opacity: 0.9;">
