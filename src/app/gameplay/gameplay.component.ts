@@ -104,8 +104,7 @@ export class GameplayComponent implements OnInit {
     let position = "toast-top-center";
     let msg = "Today's matchup between the " + this.Game.HomeTeam.TeamSeason + " " + this.Game.HomeTeam.TeamName + " and the " + this.Game.AwayTeam.TeamSeason + " " + this.Game.AwayTeam.TeamName + ". Play Ball!";
     this.toastr.success(msg, "Welcome to " + this.Game.Ballpark + " in " + this.Game.HomeTeam.TeamCity, {
-      timeOut: 0,
-      extendedTimeOut: 0,
+      timeOut: 7000,
       positionClass: position,
       messageClass: "toast-message"
     });
