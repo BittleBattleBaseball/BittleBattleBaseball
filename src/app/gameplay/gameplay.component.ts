@@ -101,16 +101,14 @@ export class GameplayComponent implements OnInit {
   ngAfterViewInit(): void {
 
     this.SetPlayingField();
-
-    // swal({
-    //   title: "Welcome to " + this.Game.Ballpark + " in " + this.Game.HomeTeam.TeamCity,
-    //   text: "Today's matchup between the " + this.Game.HomeTeam.TeamSeason + " " + this.Game.HomeTeam.TeamName + " and the " + this.Game.AwayTeam.TeamSeason + " " + this.Game.AwayTeam.TeamName + ". Play Ball!",
-    //   icon: "success",
-    //   dangerMode: true,
-    // })
-    //   .then(willDelete => {
-
-    //   });
+    let position = "toast-top-center";
+    let msg = "Today's matchup between the " + this.Game.HomeTeam.TeamSeason + " " + this.Game.HomeTeam.TeamName + " and the " + this.Game.AwayTeam.TeamSeason + " " + this.Game.AwayTeam.TeamName + ". Play Ball!";
+    this.toastr.success(msg, "Welcome to " + this.Game.Ballpark + " in " + this.Game.HomeTeam.TeamCity, {
+      timeOut: 0,
+      extendedTimeOut: 0,
+      positionClass: position,
+      messageClass: "toast-message"
+    });
   }
 
   ngOnInit() {
@@ -820,7 +818,7 @@ export class GameplayComponent implements OnInit {
       if (this.Game.CurrentInning.InningNumber >= 9 && this.Game.AwayTeamRuns != this.Game.HomeTeamRuns && this.Game.CurrentInning.HomeOuts == 3) {
         let position = "toast-top-center";
         let msg = this.Game.HomeTeam.TeamSeason + " " + this.Game.HomeTeam.TeamName + " " + this.Game.HomeTeamRuns + " to " + this.Game.AwayTeam.TeamSeason + " " + this.Game.AwayTeam.TeamName + " " + this.Game.AwayTeamRuns;
-        this.toastr.success("Game Over!", msg, {
+        this.toastr.success(msg, "Game Over!", {
           timeOut: 0,
           extendedTimeOut: 0,
           positionClass: position,
@@ -853,7 +851,7 @@ export class GameplayComponent implements OnInit {
         if (this.Game.CurrentInning.InningNumber >= 9 && this.Game.AwayTeamRuns < this.Game.HomeTeamRuns) {
           let position = "toast-top-center";
           let msg = this.Game.HomeTeam.TeamSeason + " " + this.Game.HomeTeam.TeamName + " " + this.Game.HomeTeamRuns + " to " + this.Game.AwayTeam.TeamSeason + " " + this.Game.AwayTeam.TeamName + " " + this.Game.AwayTeamRuns;
-          this.toastr.success("Game Over!", msg, {
+          this.toastr.success(msg, "Game Over!", {
             timeOut: 0,
             extendedTimeOut: 0,
             positionClass: position,
