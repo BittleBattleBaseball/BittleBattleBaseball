@@ -279,13 +279,13 @@ export class BallParkCoordinatesConfiguratorComponent implements OnInit, AfterVi
 
   PlayBatHittingBallSound() {
     if (!this.IsSoundMuted) {
-      this.batHittingBallSound.play();
+     // this.batHittingBallSound.play();
     }
   }
 
   PlayPitchSound() {
     if (!this.IsSoundMuted) {
-      this.pitchSound.play();
+    //  this.pitchSound.play();
     }
   }
 
