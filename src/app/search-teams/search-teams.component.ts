@@ -18,7 +18,7 @@ export class SearchTeamsComponent implements OnInit {
     this.GameSetup = new NewGameSetupViewModel();
     this.GameSetup.League = 'mlb';
     let today = new Date();
-    for (let i: number = today.getFullYear(); i > 1900; i--) {
+    for (let i: number = today.getFullYear() - 1; i > 1876; i--) {
       this.SearchableSeasons.push(i);
     }
   }
