@@ -5,11 +5,13 @@
 
     <hr />
     <div class="row">
-        <label>
-            <input type="checkbox" [checked]="GameSetup.IsDesignatedHitterEnabled" (change)="setDH($event)" />
-            Is Designated Hitter Enabled?
-        </label>
-
+      <div class="col-sm-12">
+      <label class="labelContainer" style="float: center;">
+        <input type="checkbox" [checked]="GameSetup.IsDesignatedHitterEnabled" (change)="setDH($event)" />
+        <span class="checkmark"></span>
+        Is Designated Hitter Enabled?
+      </label>
+      </div>
     </div>
     <div class="row" *ngIf="(GameSetup.HomeTeamSelection && GameSetup.AwayTeamSelection)">
         <div class="col-sm-12" style="text-align: center;">
