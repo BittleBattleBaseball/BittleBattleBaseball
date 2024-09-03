@@ -50,7 +50,7 @@ import { ErrorPageComponent } from './error-page/error-page.component';
     BrowserAnimationsModule, // required animations module
     ToastrModule.forRoot() // ToastrModule added
   ],
-  providers: [GameViewModel, MLBYearByYearLeagueStatsServiceService],
+  providers: [GameViewModel, MLBYearByYearLeagueStatsServiceService, BattingAvgPipePipe],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

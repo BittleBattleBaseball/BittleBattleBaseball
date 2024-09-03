@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, PipeTransform } from '@angular/core';
 import { GameViewModel } from '../game-view-model';
 import { MLBYearByYearBattingStatsViewModel } from '../mlbyear-by-year-batting-stats-view-model';
 import { MLBYearByYearPitchingStatsViewModel } from '../mlbyear-by-year-pitching-stats-view-model';
@@ -9,6 +9,7 @@ import { EnumAtBatResult } from '../enum-at-bat-result.enum';
 import { ToastrService } from 'ngx-toastr';
 
 import { GameInningViewModel } from '../game-inning-view-model';
+import { BattingAvgPipePipe } from '../batting-avg-pipe.pipe';
 //import swal from 'sweetalert';
 
 
@@ -114,7 +115,7 @@ export class GameplayComponent implements OnInit {
   }
 
   constructor(private router: Router, private activatedRoute: ActivatedRoute,
-    game: GameViewModel, mlbYearByYearLeagueStatsServiceService: MLBYearByYearLeagueStatsServiceService, private toastr: ToastrService) //, private toastr: ToastrService
+    game: GameViewModel, mlbYearByYearLeagueStatsServiceService: MLBYearByYearLeagueStatsServiceService, private toastr: ToastrService, private battingAvgPipe: BattingAvgPipePipe) //, private toastr: ToastrService
   {
 
     let d = new Date();
@@ -1081,8 +1082,9 @@ export class GameplayComponent implements OnInit {
   }
 
   private FormatPct(pct: number): string {
-    let str = pct.toString();
-    return str.replace(/^0+([^\d])/, "$1");
+  //   let str = pct.toString();
+  //  let result = str.replace(/^0+([^\d])/, "$1");
+    return this.battingAvgPipe.transform(pct);
   }
 
   DrawRunnerOnFirst() {
@@ -2211,13 +2213,13 @@ export class GameplayComponent implements OnInit {
 
   PlayBatHittingBallSound() {
     if (!this.IsSoundMuted) {
-      this.batHittingBallSound.play();
+      //this.batHittingBallSound.play();
     }
   }
 
   PlayPitchSound() {
     if (!this.IsSoundMuted) {
-      this.pitchSound.play();
+      //this.pitchSound.play();
     }
   }
 
