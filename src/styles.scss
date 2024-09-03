@@ -1,7 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
 
 body {
-  font-family: Arial, sans-serif;
+  font-family: Georgia, serif;
     /* Margin bottom by footer height */
     // margin-bottom: 60px;
 
@@ -12,10 +12,10 @@ body {
     background: url(src\assets\images\BaseballFieldBackground.jpg);
 
     min-height: 100%;
-background-repeat: no-repeat;
-background-attachment: fixed;
-background-position: center;
-background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center;
+    background-size: cover;
 }
 
 .btn-primary {
