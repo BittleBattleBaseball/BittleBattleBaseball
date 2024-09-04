@@ -89,13 +89,13 @@
                 [width]="canvasWidth" [height]="canvasHeight">
             </canvas>
             <button class="btn btn-success btn-block"
-                *ngIf="!IsAutoPlayEnabled && Game.IsGameInProgress && !IsPlayInProgress" style="padding: 25px;"
+                *ngIf="!IsAutoPlayEnabled && Game.IsGameInProgress && !IsPlayInProgress" style="padding: 25px; margin-top: 0px !important;"
                 (click)="ExecuteNextPlay()"><img style="cursor:pointer; max-width: 25px;"
                     src="../assets/images/baseballicon.png" />
                 Next Play <i class="fa fa-arrow-right"></i></button>
 
             <button class="btn btn-success btn-block"
-                *ngIf="IsAutoPlayEnabled && Game.IsGameInProgress && !IsPlayInProgress" style="padding: 25px;"
+                *ngIf="IsAutoPlayEnabled && Game.IsGameInProgress && !IsPlayInProgress" style="padding: 25px; margin-top: 0px !important;"
                 (click)="SetAutoExecuteNextPlay()"><img style="cursor:pointer; max-width: 25px;"
                     src="../assets/images/baseballicon.png" />
                 Next Play - Set Auto Play <i class="fa fa-arrow-right"></i></button>
