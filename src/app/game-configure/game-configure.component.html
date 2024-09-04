@@ -375,7 +375,13 @@
                         <tr>
                             <td class="text-left"><label class="small" *ngIf="!benchPlayer.IsEligible">X-</label>
                                 {{benchPlayer.Name}} -
-                                {{benchPlayer.Position}}
+                                {{benchPlayer.Position}} <br />
+                                <label class="small">
+                                  {{benchPlayer.HittingSeasonStats.avg |
+                                  battingAvgPipe }}
+                                  {{benchPlayer.HittingSeasonStats.hr}}HR
+                                  {{benchPlayer.HittingSeasonStats.rbi}}RBI
+                              </label>
                                 <span style="float: right;" *ngIf="benchPlayer.IsEligible">
                                     <button *ngIf="benchPlayer.Position == 'C'" class="btn btn-danger btn-pos"
                                         (click)="setLineupPosition('C', true, benchPlayer, i)">C</button>
@@ -484,7 +490,13 @@
                         <tr>
                             <td class="text-left"><label class="small" *ngIf="!benchPlayer.IsEligible">X-</label>
                                 {{benchPlayer.Name}} -
-                                {{benchPlayer.Position}}
+                                {{benchPlayer.Position}}  <br />
+                                <label class="small">
+                                  {{benchPlayer.HittingSeasonStats.avg |
+                                  battingAvgPipe }}
+                                  {{benchPlayer.HittingSeasonStats.hr}}HR
+                                  {{benchPlayer.HittingSeasonStats.rbi}}RBI
+                              </label>
                                 <span style="float: right;" *ngIf="benchPlayer.IsEligible">
                                     <button *ngIf="benchPlayer.Position == 'C'" class="btn btn-primary btn-pos"
                                         (click)="setLineupPosition('C', false, benchPlayer, i)">C</button>
@@ -595,7 +607,12 @@
                     <ng-container *ngFor="let benchPlayer of Game.HomeTeam.BenchPitchers; let i = index;">
                         <tr>
                             <td class="text-left"><label class="small" *ngIf="!benchPlayer.IsEligible">X-</label>
-                                {{benchPlayer.Name}}
+                                {{benchPlayer.Name}} <br />
+                                <label class="small">
+                                  {{benchPlayer.PitchingSeasonStats.wins + "-" + benchPlayer.PitchingSeasonStats.losses}}
+                                  {{benchPlayer.PitchingSeasonStats.era}}ERA
+                                  {{benchPlayer.PitchingSeasonStats.whip}}WHIP
+                              </label>
                                 <span style="float: right;" *ngIf="benchPlayer.IsEligible">
                                     <button *ngIf="benchPlayer.Position == 'P' || benchPlayer.Position == 'SP'"
                                         class="btn btn-danger btn-pos"
@@ -678,7 +695,12 @@
                     <ng-container *ngFor="let benchPlayer of Game.AwayTeam.BenchPitchers; let i = index;">
                         <tr>
                             <td class="text-left"><label class="small" *ngIf="!benchPlayer.IsEligible">X-</label>
-                                {{benchPlayer.Name}}
+                                {{benchPlayer.Name}} <br />
+                                <label class="small">
+                                  {{benchPlayer.PitchingSeasonStats.wins + "-" + benchPlayer.PitchingSeasonStats.losses}}
+                                  {{benchPlayer.PitchingSeasonStats.era}}ERA
+                                  {{benchPlayer.PitchingSeasonStats.whip}}WHIP
+                              </label>
                                 <span style="float: right;" *ngIf="benchPlayer.IsEligible">
                                     <button *ngIf="benchPlayer.Position == 'P' || benchPlayer.Position == 'SP'"
                                         class="btn btn-primary btn-pos"
