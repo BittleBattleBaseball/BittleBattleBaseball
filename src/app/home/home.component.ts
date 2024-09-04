@@ -66,8 +66,7 @@ export class HomeComponent implements OnInit {
     this.ImageURLs.push("../assets/images/bench1.jpg");
     this.ImageURLs.push("../assets/images/berra1.jpg");
     this.ImageURLs.push("../assets/images/walker1.jpg");
-    this.ImageURLs.push("../assets/images/tulo1.jpg");
-    this.ImageURLs.push("../assets/images/helton1.jpg");
+this.ImageURLs.push("../assets/images/helton1.jpg");
     this.ImageURLs.push("../assets/images/kershaw1.jpg");
     this.ImageURLs.push("../assets/images/molina1.jpg");
     this.ImageURLs.push("../assets/images/carter.jpg");
