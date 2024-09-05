@@ -74,7 +74,7 @@
     <div class="col-md-6"></div>
   </div>
   <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-6"  *ngIf="!GameSetup.HomeTeamSelection">
       <h4>Home Team</h4>
       <select
         class="form-control"
@@ -85,7 +85,6 @@
           {{ year }}
         </option>
       </select>
-      <hr />
       <!-- 1800s -->
       <select
         class="form-control"
@@ -155,181 +154,174 @@
           {{ year }}
         </option>
       </select>
-            <!--  1930s -->
-            <select
-            class="form-control"
-            (change)="SearchTeams(true, $event.target.value)"
-          >
-            <option selected value="-1"> 1930s</option>
-            <option
-              *ngFor="
-                let year of [
-                   1930,  1931,  1932,  1933,  1934,  1935,  1936,  1937,  1938,  1939
-                ]
-              "
-              value="{{ year }}"
-            >
-              {{ year }}
-            </option>
-          </select>
-                <!--   1940s -->
+      <!--  1930s -->
       <select
-      class="form-control"
-      (change)="SearchTeams(true, $event.target.value)"
-    >
-      <option selected value="-1">  1940s</option>
-      <option
-        *ngFor="
-          let year of [
-              1940,   1941,   1942,   1943,   1944,   1945,   1946,   1947,   1948,   1949
-          ]
-        "
-        value="{{ year }}"
+        class="form-control"
+        (change)="SearchTeams(true, $event.target.value)"
       >
-        {{ year }}
-      </option>
-    </select>
-          <!--   1950s -->
-          <select
-          class="form-control"
-          (change)="SearchTeams(true, $event.target.value)"
+        <option selected value="-1">1930s</option>
+        <option
+          *ngFor="
+            let year of [
+              1930, 1931, 1932, 1933, 1934, 1935, 1936, 1937, 1938, 1939
+            ]
+          "
+          value="{{ year }}"
         >
-          <option selected value="-1">  1950s</option>
-          <option
-            *ngFor="
-              let year of [
-                  1950,   1951,   1952,   1953,   1954,   1955,   1956,   1957,   1958,   1959
-              ]
-            "
-            value="{{ year }}"
-          >
-            {{ year }}
-          </option>
-        </select>
-              <!--   1960s -->
+          {{ year }}
+        </option>
+      </select>
+      <!--   1940s -->
       <select
-      class="form-control"
-      (change)="SearchTeams(true, $event.target.value)"
-    >
-      <option selected value="-1">  1960s</option>
-      <option
-        *ngFor="
-          let year of [
-              1960,   1961,   1962,   1963,   1964,   1965,   1966,   1967,   1968,   1969
-          ]
-        "
-        value="{{ year }}"
+        class="form-control"
+        (change)="SearchTeams(true, $event.target.value)"
       >
-        {{ year }}
-      </option>
-    </select>
-          <!--   1970s -->
-          <select
-          class="form-control"
-          (change)="SearchTeams(true, $event.target.value)"
+        <option selected value="-1">1940s</option>
+        <option
+          *ngFor="
+            let year of [
+              1940, 1941, 1942, 1943, 1944, 1945, 1946, 1947, 1948, 1949
+            ]
+          "
+          value="{{ year }}"
         >
-          <option selected value="-1">  1970s</option>
-          <option
-            *ngFor="
-              let year of [
-                  1970,   1971,   1972,   1973,   1974,   1975,   1976,   1977,   1978,   1979
-              ]
-            "
-            value="{{ year }}"
-          >
-            {{ year }}
-          </option>
-        </select>
-              <!--   1980s -->
+          {{ year }}
+        </option>
+      </select>
+      <!--   1950s -->
       <select
-      class="form-control"
-      (change)="SearchTeams(true, $event.target.value)"
-    >
-      <option selected value="-1">  1980s</option>
-      <option
-        *ngFor="
-          let year of [
-              1980,   1981,   1982,   1983,   1984,   1985,   1986,   1987,   1988,   1989
-          ]
-        "
-        value="{{ year }}"
+        class="form-control"
+        (change)="SearchTeams(true, $event.target.value)"
       >
-        {{ year }}
-      </option>
-    </select>
-          <!--   1990s -->
-          <select
-          class="form-control"
-          (change)="SearchTeams(true, $event.target.value)"
+        <option selected value="-1">1950s</option>
+        <option
+          *ngFor="
+            let year of [
+              1950, 1951, 1952, 1953, 1954, 1955, 1956, 1957, 1958, 1959
+            ]
+          "
+          value="{{ year }}"
         >
-          <option selected value="-1">  1990s</option>
-          <option
-            *ngFor="
-              let year of [
-                  1990,   1991,   1992,   1993,   1994,   1995,   1996,   1997,   1998,   1999
-              ]
-            "
-            value="{{ year }}"
-          >
-            {{ year }}
-          </option>
-        </select>
-              <!--   2000s -->
+          {{ year }}
+        </option>
+      </select>
+      <!--   1960s -->
       <select
-      class="form-control"
-      (change)="SearchTeams(true, $event.target.value)"
-    >
-      <option selected value="-1">  2000s</option>
-      <option
-        *ngFor="
-          let year of [
-              2000,   2001,   2002,   2003,   2004,   2005,   2006,   2007,   2008,   2009
-          ]
-        "
-        value="{{ year }}"
+        class="form-control"
+        (change)="SearchTeams(true, $event.target.value)"
       >
-        {{ year }}
-      </option>
-    </select>
-          <!--   2010s -->
-          <select
-          class="form-control"
-          (change)="SearchTeams(true, $event.target.value)"
+        <option selected value="-1">1960s</option>
+        <option
+          *ngFor="
+            let year of [
+              1960, 1961, 1962, 1963, 1964, 1965, 1966, 1967, 1968, 1969
+            ]
+          "
+          value="{{ year }}"
         >
-          <option selected value="-1">  2010s</option>
-          <option
-            *ngFor="
-              let year of [
-                  2010,   2011,   2012,   2013,   2014,   2015,   2016,   2017,   2018,   2019
-              ]
-            "
-            value="{{ year }}"
-          >
-            {{ year }}
-          </option>
-        </select>
-              <!--   2020s -->
+          {{ year }}
+        </option>
+      </select>
+      <!--   1970s -->
       <select
-      class="form-control"
-      (change)="SearchTeams(true, $event.target.value)"
-    >
-      <option selected value="-1">  2020s</option>
-      <option
-        *ngFor="
-          let year of [
-              2020,   2021,   2022,   2023
-          ]
-        "
-        value="{{ year }}"
+        class="form-control"
+        (change)="SearchTeams(true, $event.target.value)"
       >
-        {{ year }}
-      </option>
-    </select>
-      <button class="btn btn-danger">
-        <i class="fa fa-search"></i> Season
-      </button>
+        <option selected value="-1">1970s</option>
+        <option
+          *ngFor="
+            let year of [
+              1970, 1971, 1972, 1973, 1974, 1975, 1976, 1977, 1978, 1979
+            ]
+          "
+          value="{{ year }}"
+        >
+          {{ year }}
+        </option>
+      </select>
+      <!--   1980s -->
+      <select
+        class="form-control"
+        (change)="SearchTeams(true, $event.target.value)"
+      >
+        <option selected value="-1">1980s</option>
+        <option
+          *ngFor="
+            let year of [
+              1980, 1981, 1982, 1983, 1984, 1985, 1986, 1987, 1988, 1989
+            ]
+          "
+          value="{{ year }}"
+        >
+          {{ year }}
+        </option>
+      </select>
+      <!--   1990s -->
+      <select
+        class="form-control"
+        (change)="SearchTeams(true, $event.target.value)"
+      >
+        <option selected value="-1">1990s</option>
+        <option
+          *ngFor="
+            let year of [
+              1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999
+            ]
+          "
+          value="{{ year }}"
+        >
+          {{ year }}
+        </option>
+      </select>
+      <!--   2000s -->
+      <select
+        class="form-control"
+        (change)="SearchTeams(true, $event.target.value)"
+      >
+        <option selected value="-1">2000s</option>
+        <option
+          *ngFor="
+            let year of [
+              2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009
+            ]
+          "
+          value="{{ year }}"
+        >
+          {{ year }}
+        </option>
+      </select>
+      <!--   2010s -->
+      <select
+        class="form-control"
+        (change)="SearchTeams(true, $event.target.value)"
+      >
+        <option selected value="-1">2010s</option>
+        <option
+          *ngFor="
+            let year of [
+              2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019
+            ]
+          "
+          value="{{ year }}"
+        >
+          {{ year }}
+        </option>
+      </select>
+      <!--   2020s -->
+      <select
+        class="form-control"
+        (change)="SearchTeams(true, $event.target.value)"
+      >
+        <option selected value="-1">2020s</option>
+        <option
+          *ngFor="let year of [2020, 2021, 2022, 2023]"
+          value="{{ year }}"
+        >
+          {{ year }}
+        </option>
+      </select>
     </div>
-    <div class="col-md-6">
+    <div class="col-md-6"  *ngIf="GameSetup.HomeTeamSelection && !GameSetup.AwayTeamSelection">
       <h4>Away Team</h4>
       <select
         class="form-control"
@@ -340,249 +332,241 @@
           {{ year }}
         </option>
       </select>
-      <hr />
-       <!-- 1870s -->
-       <select
-       class="form-control"
-       (change)="SearchTeams(false, $event.target.value)"
-     >
-       <option selected value="-1">1800s</option>
-       <option
-         *ngFor="
-           let year of [
-             1876, 1877, 1888, 1889, 1890, 1891, 1892, 1893, 1894, 1895, 1896,
-             1897, 1898, 1899
-           ]
-         "
-         value="{{ year }}"
-       >
-         {{ year }}
-       </option>
-     </select>
-     <!-- 1900s -->
-     <select
-       class="form-control"
-       (change)="SearchTeams(false, $event.target.value)"
-     >
-       <option selected value="-1">1900s</option>
-       <option
-         *ngFor="
-           let year of [
-             1900, 1901, 1902, 1903, 1904, 1905, 1906, 1907, 1908, 1909
-           ]
-         "
-         value="{{ year }}"
-       >
-         {{ year }}
-       </option>
-     </select>
-     <!-- 1910s -->
-     <select
-       class="form-control"
-       (change)="SearchTeams(false, $event.target.value)"
-     >
-       <option selected value="-1">1910s</option>
-       <option
-         *ngFor="
-           let year of [
-             1910, 1911, 1912, 1913, 1914, 1915, 1966, 1917, 1918, 1919
-           ]
-         "
-         value="{{ year }}"
-       >
-         {{ year }}
-       </option>
-     </select>
-     <!-- 1920s -->
-     <select
-       class="form-control"
-       (change)="SearchTeams(false, $event.target.value)"
-     >
-       <option selected value="-1">1920s</option>
-       <option
-         *ngFor="
-           let year of [
-             1920, 1921, 1922, 1923, 1924, 1925, 1926, 1927, 1928, 1929
-           ]
-         "
-         value="{{ year }}"
-       >
-         {{ year }}
-       </option>
-     </select>
-           <!--  1930s -->
-           <select
-           class="form-control"
-           (change)="SearchTeams(false, $event.target.value)"
-         >
-           <option selected value="-1"> 1930s</option>
-           <option
-             *ngFor="
-               let year of [
-                  1930,  1931,  1932,  1933,  1934,  1935,  1936,  1937,  1938,  1939
-               ]
-             "
-             value="{{ year }}"
-           >
-             {{ year }}
-           </option>
-         </select>
-               <!--   1940s -->
-     <select
-     class="form-control"
-     (change)="SearchTeams(false, $event.target.value)"
-   >
-     <option selected value="-1">  1940s</option>
-     <option
-       *ngFor="
-         let year of [
-             1940,   1941,   1942,   1943,   1944,   1945,   1946,   1947,   1948,   1949
-         ]
-       "
-       value="{{ year }}"
-     >
-       {{ year }}
-     </option>
-   </select>
-         <!--   1950s -->
-         <select
-         class="form-control"
-         (change)="SearchTeams(false, $event.target.value)"
-       >
-         <option selected value="-1">  1950s</option>
-         <option
-           *ngFor="
-             let year of [
-                 1950,   1951,   1952,   1953,   1954,   1955,   1956,   1957,   1958,   1959
-             ]
-           "
-           value="{{ year }}"
-         >
-           {{ year }}
-         </option>
-       </select>
-             <!--   1960s -->
-     <select
-     class="form-control"
-     (change)="SearchTeams(false, $event.target.value)"
-   >
-     <option selected value="-1">  1960s</option>
-     <option
-       *ngFor="
-         let year of [
-             1960,   1961,   1962,   1963,   1964,   1965,   1966,   1967,   1968,   1969
-         ]
-       "
-       value="{{ year }}"
-     >
-       {{ year }}
-     </option>
-   </select>
-         <!--   1970s -->
-         <select
-         class="form-control"
-         (change)="SearchTeams(false, $event.target.value)"
-       >
-         <option selected value="-1">  1970s</option>
-         <option
-           *ngFor="
-             let year of [
-                 1970,   1971,   1972,   1973,   1974,   1975,   1976,   1977,   1978,   1979
-             ]
-           "
-           value="{{ year }}"
-         >
-           {{ year }}
-         </option>
-       </select>
-             <!--   1980s -->
-     <select
-     class="form-control"
-     (change)="SearchTeams(false, $event.target.value)"
-   >
-     <option selected value="-1">  1980s</option>
-     <option
-       *ngFor="
-         let year of [
-             1980,   1981,   1982,   1983,   1984,   1985,   1986,   1987,   1988,   1989
-         ]
-       "
-       value="{{ year }}"
-     >
-       {{ year }}
-     </option>
-   </select>
-         <!--   1990s -->
-         <select
-         class="form-control"
-         (change)="SearchTeams(false, $event.target.value)"
-       >
-         <option selected value="-1">  1990s</option>
-         <option
-           *ngFor="
-             let year of [
-                 1990,   1991,   1992,   1993,   1994,   1995,   1996,   1997,   1998,   1999
-             ]
-           "
-           value="{{ year }}"
-         >
-           {{ year }}
-         </option>
-       </select>
-             <!--   2000s -->
-     <select
-     class="form-control"
-     (change)="SearchTeams(false, $event.target.value)"
-   >
-     <option selected value="-1">  2000s</option>
-     <option
-       *ngFor="
-         let year of [
-             2000,   2001,   2002,   2003,   2004,   2005,   2006,   2007,   2008,   2009
-         ]
-       "
-       value="{{ year }}"
-     >
-       {{ year }}
-     </option>
-   </select>
-         <!--   2010s -->
-         <select
-         class="form-control"
-         (change)="SearchTeams(false, $event.target.value)"
-       >
-         <option selected value="-1">  2010s</option>
-         <option
-           *ngFor="
-             let year of [
-                 2010,   2011,   2012,   2013,   2014,   2015,   2016,   2017,   2018,   2019
-             ]
-           "
-           value="{{ year }}"
-         >
-           {{ year }}
-         </option>
-       </select>
-             <!--   2020s -->
-     <select
-     class="form-control"
-     (change)="SearchTeams(false, $event.target.value)"
-   >
-     <option selected value="-1">  2020s</option>
-     <option
-       *ngFor="
-         let year of [
-             2020,   2021,   2022,   2023
-         ]
-       "
-       value="{{ year }}"
-     >
-       {{ year }}
-     </option>
-   </select>
-      <button class="btn btn-primary">
-        <i class="fa fa-search"></i> Season
-      </button>
+      <!-- 1870s -->
+      <select
+        class="form-control"
+        (change)="SearchTeams(false, $event.target.value)"
+      >
+        <option selected value="-1">1800s</option>
+        <option
+          *ngFor="
+            let year of [
+              1876, 1877, 1888, 1889, 1890, 1891, 1892, 1893, 1894, 1895, 1896,
+              1897, 1898, 1899
+            ]
+          "
+          value="{{ year }}"
+        >
+          {{ year }}
+        </option>
+      </select>
+      <!-- 1900s -->
+      <select
+        class="form-control"
+        (change)="SearchTeams(false, $event.target.value)"
+      >
+        <option selected value="-1">1900s</option>
+        <option
+          *ngFor="
+            let year of [
+              1900, 1901, 1902, 1903, 1904, 1905, 1906, 1907, 1908, 1909
+            ]
+          "
+          value="{{ year }}"
+        >
+          {{ year }}
+        </option>
+      </select>
+      <!-- 1910s -->
+      <select
+        class="form-control"
+        (change)="SearchTeams(false, $event.target.value)"
+      >
+        <option selected value="-1">1910s</option>
+        <option
+          *ngFor="
+            let year of [
+              1910, 1911, 1912, 1913, 1914, 1915, 1966, 1917, 1918, 1919
+            ]
+          "
+          value="{{ year }}"
+        >
+          {{ year }}
+        </option>
+      </select>
+      <!-- 1920s -->
+      <select
+        class="form-control"
+        (change)="SearchTeams(false, $event.target.value)"
+      >
+        <option selected value="-1">1920s</option>
+        <option
+          *ngFor="
+            let year of [
+              1920, 1921, 1922, 1923, 1924, 1925, 1926, 1927, 1928, 1929
+            ]
+          "
+          value="{{ year }}"
+        >
+          {{ year }}
+        </option>
+      </select>
+      <!--  1930s -->
+      <select
+        class="form-control"
+        (change)="SearchTeams(false, $event.target.value)"
+      >
+        <option selected value="-1">1930s</option>
+        <option
+          *ngFor="
+            let year of [
+              1930, 1931, 1932, 1933, 1934, 1935, 1936, 1937, 1938, 1939
+            ]
+          "
+          value="{{ year }}"
+        >
+          {{ year }}
+        </option>
+      </select>
+      <!--   1940s -->
+      <select
+        class="form-control"
+        (change)="SearchTeams(false, $event.target.value)"
+      >
+        <option selected value="-1">1940s</option>
+        <option
+          *ngFor="
+            let year of [
+              1940, 1941, 1942, 1943, 1944, 1945, 1946, 1947, 1948, 1949
+            ]
+          "
+          value="{{ year }}"
+        >
+          {{ year }}
+        </option>
+      </select>
+      <!--   1950s -->
+      <select
+        class="form-control"
+        (change)="SearchTeams(false, $event.target.value)"
+      >
+        <option selected value="-1">1950s</option>
+        <option
+          *ngFor="
+            let year of [
+              1950, 1951, 1952, 1953, 1954, 1955, 1956, 1957, 1958, 1959
+            ]
+          "
+          value="{{ year }}"
+        >
+          {{ year }}
+        </option>
+      </select>
+      <!--   1960s -->
+      <select
+        class="form-control"
+        (change)="SearchTeams(false, $event.target.value)"
+      >
+        <option selected value="-1">1960s</option>
+        <option
+          *ngFor="
+            let year of [
+              1960, 1961, 1962, 1963, 1964, 1965, 1966, 1967, 1968, 1969
+            ]
+          "
+          value="{{ year }}"
+        >
+          {{ year }}
+        </option>
+      </select>
+      <!--   1970s -->
+      <select
+        class="form-control"
+        (change)="SearchTeams(false, $event.target.value)"
+      >
+        <option selected value="-1">1970s</option>
+        <option
+          *ngFor="
+            let year of [
+              1970, 1971, 1972, 1973, 1974, 1975, 1976, 1977, 1978, 1979
+            ]
+          "
+          value="{{ year }}"
+        >
+          {{ year }}
+        </option>
+      </select>
+      <!--   1980s -->
+      <select
+        class="form-control"
+        (change)="SearchTeams(false, $event.target.value)"
+      >
+        <option selected value="-1">1980s</option>
+        <option
+          *ngFor="
+            let year of [
+              1980, 1981, 1982, 1983, 1984, 1985, 1986, 1987, 1988, 1989
+            ]
+          "
+          value="{{ year }}"
+        >
+          {{ year }}
+        </option>
+      </select>
+      <!--   1990s -->
+      <select
+        class="form-control"
+        (change)="SearchTeams(false, $event.target.value)"
+      >
+        <option selected value="-1">1990s</option>
+        <option
+          *ngFor="
+            let year of [
+              1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999
+            ]
+          "
+          value="{{ year }}"
+        >
+          {{ year }}
+        </option>
+      </select>
+      <!--   2000s -->
+      <select
+        class="form-control"
+        (change)="SearchTeams(false, $event.target.value)"
+      >
+        <option selected value="-1">2000s</option>
+        <option
+          *ngFor="
+            let year of [
+              2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009
+            ]
+          "
+          value="{{ year }}"
+        >
+          {{ year }}
+        </option>
+      </select>
+      <!--   2010s -->
+      <select
+        class="form-control"
+        (change)="SearchTeams(false, $event.target.value)"
+      >
+        <option selected value="-1">2010s</option>
+        <option
+          *ngFor="
+            let year of [
+              2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019
+            ]
+          "
+          value="{{ year }}"
+        >
+          {{ year }}
+        </option>
+      </select>
+      <!--   2020s -->
+      <select
+        class="form-control"
+        (change)="SearchTeams(false, $event.target.value)"
+      >
+        <option selected value="-1">2020s</option>
+        <option
+          *ngFor="let year of [2020, 2021, 2022, 2023]"
+          value="{{ year }}"
+        >
+          {{ year }}
+        </option>
+      </select>
     </div>
   </div>
 
