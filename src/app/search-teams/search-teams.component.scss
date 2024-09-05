@@ -65,3 +65,10 @@
   -ms-transform: rotate(45deg);
   transform: rotate(45deg);
 }
+
+select {
+  margin: 3px;
+  font-size: small;
+  width: auto;
+  display: inline;
+}
