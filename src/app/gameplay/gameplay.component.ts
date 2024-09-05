@@ -817,7 +817,15 @@ export class GameplayComponent implements OnInit {
       this.Game.CurrentInning.HomeOuts += this.newOuts;
       if (this.Game.CurrentInning.InningNumber >= 9 && this.Game.AwayTeamRuns != this.Game.HomeTeamRuns && this.Game.CurrentInning.HomeOuts == 3) {
         let position = "toast-top-center";
-        let msg = this.Game.HomeTeam.TeamSeason + " " + this.Game.HomeTeam.TeamName + " " + this.Game.HomeTeamRuns + " to " + this.Game.AwayTeam.TeamSeason + " " + this.Game.AwayTeam.TeamName + " " + this.Game.AwayTeamRuns;
+
+        let msg = '';
+        if(this.Game.HomeTeamRuns > this.Game.AwayTeamRuns)
+        {
+          msg = "The " + this.Game.HomeTeam.TeamSeason + " " + this.Game.HomeTeam.TeamName + " beat the " + this.Game.AwayTeam.TeamSeason + " " + this.Game.AwayTeam.TeamName + " " + this.Game.HomeTeamRuns + " to " + this.Game.AwayTeamRuns;
+        }
+        else{
+          msg = "The " + this.Game.AwayTeam.TeamSeason + " " + this.Game.AwayTeam.TeamName + " beat the " + this.Game.HomeTeam.TeamSeason + " " + this.Game.HomeTeam.TeamName + " " + this.Game.AwayTeamRuns + " to " + this.Game.HomeTeamRuns;
+        }
         this.toastr.success(msg, "Game Over!", {
           timeOut: 0,
           extendedTimeOut: 0,
@@ -850,7 +858,15 @@ export class GameplayComponent implements OnInit {
 
         if (this.Game.CurrentInning.InningNumber >= 9 && this.Game.AwayTeamRuns < this.Game.HomeTeamRuns) {
           let position = "toast-top-center";
-          let msg = this.Game.HomeTeam.TeamSeason + " " + this.Game.HomeTeam.TeamName + " " + this.Game.HomeTeamRuns + " to " + this.Game.AwayTeam.TeamSeason + " " + this.Game.AwayTeam.TeamName + " " + this.Game.AwayTeamRuns;
+          let msg = '';
+          if(this.Game.HomeTeamRuns > this.Game.AwayTeamRuns)
+            {
+              msg = "The " + this.Game.HomeTeam.TeamSeason + " " + this.Game.HomeTeam.TeamName + " beat the " + this.Game.AwayTeam.TeamSeason + " " + this.Game.AwayTeam.TeamName + " " + this.Game.HomeTeamRuns + " to " + this.Game.AwayTeamRuns;
+            }
+            else{
+              msg = "The " + this.Game.AwayTeam.TeamSeason + " " + this.Game.AwayTeam.TeamName + " beat the " + this.Game.HomeTeam.TeamSeason + " " + this.Game.HomeTeam.TeamName + " " + this.Game.AwayTeamRuns + " to " + this.Game.HomeTeamRuns;
+            }
+
           this.toastr.success(msg, "Game Over!", {
             timeOut: 0,
             extendedTimeOut: 0,
@@ -2514,6 +2530,13 @@ export class GameplayComponent implements OnInit {
     setTimeout(() => {
       this.ClearCanvas();
     }, 200);
+
+    this.showInfo(player.Name + " comes into the game.");
+
+    this.scrollToTop();
   }
 
+  scrollToTop() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
 }
