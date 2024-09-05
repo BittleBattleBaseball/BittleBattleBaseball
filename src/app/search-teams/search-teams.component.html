@@ -50,11 +50,7 @@
                 <option *ngFor="let year of SearchableSeasons" value={{year}}>{{year}}</option>
             </select>
             <br />
-            <!-- 1870s -->
-            <select class="form-control" (change)="SearchTeams(true, $event.target.value)">
-              <option selected value="-1">--1870s--</option>
-              <option *ngFor="let y = 1876; y < 1880; y++;" value={{y}}>{{y}}</option>
-          </select>
+
             <button class="btn btn-danger"><i class="fa fa-search"></i>
               Season</button>
         </div>
