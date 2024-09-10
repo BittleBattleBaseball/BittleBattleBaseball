@@ -42,6 +42,8 @@
             {{ year }}
           </option>
         </select>
+        <button class="btn btn-danger"
+        (click)="SetRandomTeamYear(true)">Random</button>
         <!-- 1800s -->
         <select class="form-control" (change)="SearchTeams(true, $event.target.value)">
           <option selected value="-1">1800s</option>
@@ -210,6 +212,7 @@
             {{ year }}
           </option>
         </select>
+        <button class="btn btn-primary" (click)="SetRandomTeamYear(false)">Random</button>
         <!-- 1870s -->
         <select class="form-control" (change)="SearchTeams(false, $event.target.value)">
           <option selected value="-1">1800s</option>

@@ -92,6 +92,13 @@ export class SearchTeamsComponent implements OnInit {
     }
   }
 
+  SetRandomTeamYear(isHomeTeam = false){
+    const d = new Date();
+    let lastYear = d.getFullYear() - 1;
+    let year = Math.floor(Math.random() * (lastYear - 1876) + 1876);
+    this.SearchTeams(isHomeTeam, year)
+  }
+
   SetHomeTeamSelection(selection: TeamSearchResultViewModel) {
     this.GameSetup.SetHomeTeamSelection(selection);
 

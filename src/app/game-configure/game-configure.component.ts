@@ -719,7 +719,7 @@ export class GameConfigureComponent implements OnInit {
   }
 
   GenerateRandomNumber(from: number, to: number): number {
-    return Math.floor((Math.random() * to) + from);
+    return Math.floor(Math.random() * (to - from) + from);
   }
 
   ExecuteCurrentBatterReachedBase() {

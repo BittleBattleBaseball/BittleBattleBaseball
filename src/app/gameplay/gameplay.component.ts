@@ -201,16 +201,17 @@ export class GameplayComponent implements OnInit {
         this.timers.push(setTimeout(() => {
           this.IsPlayInProgress = false;
           this.ClearCanvas();
+          this.ClearTimers();
         }, 2500));
 
       }, 300));
     }, 200));
-
-
   }
 
   GenerateRandomNumber(from: number, to: number): number {
-    return Math.floor((Math.random() * to) + from);
+    let randomNumber = Math.floor((Math.random() * to) + from);
+    console.log("Random # generated : " + randomNumber)
+    return randomNumber;
   }
 
   ExecuteCurrentBatterReachedBase() {
