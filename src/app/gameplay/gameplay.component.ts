@@ -22,6 +22,8 @@ import { BattingAvgPipePipe } from '../batting-avg-pipe.pipe';
 
 export class GameplayComponent implements OnInit {
 
+  timers = [];
+
   canvas: HTMLCanvasElement;
   ctx: CanvasRenderingContext2D;
   batHittingBallSound = new Audio("../assets/audio/batHittingBall.mp3");
@@ -182,10 +184,10 @@ export class GameplayComponent implements OnInit {
     this.Game.CurrentAtBat.Batter.HittingSeasonStats.OBRP =
       this.Game.CurrentAtBat.Pitcher.PitchingSeasonStats.PX * this.Game.CurrentAtBat.Batter.HittingSeasonStats.obp;
 
-    setTimeout(() => {
+    this.timers.push(setTimeout(() => {
       this.Pitch();
 
-      setTimeout(() => {
+      this.timers.push(setTimeout(() => {
         let diceRoll = this.GenerateRandomNumber(1, 1000);
         //this.showWarning("Dice Roll is " + diceRoll + " Current Batter OBRP : " + this.Game.CurrentAtBat.Batter.HittingSeasonStats.OBRP);
 
@@ -196,13 +198,13 @@ export class GameplayComponent implements OnInit {
           this.ExecuteCurrentBatterIsOut();
         }
 
-        setTimeout(() => {
+        this.timers.push(setTimeout(() => {
           this.IsPlayInProgress = false;
           this.ClearCanvas();
-        }, 2500);
+        }, 2500));
 
-      }, 300);
-    }, 200);
+      }, 300));
+    }, 200));
 
 
   }
@@ -813,6 +815,14 @@ export class GameplayComponent implements OnInit {
 
   }
 
+  ClearTimers(){
+    // clear all timers in the array
+for (var i = 0; i < this.timers.length; i++)
+  {
+      clearTimeout(this.timers[i]);
+  }
+}
+
   ProcessEndOfOutPlay() {
     if (this.Game.CurrentInning.IsBottomOfInning) {
       this.Game.CurrentInning.HomeOuts += this.newOuts;
@@ -836,6 +846,8 @@ export class GameplayComponent implements OnInit {
 
         this.Game.PlayByPlays.push(msg);
         this.Game.IsGameInProgress = false;
+
+        this.ClearTimers();
       }
       else {
         if (this.Game.CurrentInning.HomeOuts == 3) {
@@ -877,6 +889,8 @@ export class GameplayComponent implements OnInit {
 
           this.Game.PlayByPlays.push(msg);
           this.Game.IsGameInProgress = false;
+
+          this.ClearTimers();
         } else {
 
           this.Game.CurrentInning.IsBottomOfInning = true;
@@ -936,11 +950,11 @@ export class GameplayComponent implements OnInit {
     img.onload = () => {
       this.ctx.drawImage(img, 0, 0, this.canvasWidth, this.canvasHeight);
 
-      setTimeout(() => {
+      this.timers.push(setTimeout(() => {
         this.DrawOuts();
         this.SetDefensivePlayers();
         this.DrawOffensivePlayers();
-      }, 100);
+      }, 100));
     }
   }
 
@@ -1835,7 +1849,7 @@ export class GameplayComponent implements OnInit {
     this.ctx.strokeStyle = 'white';
     this.ctx.stroke();
 
-    setTimeout(() => {
+    this.timers.push(setTimeout(() => {
 
       this.ctx.moveTo(this.thirdBasemanX + (this.playerFieldImgAvatarWidth / 2) + 15, this.thirdBasemanY + (this.playerFieldImgAvatarHeight / 2) + 15);
 
@@ -1848,7 +1862,7 @@ export class GameplayComponent implements OnInit {
       // line color
       this.ctx.strokeStyle = 'white';
       this.ctx.stroke();
-    }, 200);
+    }, 200));
   }
 
   ThirdToFirstSingleGroundOut() {
@@ -1861,7 +1875,7 @@ export class GameplayComponent implements OnInit {
     this.ctx.strokeStyle = 'white';
     this.ctx.stroke();
 
-    setTimeout(() => {
+    this.timers.push(setTimeout(() => {
       this.ctx.beginPath();
       this.ctx.moveTo(this.thirdBasemanX + (this.playerFieldImgAvatarWidth / 2) + 15, this.thirdBasemanY + (this.playerFieldImgAvatarHeight / 2) + 15);
 
@@ -1870,7 +1884,7 @@ export class GameplayComponent implements OnInit {
       // line color
       this.ctx.strokeStyle = 'white';
       this.ctx.stroke();
-    }, 200);
+    }, 200));
   }
 
   AttemptFiveFourThreeTriplePlay() {
@@ -1952,7 +1966,7 @@ export class GameplayComponent implements OnInit {
     this.ctx.strokeStyle = 'white';
     this.ctx.stroke();
 
-    setTimeout(() => {
+    this.timers.push(setTimeout(() => {
       this.ctx.beginPath();
       this.ctx.moveTo(this.shortstopX + (this.playerFieldImgAvatarWidth / 2) + 15, this.shortstopY + (this.playerFieldImgAvatarHeight / 2) + 15);
 
@@ -1961,7 +1975,7 @@ export class GameplayComponent implements OnInit {
       // line color
       this.ctx.strokeStyle = 'white';
       this.ctx.stroke();
-    }, 200);
+    }, 200));
   }
 
   GroundBallOutToSecond() {
@@ -1976,7 +1990,7 @@ export class GameplayComponent implements OnInit {
     this.ctx.strokeStyle = 'white';
     this.ctx.stroke();
 
-    setTimeout(() => {
+    this.timers.push(setTimeout(() => {
       this.ctx.beginPath();
       this.ctx.moveTo(this.secondBasemanX + (this.playerFieldImgAvatarWidth / 2) + 15, this.secondBasemanY + (this.playerFieldImgAvatarHeight / 2) + 15);
 
@@ -1985,7 +1999,7 @@ export class GameplayComponent implements OnInit {
       // line color
       this.ctx.strokeStyle = 'white';
       this.ctx.stroke();
-    }, 200);
+    }, 200));
   }
 
   GroundBallOutToFirst() {
@@ -2013,7 +2027,7 @@ export class GameplayComponent implements OnInit {
     this.ctx.strokeStyle = 'white';
     this.ctx.stroke();
 
-    setTimeout(() => {
+    this.timers.push(setTimeout(() => {
       this.ctx.beginPath();
       this.ctx.moveTo(this.pitcherX + (this.playerFieldImgAvatarWidth / 2), this.pitcherY + (this.playerFieldImgAvatarHeight / 2) + 15);
 
@@ -2022,7 +2036,7 @@ export class GameplayComponent implements OnInit {
       // line color
       this.ctx.strokeStyle = 'white';
       this.ctx.stroke();
-    }, 200);
+    }, 200));
   }
 
   //Line Drive Outs
@@ -2547,9 +2561,9 @@ export class GameplayComponent implements OnInit {
       }
     }
 
-    setTimeout(() => {
+    this.timers.push(setTimeout(() => {
       this.ClearCanvas();
-    }, 200);
+    }, 200));
 
     this.showInfo(player.Name + " comes into the game.");
 

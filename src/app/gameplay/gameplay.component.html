@@ -174,7 +174,7 @@
     <!-- BOX SCORE -->
     <div class="row" style="margin: 0px; padding: 0px;">
         <div class="col-md-6">
-          <div *ngIf="!Game.CurrentInning.IsBottomOfInning">
+          <div *ngIf="!Game.CurrentInning.IsBottomOfInning || !Game.IsGameInProgress">
             <h5 class="text-left"><img [src]="Game.AwayTeam.TeamLogoUrl"
                     style="height: 50px; border: 3px solid white; margin-right: 15px;" />
                 {{Game.AwayTeam.TeamSeason}} {{Game.AwayTeam.FullTeamName}} Hitting</h5>
@@ -291,7 +291,7 @@
           </div>
         </div>
         <div class="col-md-6">
-          <div *ngIf="Game.CurrentInning.IsBottomOfInning">
+          <div *ngIf="Game.CurrentInning.IsBottomOfInning || !Game.IsGameInProgress">
             <h5 class="text-left"><img [src]="Game.HomeTeam.TeamLogoUrl"
                     style="height: 50px; border: 3px solid white; margin-right: 15px;" />
                 {{Game.HomeTeam.TeamSeason}} {{Game.HomeTeam.FullTeamName}} Hitting</h5>
@@ -413,7 +413,7 @@
     <!-- PITCHING -->
     <div class="row" style="margin: 0px; padding: 0px;">
         <div class="col-md-6">
-          <div *ngIf="Game.CurrentInning.IsBottomOfInning">
+          <div *ngIf="Game.CurrentInning.IsBottomOfInning || !Game.IsGameInProgress">
             <h5 class="text-left"><img [src]="Game.AwayTeam.TeamLogoUrl"
                     style="height: 50px; border: 3px solid white; margin-right: 15px;" />
                 {{Game.AwayTeam.TeamSeason}} {{Game.AwayTeam.FullTeamName}} Pitching</h5>
@@ -503,7 +503,7 @@
           </div>
         </div>
         <div class="col-md-6">
-          <div *ngIf="!Game.CurrentInning.IsBottomOfInning">
+          <div *ngIf="!Game.CurrentInning.IsBottomOfInning || !Game.IsGameInProgress">
             <h5 class="text-left"><img [src]="Game.HomeTeam.TeamLogoUrl"
                     style="height: 50px; border: 3px solid white; margin-right: 15px;" />
                 {{Game.HomeTeam.TeamSeason}} {{Game.HomeTeam.FullTeamName}} Pitching</h5>
