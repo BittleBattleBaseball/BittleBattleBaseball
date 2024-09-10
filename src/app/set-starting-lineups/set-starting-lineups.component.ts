@@ -368,6 +368,7 @@ export class SetStartingLineupsComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.scrollToTop();
   }
 
   scrollToTop() {

@@ -112,6 +112,7 @@ export class GameplayComponent implements OnInit {
   }
 
   ngOnInit() {
+ this.scrollToTop();
   }
 
   constructor(private router: Router, private activatedRoute: ActivatedRoute,

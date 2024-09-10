@@ -91,7 +91,7 @@
                     </table>
                 </div>
                 <div class="row">
-                    <div class="col-lg-6" *ngIf="HomeTeamRoster && HomeTeamRoster.suggestedLineup" class="alert-danger"
+                    <div class="col-lg-6" *ngIf="HomeTeamRoster && HomeTeamRoster.suggestedLineup && !Game.HomeTeam.IsRosterSet" class="alert-danger"
                         style="padding: 10px; font-size: small; opacity: .9; width: 100%; margin: 3px;">
                         <h5>Suggested Batting Order <button (click)="UseSuggestedHomeLineup()" class="btn btn-success"
                                 style="float:right; font-size: small;">Use This Lineup</button></h5>
@@ -106,7 +106,7 @@
                             <br />
                         </ng-container>
                     </div>
-                    <div class="col-lg-6" *ngIf="HomeTeamRoster && HomeTeamRoster.suggestedRotation"
+                    <div class="col-lg-6" *ngIf="HomeTeamRoster && HomeTeamRoster.suggestedRotation && !Game.HomeTeam.IsRosterSet"
                         class="alert-danger"
                         style="padding: 10px; font-size: small; opacity: .9; width: 100%; margin: 3px; float: right;">
                         <h5>Suggested Rotation</h5>
@@ -196,7 +196,7 @@
                     </table>
                 </div>
                 <div class="row">
-                    <div class="col-sm-6" *ngIf="AwayTeamRoster && AwayTeamRoster.suggestedLineup" class="alert-primary"
+                    <div class="col-sm-6" *ngIf="AwayTeamRoster && AwayTeamRoster.suggestedLineup && !Game.AwayTeam.IsRosterSet" class="alert-primary"
                         style="padding: 10px; font-size: small; opacity: .9; width: 100%; margin: 3px;">
                         <h5>Suggested Batting Order <button (click)="UseSuggestedAwayLineup()" class="btn btn-success"
                                 style="float:right; font-size: small;">Use This Lineup</button></h5>
@@ -211,7 +211,7 @@
                             <br />
                         </ng-container>
                     </div>
-                    <div class="col-sm-6" *ngIf="AwayTeamRoster && AwayTeamRoster.suggestedRotation"
+                    <div class="col-sm-6" *ngIf="AwayTeamRoster && AwayTeamRoster.suggestedRotation && !Game.AwayTeam.IsRosterSet"
                         class="alert-primary"
                         style="padding: 10px; font-size: small; opacity: .9; width: 100%; margin: 3px; float: right;">
                         <h5>Suggested Rotation</h5>
@@ -234,8 +234,9 @@
     </div>
     <div class="row">
         <div class="col-lg-6">
+          <div *ngIf="HomeTeamRoster && !Game.HomeTeam.IsRosterSet">
             <h5 *ngIf="!HomeTeamDataLoading">Home Roster</h5>
-            <table *ngIf="HomeTeamRoster" class="table table-bordered table-dark table-hover table-condensed"
+            <table class="table table-bordered table-dark table-hover table-condensed"
                 style="margin-top: 20px; opacity: 0.9; font-size: small;">
                 <thead>
                     <tr>
@@ -355,10 +356,12 @@
                     </ng-container>
                 </tbody>
             </table>
+          </div>
         </div>
         <div class="col-lg-6">
+          <div *ngIf="AwayTeamRoster && !Game.AwayTeam.IsRosterSet" >
             <h5 *ngIf="!AwayTeamDataLoading">Away Roster</h5>
-            <table *ngIf="AwayTeamRoster" class="table table-bordered table-dark table-hover table-condensed"
+            <table class="table table-bordered table-dark table-hover table-condensed"
                 style="margin-top: 20px; opacity: 0.9; font-size: small;">
                 <thead>
                     <tr>
@@ -478,6 +481,7 @@
                     </ng-container>
                 </tbody>
             </table>
+          </div>
         </div>
     </div>
 
