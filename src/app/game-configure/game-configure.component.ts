@@ -1572,6 +1572,11 @@ export class GameConfigureComponent implements OnInit {
   }
 
   private DrawBatterImgData(img: HTMLImageElement) {
+    let color = '#00004E';
+    if (this.Game.CurrentInning.IsBottomOfInning) {
+      color =  '#B30000';
+    }
+
     this.ctx.font = '18pt Calibri';
     this.ctx.textAlign = 'right';
     this.ctx.fillStyle = 'white';
@@ -1587,6 +1592,13 @@ export class GameConfigureComponent implements OnInit {
 
 
     //Draw Current Batter Info
+    this.ctx.beginPath();
+    this.ctx.rect(1080, 600, this.playerFieldImgAvatarWidth * 2, this.playerFieldImgAvatarHeight * 2);
+    this.ctx.fillStyle = color;
+    this.ctx.fill();
+    this.ctx.lineWidth = 4;
+    this.ctx.strokeStyle = color;
+    this.ctx.stroke();
     this.ctx.drawImage(img,
       1080, 600, this.playerFieldImgAvatarWidth * 2, this.playerFieldImgAvatarHeight * 2);
   }
@@ -1800,8 +1812,15 @@ export class GameConfigureComponent implements OnInit {
       this.ctx.fillText(img.title, this.pitcherX + (this.playerFieldImgAvatarWidth / 2), (this.pitcherY - 5));
 
       //Draw Current Pitcher Info
-      this.ctx.drawImage(img,
-        80, 600, this.playerFieldImgAvatarWidth * 2, this.playerFieldImgAvatarHeight * 2);
+        this.ctx.beginPath();
+        this.ctx.rect(80, 600, this.playerFieldImgAvatarWidth * 2, this.playerFieldImgAvatarHeight * 2);
+        this.ctx.fillStyle = color;
+        this.ctx.fill();
+        this.ctx.lineWidth = 4;
+        this.ctx.strokeStyle = color;
+        this.ctx.stroke();
+        this.ctx.drawImage(img,
+          80, 600, this.playerFieldImgAvatarWidth * 2, this.playerFieldImgAvatarHeight * 2);
 
       this.ctx.font = '18pt Calibri';
       this.ctx.textAlign = 'left';
