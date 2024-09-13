@@ -1139,7 +1139,7 @@ for (var i = 0; i < this.timers.length; i++)
       img.title = this.Game.RunnerOnFirst.Name;
 
       if (this.Game.CurrentInning.IsBottomOfInning) {
-        color = "red";
+        color = "#B30000";
       }
 
       img.onerror = function () {
@@ -1174,7 +1174,7 @@ for (var i = 0; i < this.timers.length; i++)
       img.title = this.Game.RunnerOnSecond.Name;
 
       if (this.Game.CurrentInning.IsBottomOfInning) {
-        color = "red";
+        color = "#B30000";
       }
 
       img.onerror = function () {
@@ -1209,7 +1209,7 @@ for (var i = 0; i < this.timers.length; i++)
       img.title = this.Game.RunnerOnThird.Name;
 
       if (this.Game.CurrentInning.IsBottomOfInning) {
-        color = "red";
+        color = "#B30000";
       }
 
       img.onerror = function () {
