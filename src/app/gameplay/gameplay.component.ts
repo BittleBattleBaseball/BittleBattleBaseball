@@ -2515,7 +2515,7 @@ export class GameplayComponent implements OnInit {
 
     //Actual Outcome
     let diceRoll = this.GenerateRandomNumber(1, 100);
-    if (diceRoll > 90) {
+    if (diceRoll > 87) {
       //Both Safe
       if (this.Game.RunnerOnThird) {
         //Player from third scores
@@ -2532,7 +2532,7 @@ export class GameplayComponent implements OnInit {
       this.newOuts = 0;
 
       this.showInfo("All baserunners safe after double-play attempt.");
-    } else if (diceRoll > 76) {
+    } else if (diceRoll > 68) {
       //Out at second only
       if (this.Game.RunnerOnThird) {
         if (this.GetCurrentNumberOfOuts() == 0) {
@@ -2966,7 +2966,7 @@ export class GameplayComponent implements OnInit {
 
     //Actual Outcome
     let diceRoll = this.GenerateRandomNumber(1, 100);
-    if (diceRoll > 90) {
+    if (diceRoll > 85) {
       //Both Safe
       if (this.Game.RunnerOnThird) {
         //Player from third scores
@@ -2983,7 +2983,7 @@ export class GameplayComponent implements OnInit {
       this.newOuts = 0;
 
       this.showInfo("All baserunners safe after double-play attempt.");
-    } else if (diceRoll > 76) {
+    } else if (diceRoll > 65) {
       //Out at second only
       if (this.Game.RunnerOnThird) {
         if (this.GetCurrentNumberOfOuts() == 0) {
