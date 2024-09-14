@@ -1926,8 +1926,8 @@ export class GameConfigureComponent implements OnInit {
         // dark orange
         grd.addColorStop(0, "#ff8c00");
 
-        // light orange
-        grd.addColorStop(1, "#ffcc00");
+        // light orange / yellow
+        grd.addColorStop(1, "#ffff00");
 
         this.ctx.fillStyle = grd;
       }
