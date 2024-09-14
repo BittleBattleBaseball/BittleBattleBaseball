@@ -362,7 +362,7 @@ export class SetStartingLineupsComponent implements OnInit {
     this.SaveAwayTeamBenchPlayers();
     this.SaveHomeTeamBenchPitchers();
     this.SaveAwayTeamBenchPitchers();
-    localStorage.setItem('bittlebattlebaseball_game_instance' + this.GameId, JSON.stringify(this.Game));
+   // localStorage.setItem('bittlebattlebaseball_game_instance' + this.GameId, JSON.stringify(this.Game));
     this.router.navigateByUrl("/game/" + this.GameId);
     //   this.router.navigateByUrl("/game/" + this.GameId, { state: this.Game });
   }

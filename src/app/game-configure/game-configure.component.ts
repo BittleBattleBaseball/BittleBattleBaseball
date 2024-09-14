@@ -116,10 +116,6 @@ export class GameConfigureComponent implements OnInit {
     let t = d.getTime().toString();
     document.body.style.backgroundImage = "url('../assets/images/baseball-background" + t.substring(t.length - 1, t.length) + ".jpg')";
 
-    //this.GameId = activatedRoute.snapshot.params["gameId"];
-    //var parsedGame = ) as GameViewModel;
-    //Object.assign(this.Game, JSON.parse(localStorage.getItem('bittlebattlebaseball_game_instance' + this.GameId)));
-
     this.Game = this.BuildMockGame();
 
     try {
