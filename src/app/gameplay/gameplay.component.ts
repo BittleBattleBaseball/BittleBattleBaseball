@@ -1164,6 +1164,9 @@ export class GameplayComponent implements OnInit {
 
   SetPlayingField() {
     this.canvas = <HTMLCanvasElement>document.getElementById("ballparkCanvas");
+    if(this.canvas)
+      this.canvas = <HTMLCanvasElement>document.getElementById("ballparkCanvas");
+
     this.ctx = this.canvas.getContext("2d");
 
     let img = new Image();
