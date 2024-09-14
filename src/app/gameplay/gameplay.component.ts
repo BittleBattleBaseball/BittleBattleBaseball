@@ -119,8 +119,7 @@ export class GameplayComponent implements OnInit {
     );
   }
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   constructor(
     private router: Router,
@@ -1164,8 +1163,10 @@ export class GameplayComponent implements OnInit {
 
   SetPlayingField() {
     this.canvas = <HTMLCanvasElement>document.getElementById("ballparkCanvas");
-    if(this.canvas)
-      this.canvas = <HTMLCanvasElement>document.getElementById("ballparkCanvas");
+    if (this.canvas)
+      this.canvas = <HTMLCanvasElement>(
+        document.getElementById("ballparkCanvas")
+      );
 
     this.ctx = this.canvas.getContext("2d");
 
@@ -1787,8 +1788,7 @@ export class GameplayComponent implements OnInit {
         grd.addColorStop(1, "#00e400");
 
         this.ctx.fillStyle = grd;
-      }
-      else  if (left <= 292 && left > 280) {
+      } else if (left <= 292 && left > 280) {
         var grd = this.ctx.createLinearGradient(0, 0, left, 15);
         // dark orange
         grd.addColorStop(0, "#ff8c00");
@@ -1797,8 +1797,7 @@ export class GameplayComponent implements OnInit {
         grd.addColorStop(1, "#ffff00");
 
         this.ctx.fillStyle = grd;
-      }
-      else {
+      } else {
         var grd = this.ctx.createLinearGradient(0, 0, left, 15);
 
         // dark red
@@ -2536,10 +2535,10 @@ export class GameplayComponent implements OnInit {
     } else if (diceRoll > 76) {
       //Out at second only
       if (this.Game.RunnerOnThird) {
-        if(this.GetCurrentNumberOfOuts() == 0){
-           //Player from third scores
-           this.Game.RunnersWhoScoredOnPlay.push(this.Game.RunnerOnThird);
-           this.Game.RunnerOnThird = null;
+        if (this.GetCurrentNumberOfOuts() == 0) {
+          //Player from third scores
+          this.Game.RunnersWhoScoredOnPlay.push(this.Game.RunnerOnThird);
+          this.Game.RunnerOnThird = null;
         }
       }
 
@@ -2568,7 +2567,11 @@ export class GameplayComponent implements OnInit {
   AttemptOneTwoThreeDoublePlay() {}
 
   IsForcePlayAtHome() {
-    return this.Game.RunnerOnThird && this.Game.RunnerOnSecond && this.Game.RunnerOnFirst;
+    return (
+      this.Game.RunnerOnThird &&
+      this.Game.RunnerOnSecond &&
+      this.Game.RunnerOnFirst
+    );
   }
 
   IsForcePlayAtThird() {
@@ -2606,33 +2609,47 @@ export class GameplayComponent implements OnInit {
     }
   }
 
-  ShortToSecondToFirstDoublePlayGroundOut(){
+  ShortToSecondToFirstDoublePlayGroundOut() {
     this.ctx.beginPath();
     this.ctx.moveTo(this.homePlateX, this.homePlateY);
 
     this.ctx.lineWidth = 2;
-    this.ctx.lineTo(this.shortstopX + (this.playerFieldImgAvatarWidth / 2) + 15, this.shortstopY + (this.playerFieldImgAvatarHeight / 2) + 15);
+    this.ctx.lineTo(
+      this.shortstopX + this.playerFieldImgAvatarWidth / 2 + 15,
+      this.shortstopY + this.playerFieldImgAvatarHeight / 2 + 15
+    );
     // line color
-    this.ctx.strokeStyle = 'white';
+    this.ctx.strokeStyle = "white";
     this.ctx.stroke();
 
     setTimeout(() => {
+      this.ctx.moveTo(
+        this.shortstopX + this.playerFieldImgAvatarWidth / 2 + 15,
+        this.shortstopY + this.playerFieldImgAvatarHeight / 2 + 15
+      );
 
-      this.ctx.moveTo(this.shortstopX + (this.playerFieldImgAvatarWidth / 2) + 15, this.shortstopY + (this.playerFieldImgAvatarHeight / 2) + 15);
+      this.ctx.lineTo(
+        this.secondBaseX + this.playerFieldImgAvatarWidth / 2,
+        this.secondBaseY + this.playerFieldImgAvatarHeight / 2
+      );
 
-      this.ctx.lineTo(this.secondBaseX + (this.playerFieldImgAvatarWidth / 2), this.secondBaseY + (this.playerFieldImgAvatarHeight / 2));
-
-      this.ctx.moveTo(this.secondBaseX + (this.playerFieldImgAvatarWidth / 2) + 15, this.secondBaseY + (this.playerFieldImgAvatarHeight / 2) + 15);
+      this.ctx.moveTo(
+        this.secondBaseX + this.playerFieldImgAvatarWidth / 2 + 15,
+        this.secondBaseY + this.playerFieldImgAvatarHeight / 2 + 15
+      );
 
       this.ctx.lineWidth = 2;
-      this.ctx.lineTo(this.firstBaseX + (this.playerFieldImgAvatarWidth / 2), this.firstBaseY + (this.playerFieldImgAvatarHeight / 2));
+      this.ctx.lineTo(
+        this.firstBaseX + this.playerFieldImgAvatarWidth / 2,
+        this.firstBaseY + this.playerFieldImgAvatarHeight / 2
+      );
       // line color
-      this.ctx.strokeStyle = 'white';
+      this.ctx.strokeStyle = "white";
       this.ctx.stroke();
     }, 200);
   }
 
-  AttemptSixFourThreeDoublePlay(){
+  AttemptSixFourThreeDoublePlay() {
     //Drawing part
     this.ShortToSecondToFirstDoublePlayGroundOut();
 
@@ -2655,15 +2672,14 @@ export class GameplayComponent implements OnInit {
       this.newOuts = 0;
 
       this.showInfo("All baserunners safe after double-play attempt.");
-    }
-    else if (diceRoll > 76) {
+    } else if (diceRoll > 76) {
       //Out at second only
       if (this.Game.RunnerOnThird) {
-        if(this.GetCurrentNumberOfOuts() == 0){
+        if (this.GetCurrentNumberOfOuts() == 0) {
           //Player from third scores
           this.Game.RunnersWhoScoredOnPlay.push(this.Game.RunnerOnThird);
           this.Game.RunnerOnThird = null;
-       }
+        }
       }
 
       if (this.Game.RunnerOnSecond) {
@@ -2674,43 +2690,52 @@ export class GameplayComponent implements OnInit {
       this.Game.RunnerOnFirst = this.Game.CurrentAtBat.Batter;
       this.newOuts = 1;
 
-      this.showInfo("Baserunner at second is out and baserunner at first is safe after double-play attempt.");
-    }
-    else {
+      this.showInfo(
+        "Baserunner at second is out and baserunner at first is safe after double-play attempt."
+      );
+    } else {
       //Both out
       this.Game.RunnerOnSecond = null;
       this.Game.RunnerOnFirst = null;
       this.newOuts = 2;
-      this.showError("Twin-killing! 6-4-3 Double-play. Both baserunners are out!");
+      this.showError(
+        "Twin-killing! 6-4-3 Double-play. Both baserunners are out!"
+      );
     }
-    }
+  }
 
-  ShortToFirstSingleGroundOut(){
-  this.PlayBatHittingBallSound();
+  ShortToFirstSingleGroundOut() {
+    this.PlayBatHittingBallSound();
 
     this.ctx.beginPath();
     this.ctx.moveTo(this.homePlateX, this.homePlateY);
 
     this.ctx.lineWidth = 2;
-    this.ctx.lineTo(this.shortstopX + (this.playerFieldImgAvatarWidth / 2) + 15, this.shortstopY + (this.playerFieldImgAvatarHeight / 2) + 15);
+    this.ctx.lineTo(
+      this.shortstopX + this.playerFieldImgAvatarWidth / 2 + 15,
+      this.shortstopY + this.playerFieldImgAvatarHeight / 2 + 15
+    );
     // line color
-    this.ctx.strokeStyle = 'white';
+    this.ctx.strokeStyle = "white";
     this.ctx.stroke();
 
     setTimeout(() => {
       this.ctx.beginPath();
-      this.ctx.moveTo(this.shortstopX + (this.playerFieldImgAvatarWidth / 2) + 15, this.shortstopY + (this.playerFieldImgAvatarHeight / 2) + 15);
+      this.ctx.moveTo(
+        this.shortstopX + this.playerFieldImgAvatarWidth / 2 + 15,
+        this.shortstopY + this.playerFieldImgAvatarHeight / 2 + 15
+      );
 
       this.ctx.lineWidth = 2;
-      this.ctx.lineTo(this.firstBaseX + (this.playerFieldImgAvatarWidth / 2), this.firstBaseY + (this.playerFieldImgAvatarHeight / 2));
+      this.ctx.lineTo(
+        this.firstBaseX + this.playerFieldImgAvatarWidth / 2,
+        this.firstBaseY + this.playerFieldImgAvatarHeight / 2
+      );
       // line color
-      this.ctx.strokeStyle = 'white';
+      this.ctx.strokeStyle = "white";
       this.ctx.stroke();
     }, 200);
   }
-
-
-
 
   GroundBallOutToSecond() {
     this.PlayBatHittingBallSound();
@@ -2739,83 +2764,99 @@ export class GameplayComponent implements OnInit {
     }
   }
 
-  SecondToShortToFirstDoublePlayGroundOut(){
+  SecondToShortToFirstDoublePlayGroundOut() {
     this.ctx.beginPath();
     this.ctx.moveTo(this.homePlateX, this.homePlateY);
 
     this.ctx.lineWidth = 2;
-    this.ctx.lineTo(this.secondBasemanX + (this.playerFieldImgAvatarWidth / 2) + 15, this.secondBasemanY + (this.playerFieldImgAvatarHeight / 2) + 15);
+    this.ctx.lineTo(
+      this.secondBasemanX + this.playerFieldImgAvatarWidth / 2 + 15,
+      this.secondBasemanY + this.playerFieldImgAvatarHeight / 2 + 15
+    );
     // line color
-    this.ctx.strokeStyle = 'white';
+    this.ctx.strokeStyle = "white";
     this.ctx.stroke();
 
     setTimeout(() => {
+      this.ctx.moveTo(
+        this.secondBasemanX + this.playerFieldImgAvatarWidth / 2 + 15,
+        this.secondBasemanY + this.playerFieldImgAvatarHeight / 2 + 15
+      );
 
-      this.ctx.moveTo(this.secondBasemanX + (this.playerFieldImgAvatarWidth / 2) + 15, this.secondBasemanY + (this.playerFieldImgAvatarHeight / 2) + 15);
+      this.ctx.lineTo(
+        this.secondBaseX + this.playerFieldImgAvatarWidth / 2,
+        this.secondBaseY + this.playerFieldImgAvatarHeight / 2
+      );
 
-      this.ctx.lineTo(this.secondBaseX + (this.playerFieldImgAvatarWidth / 2), this.secondBaseY + (this.playerFieldImgAvatarHeight / 2));
-
-      this.ctx.moveTo(this.secondBaseX + (this.playerFieldImgAvatarWidth / 2) + 15, this.secondBaseY + (this.playerFieldImgAvatarHeight / 2) + 15);
+      this.ctx.moveTo(
+        this.secondBaseX + this.playerFieldImgAvatarWidth / 2 + 15,
+        this.secondBaseY + this.playerFieldImgAvatarHeight / 2 + 15
+      );
 
       this.ctx.lineWidth = 2;
-      this.ctx.lineTo(this.firstBaseX + (this.playerFieldImgAvatarWidth / 2), this.firstBaseY + (this.playerFieldImgAvatarHeight / 2));
+      this.ctx.lineTo(
+        this.firstBaseX + this.playerFieldImgAvatarWidth / 2,
+        this.firstBaseY + this.playerFieldImgAvatarHeight / 2
+      );
       // line color
-      this.ctx.strokeStyle = 'white';
+      this.ctx.strokeStyle = "white";
       this.ctx.stroke();
     }, 200);
   }
 
-  AttemptFourSixThreeDoublePlay(){
- //Drawing part
- this.SecondToShortToFirstDoublePlayGroundOut();
+  AttemptFourSixThreeDoublePlay() {
+    //Drawing part
+    this.SecondToShortToFirstDoublePlayGroundOut();
 
- //Actual Outcome
- let diceRoll = this.GenerateRandomNumber(1, 100);
- if (diceRoll > 90) {
-   //Both Safe
-   if (this.Game.RunnerOnThird) {
-     //Player from third scores
-     this.Game.RunnersWhoScoredOnPlay.push(this.Game.RunnerOnThird);
-     this.Game.RunnerOnThird = null;
-   }
+    //Actual Outcome
+    let diceRoll = this.GenerateRandomNumber(1, 100);
+    if (diceRoll > 90) {
+      //Both Safe
+      if (this.Game.RunnerOnThird) {
+        //Player from third scores
+        this.Game.RunnersWhoScoredOnPlay.push(this.Game.RunnerOnThird);
+        this.Game.RunnerOnThird = null;
+      }
 
-   if (this.Game.RunnerOnSecond) {
-     this.Game.RunnerOnThird = this.Game.RunnerOnSecond;
-   }
+      if (this.Game.RunnerOnSecond) {
+        this.Game.RunnerOnThird = this.Game.RunnerOnSecond;
+      }
 
-   this.Game.RunnerOnSecond = this.Game.RunnerOnFirst;
-   this.Game.RunnerOnFirst = this.Game.CurrentAtBat.Batter;
-   this.newOuts = 0;
+      this.Game.RunnerOnSecond = this.Game.RunnerOnFirst;
+      this.Game.RunnerOnFirst = this.Game.CurrentAtBat.Batter;
+      this.newOuts = 0;
 
-   this.showInfo("All baserunners safe after double-play attempt.");
- }
- else if (diceRoll > 76) {
-   //Out at second only
-   if (this.Game.RunnerOnThird) {
-    if(this.GetCurrentNumberOfOuts() == 0){
-      //Player from third scores
-      this.Game.RunnersWhoScoredOnPlay.push(this.Game.RunnerOnThird);
-      this.Game.RunnerOnThird = null;
-   }
-   }
+      this.showInfo("All baserunners safe after double-play attempt.");
+    } else if (diceRoll > 76) {
+      //Out at second only
+      if (this.Game.RunnerOnThird) {
+        if (this.GetCurrentNumberOfOuts() == 0) {
+          //Player from third scores
+          this.Game.RunnersWhoScoredOnPlay.push(this.Game.RunnerOnThird);
+          this.Game.RunnerOnThird = null;
+        }
+      }
 
-   if (this.Game.RunnerOnSecond) {
-     this.Game.RunnerOnThird = this.Game.RunnerOnSecond;
-   }
+      if (this.Game.RunnerOnSecond) {
+        this.Game.RunnerOnThird = this.Game.RunnerOnSecond;
+      }
 
-   this.Game.RunnerOnSecond = null;
-   this.Game.RunnerOnFirst = this.Game.CurrentAtBat.Batter;
-   this.newOuts = 1;
+      this.Game.RunnerOnSecond = null;
+      this.Game.RunnerOnFirst = this.Game.CurrentAtBat.Batter;
+      this.newOuts = 1;
 
-   this.showInfo("Baserunner at second is out and baserunner at first is safe after double-play attempt.");
- }
- else {
-   //Both out
-   this.Game.RunnerOnSecond = null;
-   this.Game.RunnerOnFirst = null;
-   this.newOuts = 2;
-   this.showError("Twin-killing! 6-4-3 Double-play. Both baserunners are out!");
- }
+      this.showInfo(
+        "Baserunner at second is out and baserunner at first is safe after double-play attempt."
+      );
+    } else {
+      //Both out
+      this.Game.RunnerOnSecond = null;
+      this.Game.RunnerOnFirst = null;
+      this.newOuts = 2;
+      this.showError(
+        "Twin-killing! 6-4-3 Double-play. Both baserunners are out!"
+      );
+    }
   }
 
   SecondToFirstSingleGroundOut() {
@@ -2825,19 +2866,28 @@ export class GameplayComponent implements OnInit {
     this.ctx.moveTo(this.homePlateX, this.homePlateY);
 
     this.ctx.lineWidth = 2;
-    this.ctx.lineTo(this.secondBasemanX + (this.playerFieldImgAvatarWidth / 2) + 15, this.secondBasemanY + (this.playerFieldImgAvatarHeight / 2) + 15);
+    this.ctx.lineTo(
+      this.secondBasemanX + this.playerFieldImgAvatarWidth / 2 + 15,
+      this.secondBasemanY + this.playerFieldImgAvatarHeight / 2 + 15
+    );
     // line color
-    this.ctx.strokeStyle = 'white';
+    this.ctx.strokeStyle = "white";
     this.ctx.stroke();
 
     setTimeout(() => {
       this.ctx.beginPath();
-      this.ctx.moveTo(this.secondBasemanX + (this.playerFieldImgAvatarWidth / 2) + 15, this.secondBasemanY + (this.playerFieldImgAvatarHeight / 2) + 15);
+      this.ctx.moveTo(
+        this.secondBasemanX + this.playerFieldImgAvatarWidth / 2 + 15,
+        this.secondBasemanY + this.playerFieldImgAvatarHeight / 2 + 15
+      );
 
       this.ctx.lineWidth = 2;
-      this.ctx.lineTo(this.firstBaseX + (this.playerFieldImgAvatarWidth / 2), this.firstBaseY + (this.playerFieldImgAvatarHeight / 2));
+      this.ctx.lineTo(
+        this.firstBaseX + this.playerFieldImgAvatarWidth / 2,
+        this.firstBaseY + this.playerFieldImgAvatarHeight / 2
+      );
       // line color
-      this.ctx.strokeStyle = 'white';
+      this.ctx.strokeStyle = "white";
       this.ctx.stroke();
     }, 200);
   }
@@ -2885,62 +2935,62 @@ export class GameplayComponent implements OnInit {
     }
   }
 
-  AttemptOneSixThreeDoublePlay(){
-     //Drawing part
-      this.PitcherToSecondToFirstDoublePlayGroundOut();
+  AttemptOneSixThreeDoublePlay() {
+    //Drawing part
+    this.PitcherToSecondToFirstDoublePlayGroundOut();
 
-       //Actual Outcome
- let diceRoll = this.GenerateRandomNumber(1, 100);
- if (diceRoll > 90) {
-   //Both Safe
-   if (this.Game.RunnerOnThird) {
-     //Player from third scores
-     this.Game.RunnersWhoScoredOnPlay.push(this.Game.RunnerOnThird);
-     this.Game.RunnerOnThird = null;
-   }
-
-   if (this.Game.RunnerOnSecond) {
-     this.Game.RunnerOnThird = this.Game.RunnerOnSecond;
-   }
-
-   this.Game.RunnerOnSecond = this.Game.RunnerOnFirst;
-   this.Game.RunnerOnFirst = this.Game.CurrentAtBat.Batter;
-   this.newOuts = 0;
-
-   this.showInfo("All baserunners safe after double-play attempt.");
- } else if (diceRoll > 76) {
-   //Out at second only
-   if (this.Game.RunnerOnThird) {
-     if(this.GetCurrentNumberOfOuts() == 0){
+    //Actual Outcome
+    let diceRoll = this.GenerateRandomNumber(1, 100);
+    if (diceRoll > 90) {
+      //Both Safe
+      if (this.Game.RunnerOnThird) {
         //Player from third scores
         this.Game.RunnersWhoScoredOnPlay.push(this.Game.RunnerOnThird);
         this.Game.RunnerOnThird = null;
-     }
-   }
+      }
 
-   if (this.Game.RunnerOnSecond) {
-     this.Game.RunnerOnThird = this.Game.RunnerOnSecond;
-   }
+      if (this.Game.RunnerOnSecond) {
+        this.Game.RunnerOnThird = this.Game.RunnerOnSecond;
+      }
 
-   this.Game.RunnerOnSecond = null;
-   this.Game.RunnerOnFirst = this.Game.CurrentAtBat.Batter;
-   this.newOuts = 1;
+      this.Game.RunnerOnSecond = this.Game.RunnerOnFirst;
+      this.Game.RunnerOnFirst = this.Game.CurrentAtBat.Batter;
+      this.newOuts = 0;
 
-   this.showInfo(
-     "Baserunner at second is out and baserunner at first is safe after double-play attempt."
-   );
- } else {
-   //Both out
-   this.Game.RunnerOnSecond = null;
-   this.Game.RunnerOnFirst = null;
-   this.newOuts = 2;
-   this.showError(
-     "Twin-killing! 5-4-3 Double-play. Both baserunners are out!"
-   );
- }
+      this.showInfo("All baserunners safe after double-play attempt.");
+    } else if (diceRoll > 76) {
+      //Out at second only
+      if (this.Game.RunnerOnThird) {
+        if (this.GetCurrentNumberOfOuts() == 0) {
+          //Player from third scores
+          this.Game.RunnersWhoScoredOnPlay.push(this.Game.RunnerOnThird);
+          this.Game.RunnerOnThird = null;
+        }
+      }
+
+      if (this.Game.RunnerOnSecond) {
+        this.Game.RunnerOnThird = this.Game.RunnerOnSecond;
+      }
+
+      this.Game.RunnerOnSecond = null;
+      this.Game.RunnerOnFirst = this.Game.CurrentAtBat.Batter;
+      this.newOuts = 1;
+
+      this.showInfo(
+        "Baserunner at second is out and baserunner at first is safe after double-play attempt."
+      );
+    } else {
+      //Both out
+      this.Game.RunnerOnSecond = null;
+      this.Game.RunnerOnFirst = null;
+      this.newOuts = 2;
+      this.showError(
+        "Twin-killing! 5-4-3 Double-play. Both baserunners are out!"
+      );
+    }
   }
 
-  PitcherToSecondToFirstDoublePlayGroundOut(){
+  PitcherToSecondToFirstDoublePlayGroundOut() {
     this.ctx.beginPath();
     this.ctx.moveTo(this.homePlateX, this.homePlateY);
 
@@ -2981,7 +3031,6 @@ export class GameplayComponent implements OnInit {
       }, 200)
     );
   }
-
 
   PitcherToFirstSingleGroundOut() {
     this.PlayBatHittingBallSound();

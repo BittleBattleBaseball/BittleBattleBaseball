@@ -1,597 +1,587 @@
 <div class="container-fluid"
-    style="text-align: center; margin: 0px; padding: 0px; background-color: transparent; color: white;">
-    <div class="row" style="margin: 0px; padding: 0px;">
-        <div class="desktopOnly col-md-2">
-            <table *ngIf="Game && Game.AwayTeam && Game.IsGameInProgress"
-                class="desktopOnly table table-bordered table-dark table-hover table-condensed"
-                style="margin-top: 20px; opacity: 0.9;">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th><img [src]="Game.AwayTeam.TeamLogoUrl" style="height: 50px; border: 3px solid white;" />
-                        </th>
-                        <th>Name</th>
-                        <th>Pos</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <ng-container *ngFor="let lineUpNumber of lineupNumbers">
-                        <tr *ngIf="Game && Game.AwayTeam && Game.AwayTeam.GetBatterAtLineupPosition(lineUpNumber)"
-                            [class]="((Game.AwayTeam.GetBatterAtLineupPosition(lineUpNumber).Id == Game.CurrentAtBat.Batter.Id) ? 'table-away' : undefined)">
-                            <td class="text-center">{{lineUpNumber}}</td>
-                            <td><img [src]="Game.AwayTeam.GetBatterAtLineupPosition(lineUpNumber).PlayerImageURL"
-                                    alt="!" onerror="this.src='../assets/images/emptyHeadshot.jpeg'" height="40px">
-                            </td>
-                            <td>
-                                {{Game.AwayTeam.GetBatterAtLineupPosition(lineUpNumber).Name}}
-                                <label class="small">
-                                    {{Game.AwayTeam.GetBatterAtLineupPosition(lineUpNumber).HittingSeasonStats.avg |
-                                    battingAvgPipe }}
-                                    {{Game.AwayTeam.GetBatterAtLineupPosition(lineUpNumber).HittingSeasonStats.hr}}HR
-                                    {{Game.AwayTeam.GetBatterAtLineupPosition(lineUpNumber).HittingSeasonStats.rbi}}RBI
-                                </label>
-                            </td>
-                            <td class="text-center">
-                                {{Game.AwayTeam.GetBatterAtLineupPosition(lineUpNumber).Position}}
-                            </td>
-                        </tr>
-                    </ng-container>
-                </tbody>
-            </table>
-        </div>
-        <div class="col-lg-8 col-md-12">
-            <div>
-                <table [style.visibility]="IsPlayInProgress ? 'hidden' : 'visible'"
-                    class="table table-bordered table-dark table-hover table-condensed table-responsive-md"
-                    style="margin-left: 5px; margin-right: 5px; margin-bottom: -11.7%; opacity: 0.8;">
-                    <thead>
-                        <tr>
-                            <th> <a [href]="'https://www.ballparksofbaseball.com/ballparks/' + Game.Ballpark.replace(' ', '-')"  target="_blank">{{Game.Ballpark}}</a></th>
-                            <ng-container *ngFor="let inning of Game.Innings">
-                                <th>{{inning.InningNumber}}</th>
-                            </ng-container>
-                            <th>R</th>
-                            <th>H</th>
-                            <th>E</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-
-                            <td class="text-left"><img [src]="Game.AwayTeam.TeamLogoUrl"
-                                    style="height: 50px; border: 3px solid white; margin-right: 15px;" />
-                                {{Game.AwayTeam.TeamSeason}}
-                                {{Game.AwayTeam.FullTeamName}}</td>
-                            <ng-container *ngFor="let inning of Game.Innings">
-                                <td>{{inning.AwayRunsScored}}</td>
-                            </ng-container>
-                            <td>{{Game.AwayTeamRuns}}</td>
-                            <td>{{Game.AwayTeamHits}}</td>
-                            <td>{{Game.AwayTeamErrors}}</td>
-                        </tr>
-                        <tr>
-                            <td class="text-left"><img [src]="Game.HomeTeam.TeamLogoUrl"
-                                    style="height: 50px; border: 3px solid white; margin-right: 15px;" />
-                                {{Game.HomeTeam.TeamSeason}}
-                                {{Game.HomeTeam.FullTeamName}}</td>
-                            <ng-container *ngFor="let inning of Game.Innings">
-                                <td> {{inning.HomeRunsScored}}</td>
-                            </ng-container>
-                            <td>{{Game.HomeTeamRuns}}</td>
-                            <td>{{Game.HomeTeamHits}}</td>
-                            <td>{{Game.HomeTeamErrors}}</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <br />
-            <canvas *ngIf="Game.IsGameInProgress" id="ballparkCanvas" style="max-width: 100%; margin-top: -10%;"
-                [width]="canvasWidth" [height]="canvasHeight">
-            </canvas>
-            <button class="btn btn-success btn-block"
-                *ngIf="!IsAutoPlayEnabled && Game.IsGameInProgress && !IsPlayInProgress" style="padding: 25px; margin-top: 0px !important;"
-                (click)="ExecuteNextPlay()"><img style="cursor:pointer; max-width: 25px;"
-                    src="../assets/images/baseballicon.png" />
-                Next Play <i class="fa fa-arrow-right"></i></button>
-
-            <button class="btn btn-success btn-block"
-                *ngIf="IsAutoPlayEnabled && Game.IsGameInProgress && !IsPlayInProgress" style="padding: 25px; margin-top: 0px !important;"
-                (click)="SetAutoExecuteNextPlay()"><img style="cursor:pointer; max-width: 25px;"
-                    src="../assets/images/baseballicon.png" />
-                Next Play - Set Auto Play <i class="fa fa-arrow-right"></i></button>
-
-            <label>
-                <input type="checkbox" [checked]="IsAutoPlayEnabled" (change)="setAutoPlay($event)" />
-                Is Auto-play Enabled
-            </label>
-        </div>
-        <div class="desktopOnly col-md-2">
-            <table *ngIf="Game && Game.HomeTeam && Game.IsGameInProgress"
-                class="desktopOnly table table-bordered table-dark table-hover table-condensed"
-                style="margin-top: 20px; opacity: 0.9;">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th><img [src]="Game.HomeTeam.TeamLogoUrl" style="height: 50px; border: 3px solid white;" />
-                        </th>
-                        <th>Name</th>
-                        <th>Pos</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <ng-container *ngFor="let lineUpNumber of lineupNumbers">
-                        <tr *ngIf="Game.HomeTeam.GetBatterAtLineupPosition(lineUpNumber)"
-                            [class]="((Game.HomeTeam.GetBatterAtLineupPosition(lineUpNumber).Id == Game.CurrentAtBat.Batter.Id) ? 'table-home' : undefined)">
-                            <td class="text-center">{{lineUpNumber}}</td>
-                            <td><img [src]="Game.HomeTeam.GetBatterAtLineupPosition(lineUpNumber).PlayerImageURL"
-                                    alt="!" onerror="this.src='../assets/images/emptyHeadshot.jpeg'" height="40px">
-                            </td>
-                            <td>{{Game.HomeTeam.GetBatterAtLineupPosition(lineUpNumber).Name}}
-                                <label class="small">
-                                    {{Game.HomeTeam.GetBatterAtLineupPosition(lineUpNumber).HittingSeasonStats.avg |
-                                    battingAvgPipe }}
-                                    {{Game.HomeTeam.GetBatterAtLineupPosition(lineUpNumber).HittingSeasonStats.hr}}HR
-                                    {{Game.HomeTeam.GetBatterAtLineupPosition(lineUpNumber).HittingSeasonStats.rbi}}RBI
-                                </label>
-
-                            </td>
-                            <td class="text-center">
-                                {{Game.HomeTeam.GetBatterAtLineupPosition(lineUpNumber).Position}}
-                            </td>
-                        </tr>
-                    </ng-container>
-                </tbody>
-            </table>
-        </div>
-
+  style="text-align: center; margin: 0px; padding: 0px; background-color: transparent; color: white;">
+  <div class="row" style="margin: 0px; padding: 0px;">
+    <div class="desktopOnly col-md-2">
+      <table *ngIf="Game && Game.AwayTeam && Game.IsGameInProgress"
+        class="desktopOnly table table-bordered table-dark table-hover table-condensed"
+        style="margin-top: 20px; opacity: 0.9;">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th><img [src]="Game.AwayTeam.TeamLogoUrl" style="height: 50px; border: 3px solid white;" />
+            </th>
+            <th>Name</th>
+            <th>Pos</th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-container *ngFor="let lineUpNumber of lineupNumbers">
+            <tr *ngIf="Game && Game.AwayTeam && Game.AwayTeam.GetBatterAtLineupPosition(lineUpNumber)"
+              [class]="((Game.AwayTeam.GetBatterAtLineupPosition(lineUpNumber).Id == Game.CurrentAtBat.Batter.Id) ? 'table-away' : undefined)">
+              <td class="text-center">{{lineUpNumber}}</td>
+              <td><img [src]="Game.AwayTeam.GetBatterAtLineupPosition(lineUpNumber).PlayerImageURL" alt="!"
+                  onerror="this.src='../assets/images/emptyHeadshot.jpeg'" height="40px">
+              </td>
+              <td>
+                {{Game.AwayTeam.GetBatterAtLineupPosition(lineUpNumber).Name}}
+                <label class="small">
+                  {{Game.AwayTeam.GetBatterAtLineupPosition(lineUpNumber).HittingSeasonStats.avg |
+                  battingAvgPipe }}
+                  {{Game.AwayTeam.GetBatterAtLineupPosition(lineUpNumber).HittingSeasonStats.hr}}HR
+                  {{Game.AwayTeam.GetBatterAtLineupPosition(lineUpNumber).HittingSeasonStats.rbi}}RBI
+                </label>
+              </td>
+              <td class="text-center">
+                {{Game.AwayTeam.GetBatterAtLineupPosition(lineUpNumber).Position}}
+              </td>
+            </tr>
+          </ng-container>
+        </tbody>
+      </table>
     </div>
-    <div class="row" style="margin: 0px; padding: 0px;">
-        <div class="col-sm-12">
-            <table class="table table-bordered table-dark table-hover table-condensed"
-                style="margin: 5px; opacity: 0.8;">
-                <thead>
-                    <tr>
-                        <th>Play-By-Play Summary</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>
-                            <div style="max-height: 80px; overflow-y: auto; ">
-                                <ng-container *ngFor="let pbp of Game.PlayByPlays.slice().reverse()">
-                                    <span>{{pbp}}</span>
-                                    <hr />
-                                </ng-container>
-                            </div>
+    <div class="col-lg-8 col-md-12">
+      <div>
+        <table [style.visibility]="IsPlayInProgress ? 'hidden' : 'visible'"
+          class="table table-bordered table-dark table-hover table-condensed table-responsive-md"
+          style="margin-left: 5px; margin-right: 5px; margin-bottom: -11.7%; opacity: 0.8;">
+          <thead>
+            <tr>
+              <th> <a [href]="'https://www.ballparksofbaseball.com/ballparks/' + Game.Ballpark.replace(' ', '-')"
+                  target="_blank">{{Game.Ballpark}}</a></th>
+              <ng-container *ngFor="let inning of Game.Innings">
+                <th>{{inning.InningNumber}}</th>
+              </ng-container>
+              <th>R</th>
+              <th>H</th>
+              <th>E</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
 
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+              <td class="text-left"><img [src]="Game.AwayTeam.TeamLogoUrl"
+                  style="height: 50px; border: 3px solid white; margin-right: 15px;" />
+                {{Game.AwayTeam.TeamSeason}}
+                {{Game.AwayTeam.FullTeamName}}</td>
+              <ng-container *ngFor="let inning of Game.Innings">
+                <td>{{inning.AwayRunsScored}}</td>
+              </ng-container>
+              <td>{{Game.AwayTeamRuns}}</td>
+              <td>{{Game.AwayTeamHits}}</td>
+              <td>{{Game.AwayTeamErrors}}</td>
+            </tr>
+            <tr>
+              <td class="text-left"><img [src]="Game.HomeTeam.TeamLogoUrl"
+                  style="height: 50px; border: 3px solid white; margin-right: 15px;" />
+                {{Game.HomeTeam.TeamSeason}}
+                {{Game.HomeTeam.FullTeamName}}</td>
+              <ng-container *ngFor="let inning of Game.Innings">
+                <td> {{inning.HomeRunsScored}}</td>
+              </ng-container>
+              <td>{{Game.HomeTeamRuns}}</td>
+              <td>{{Game.HomeTeamHits}}</td>
+              <td>{{Game.HomeTeamErrors}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <br />
+      <canvas *ngIf="Game.IsGameInProgress" id="ballparkCanvas" style="max-width: 100%; margin-top: -10%;"
+        [width]="canvasWidth" [height]="canvasHeight">
+      </canvas>
+      <button class="btn btn-success btn-block" *ngIf="!IsAutoPlayEnabled && Game.IsGameInProgress && !IsPlayInProgress"
+        style="padding: 25px; margin-top: 0px !important;" (click)="ExecuteNextPlay()"><img
+          style="cursor:pointer; max-width: 25px;" src="../assets/images/baseballicon.png" />
+        Next Play <i class="fa fa-arrow-right"></i></button>
+
+      <button class="btn btn-success btn-block" *ngIf="IsAutoPlayEnabled && Game.IsGameInProgress && !IsPlayInProgress"
+        style="padding: 25px; margin-top: 0px !important;" (click)="SetAutoExecuteNextPlay()"><img
+          style="cursor:pointer; max-width: 25px;" src="../assets/images/baseballicon.png" />
+        Next Play - Set Auto Play <i class="fa fa-arrow-right"></i></button>
+
+      <label>
+        <input type="checkbox" [checked]="IsAutoPlayEnabled" (change)="setAutoPlay($event)" />
+        Is Auto-play Enabled
+      </label>
+    </div>
+    <div class="desktopOnly col-md-2">
+      <table *ngIf="Game && Game.HomeTeam && Game.IsGameInProgress"
+        class="desktopOnly table table-bordered table-dark table-hover table-condensed"
+        style="margin-top: 20px; opacity: 0.9;">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th><img [src]="Game.HomeTeam.TeamLogoUrl" style="height: 50px; border: 3px solid white;" />
+            </th>
+            <th>Name</th>
+            <th>Pos</th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-container *ngFor="let lineUpNumber of lineupNumbers">
+            <tr *ngIf="Game.HomeTeam.GetBatterAtLineupPosition(lineUpNumber)"
+              [class]="((Game.HomeTeam.GetBatterAtLineupPosition(lineUpNumber).Id == Game.CurrentAtBat.Batter.Id) ? 'table-home' : undefined)">
+              <td class="text-center">{{lineUpNumber}}</td>
+              <td><img [src]="Game.HomeTeam.GetBatterAtLineupPosition(lineUpNumber).PlayerImageURL" alt="!"
+                  onerror="this.src='../assets/images/emptyHeadshot.jpeg'" height="40px">
+              </td>
+              <td>{{Game.HomeTeam.GetBatterAtLineupPosition(lineUpNumber).Name}}
+                <label class="small">
+                  {{Game.HomeTeam.GetBatterAtLineupPosition(lineUpNumber).HittingSeasonStats.avg |
+                  battingAvgPipe }}
+                  {{Game.HomeTeam.GetBatterAtLineupPosition(lineUpNumber).HittingSeasonStats.hr}}HR
+                  {{Game.HomeTeam.GetBatterAtLineupPosition(lineUpNumber).HittingSeasonStats.rbi}}RBI
+                </label>
+
+              </td>
+              <td class="text-center">
+                {{Game.HomeTeam.GetBatterAtLineupPosition(lineUpNumber).Position}}
+              </td>
+            </tr>
+          </ng-container>
+        </tbody>
+      </table>
     </div>
 
-    <!-- BOX SCORE -->
-    <div class="row" style="margin: 0px; padding: 0px;">
-        <div class="col-md-6">
-          <div *ngIf="!Game.CurrentInning.IsBottomOfInning || !Game.IsGameInProgress">
-            <h5 class="text-left"><img [src]="Game.AwayTeam.TeamLogoUrl"
-                    style="height: 50px; border: 3px solid white; margin-right: 15px;" />
-                {{Game.AwayTeam.TeamSeason}} {{Game.AwayTeam.FullTeamName}} Hitting</h5>
-            <hr />
-            <table *ngIf="Game && Game.AwayTeam"
-                class="table table-bordered table-dark table-hover table-condensed table-responsive-md"
-                style="margin-top: 20px; opacity: 0.9;">
-                <thead>
-                    <tr>
-                        <th>Hitter</th>
-                        <th>AB</th>
-                        <th>R</th>
-                        <th>H</th>
-                        <th>RBI</th>
-                        <th>BB</th>
-                        <th>K</th>
-                    </tr>
-                </thead>
-                <tbody *ngIf="Game && Game.AwayTeam">
-                    <ng-container *ngFor="let lineUpNumber of lineupNumbers">
-                        <tr *ngIf="Game.AwayTeam.GetBatterAtLineupPosition(lineUpNumber)"
-                            [class]="((Game.AwayTeam.GetBatterAtLineupPosition(lineUpNumber).Id == Game.CurrentAtBat.Batter.Id) ? 'table-away' : undefined)">
-                            <td class="text-left"> {{Game.AwayTeam.GetBatterAtLineupPosition(lineUpNumber).Name}} -
-                                {{Game.AwayTeam.GetBatterAtLineupPosition(lineUpNumber).Position}}</td>
-                            <td>
-                                {{Game.GetAtBats(Game.AwayTeam.GetBatterAtLineupPosition(lineUpNumber).Id, false)}}
-                            </td>
-                            <td>
-                                {{Game.AwayTeam.GetBatterAtLineupPosition(lineUpNumber).RunsScored}}
-                            </td>
-                            <td class="text-center">
-                                {{Game.GetHits(Game.AwayTeam.GetBatterAtLineupPosition(lineUpNumber).Id, false)}}
-                            </td>
-                            <td>
-                                {{Game.AwayTeam.GetBatterAtLineupPosition(lineUpNumber).RBIs}}
-                            </td>
-                            <td class="text-center">
-                                {{Game.GetWalks(Game.AwayTeam.GetBatterAtLineupPosition(lineUpNumber).Id, false)}}
-                            </td>
-                            <td> {{Game.GetStrikeouts(Game.AwayTeam.GetBatterAtLineupPosition(lineUpNumber).Id, false)}}
-                            </td>
-                        </tr>
-                    </ng-container>
-                    <tr>
-                        <td colspan="7">
-                            <label>BENCH</label>
-                        </td>
-                    </tr>
-                    <ng-container *ngFor="let benchPlayer of Game.AwayTeam.BenchPositionPlayers; let i = index;">
-                        <tr>
-                            <td class="text-left"><label class="small" *ngIf="!benchPlayer.IsEligible">X-</label>
-                                {{benchPlayer.Name}} -
-                                {{benchPlayer.Position}} <br />
-                                <label class="small">
-                                  {{benchPlayer.HittingSeasonStats.avg |
-                                  battingAvgPipe }}
-                                  {{benchPlayer.HittingSeasonStats.hr}}HR
-                                  {{benchPlayer.HittingSeasonStats.rbi}}RBI
-                              </label>
-                                <span style="float: right;" *ngIf="benchPlayer.IsEligible">
-                                    <button *ngIf="benchPlayer.Position == 'C'" class="btn btn-primary btn-pos"
-                                        (click)="setLineupPosition('C', false, benchPlayer, i)">C</button>
-                                    <button class="btn btn-primary btn-pos"
-                                        (click)="setLineupPosition('1B', false, benchPlayer, i)">1B</button>
-                                    <button
-                                        *ngIf="(benchPlayer.Position == '2B' || benchPlayer.Position == 'SS' || benchPlayer.Position == '3B')"
-                                        class="btn btn-primary btn-pos"
-                                        (click)="setLineupPosition('2B', false, benchPlayer, i)">2B</button>
-                                    <button
-                                        *ngIf="(benchPlayer.Position == '2B' || benchPlayer.Position == 'SS' || benchPlayer.Position == '3B')"
-                                        class="btn btn-primary btn-pos"
-                                        (click)="setLineupPosition('SS', false, benchPlayer, i)">SS</button>
-                                    <button
-                                        *ngIf="(benchPlayer.Position == '2B' || benchPlayer.Position == 'SS' || benchPlayer.Position == '3B' || benchPlayer.Position == '1B')"
-                                        class="btn btn-primary btn-pos"
-                                        (click)="setLineupPosition('3B', false, benchPlayer, i)">3B</button>
-                                    <button
-                                        *ngIf="(benchPlayer.Position == 'LF' || benchPlayer.Position == 'CF' || benchPlayer.Position == 'RF' || benchPlayer.Position == 'OF' )"
-                                        class="btn btn-primary btn-pos"
-                                        (click)="setLineupPosition('LF', false, benchPlayer, i)">LF</button>
-                                    <button
-                                        *ngIf="(benchPlayer.Position == 'LF' || benchPlayer.Position == 'CF' || benchPlayer.Position == 'RF' || benchPlayer.Position == 'OF' )"
-                                        class="btn btn-primary btn-pos"
-                                        (click)="setLineupPosition('CF', false, benchPlayer, i)">CF</button>
-                                    <button
-                                        *ngIf="(benchPlayer.Position == 'LF' || benchPlayer.Position == 'CF' || benchPlayer.Position == 'RF' || benchPlayer.Position == 'OF' )"
-                                        class="btn btn-primary btn-pos"
-                                        (click)="setLineupPosition('RF', false, benchPlayer, i)">RF</button>
-                                </span>
-                            </td>
-                            <td>
-                                {{Game.GetAtBats(benchPlayer.Id, false)}}
-                            </td>
-                            <td>
-                                {{benchPlayer.RunsScored}}
-                            </td>
-                            <td class="text-center">
-                                {{Game.GetHits(benchPlayer.Id, false)}}
-                            </td>
-                            <td>
-                                {{benchPlayer.RBIs}}
-                            </td>
-                            <td class="text-center">
-                                {{Game.GetWalks(benchPlayer.Id, false)}}
-                            </td>
-                            <td> {{Game.GetStrikeouts(benchPlayer.Id, false)}}
-                            </td>
-                        </tr>
-                    </ng-container>
-                </tbody>
-            </table>
-            <br />
-            <button class="btn btn-primary btn-pos"> </button> <label> = Substitution</label>
-          </div>
-        </div>
-        <div class="col-md-6">
-          <div *ngIf="Game.CurrentInning.IsBottomOfInning || !Game.IsGameInProgress">
-            <h5 class="text-left"><img [src]="Game.HomeTeam.TeamLogoUrl"
-                    style="height: 50px; border: 3px solid white; margin-right: 15px;" />
-                {{Game.HomeTeam.TeamSeason}} {{Game.HomeTeam.FullTeamName}} Hitting</h5>
-            <hr />
-            <table *ngIf="Game && Game.HomeTeam"
-                class="table table-bordered table-dark table-hover table-condensed table-responsive-md"
-                style="margin-top: 20px; opacity: 0.9;">
-                <thead>
-                    <tr>
-                        <th>Hitter</th>
-                        <th>AB</th>
-                        <th>R</th>
-                        <th>H</th>
-                        <th>RBI</th>
-                        <th>BB</th>
-                        <th>K</th>
-                    </tr>
-                </thead>
-                <tbody *ngIf="Game && Game.HomeTeam">
-                    <ng-container *ngFor="let lineUpNumber of lineupNumbers">
-                        <tr *ngIf="Game.HomeTeam.GetBatterAtLineupPosition(lineUpNumber)"
-                            [class]="((Game.HomeTeam.GetBatterAtLineupPosition(lineUpNumber).Id == Game.CurrentAtBat.Batter.Id) ? 'table-away' : undefined)">
-                            <td class="text-left"> {{Game.HomeTeam.GetBatterAtLineupPosition(lineUpNumber).Name}} -
-                                {{Game.HomeTeam.GetBatterAtLineupPosition(lineUpNumber).Position}}</td>
-                            <td>
-                                {{Game.GetAtBats(Game.HomeTeam.GetBatterAtLineupPosition(lineUpNumber).Id, true)}}
-                            </td>
-                            <td>
-                                {{Game.HomeTeam.GetBatterAtLineupPosition(lineUpNumber).RunsScored}}
-                            </td>
-                            <td class="text-center">
-                                {{Game.GetHits(Game.HomeTeam.GetBatterAtLineupPosition(lineUpNumber).Id, true)}}
-                            </td>
-                            <td>
-                                {{Game.HomeTeam.GetBatterAtLineupPosition(lineUpNumber).RBIs}}
-                            </td>
-                            <td class="text-center">
-                                {{Game.GetWalks(Game.HomeTeam.GetBatterAtLineupPosition(lineUpNumber).Id, true)}}
-                            </td>
-                            <td> {{Game.GetStrikeouts(Game.HomeTeam.GetBatterAtLineupPosition(lineUpNumber).Id, true)}}
-                            </td>
-                        </tr>
-                    </ng-container>
-                    <tr>
-                        <td colspan="7">
-                            <label>BENCH</label>
-                        </td>
-                    </tr>
+  </div>
+  <div class="row" style="margin: 0px; padding: 0px;">
+    <div class="col-sm-12">
+      <table class="table table-bordered table-dark table-hover table-condensed" style="margin: 5px; opacity: 0.8;">
+        <thead>
+          <tr>
+            <th>Play-By-Play Summary</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <div style="max-height: 80px; overflow-y: auto; ">
+                <ng-container *ngFor="let pbp of Game.PlayByPlays.slice().reverse()">
+                  <span>{{pbp}}</span>
+                  <hr />
+                </ng-container>
+              </div>
 
-                    <ng-container *ngFor="let benchPlayer of Game.HomeTeam.BenchPositionPlayers; let i = index;">
-                        <tr>
-                            <td class="text-left"><label class="small" *ngIf="!benchPlayer.IsEligible">X-</label>
-                                {{benchPlayer.Name}} -
-                                {{benchPlayer.Position}} <br />
-                                <label class="small">
-                                  {{benchPlayer.HittingSeasonStats.avg |
-                                  battingAvgPipe }}
-                                  {{benchPlayer.HittingSeasonStats.hr}}HR
-                                  {{benchPlayer.HittingSeasonStats.rbi}}RBI
-                              </label>
-                                <span style="float: right;" *ngIf="benchPlayer.IsEligible">
-                                    <button *ngIf="benchPlayer.Position == 'C'" class="btn btn-danger btn-pos"
-                                        (click)="setLineupPosition('C', true, benchPlayer, i)">C</button>
-                                    <button class="btn btn-danger btn-pos"
-                                        (click)="setLineupPosition('1B', true, benchPlayer, i)">1B</button>
-                                    <button
-                                        *ngIf="(benchPlayer.Position == '2B' || benchPlayer.Position == 'SS' || benchPlayer.Position == '3B')"
-                                        class="btn btn-danger btn-pos"
-                                        (click)="setLineupPosition('2B', true, benchPlayer, i)">2B</button>
-                                    <button
-                                        *ngIf="(benchPlayer.Position == '2B' || benchPlayer.Position == 'SS' || benchPlayer.Position == '3B')"
-                                        class="btn btn-danger btn-pos"
-                                        (click)="setLineupPosition('SS', true, benchPlayer, i)">SS</button>
-                                    <button
-                                        *ngIf="(benchPlayer.Position == '2B' || benchPlayer.Position == 'SS' || benchPlayer.Position == '3B' || benchPlayer.Position == '1B')"
-                                        class="btn btn-danger btn-pos"
-                                        (click)="setLineupPosition('3B', true, benchPlayer, i)">3B</button>
-                                    <button
-                                        *ngIf="(benchPlayer.Position == 'LF' || benchPlayer.Position == 'CF' || benchPlayer.Position == 'RF' || benchPlayer.Position == 'OF' )"
-                                        class="btn btn-danger btn-pos"
-                                        (click)="setLineupPosition('LF', true, benchPlayer, i)">LF</button>
-                                    <button
-                                        *ngIf="(benchPlayer.Position == 'LF' || benchPlayer.Position == 'CF' || benchPlayer.Position == 'RF' || benchPlayer.Position == 'OF' )"
-                                        class="btn btn-danger btn-pos"
-                                        (click)="setLineupPosition('CF', true, benchPlayer, i)">CF</button>
-                                    <button
-                                        *ngIf="(benchPlayer.Position == 'LF' || benchPlayer.Position == 'CF' || benchPlayer.Position == 'RF' || benchPlayer.Position == 'OF' )"
-                                        class="btn btn-danger btn-pos"
-                                        (click)="setLineupPosition('RF', true, benchPlayer, i)">RF</button>
-                                </span>
-                            </td>
-                            <td>
-                                {{Game.GetAtBats(benchPlayer.Id, false)}}
-                            </td>
-                            <td>
-                                {{benchPlayer.RunsScored}}
-                            </td>
-                            <td class="text-center">
-                                {{Game.GetHits(benchPlayer.Id, false)}}
-                            </td>
-                            <td>
-                                {{benchPlayer.RBIs}}
-                            </td>
-                            <td class="text-center">
-                                {{Game.GetWalks(benchPlayer.Id, false)}}
-                            </td>
-                            <td> {{Game.GetStrikeouts(benchPlayer.Id, false)}}
-                            </td>
-                        </tr>
-                    </ng-container>
-                </tbody>
-            </table>
-            <br />
-            <button class="btn btn-danger btn-pos"> </button> <label> = Substitution</label>
-        </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- BOX SCORE -->
+  <div class="row" style="margin: 0px; padding: 0px;">
+    <div class="col-md-6">
+      <div *ngIf="!Game.CurrentInning.IsBottomOfInning || !Game.IsGameInProgress">
+        <h5 class="text-left"><img [src]="Game.AwayTeam.TeamLogoUrl"
+            style="height: 50px; border: 3px solid white; margin-right: 15px;" />
+          {{Game.AwayTeam.TeamSeason}} {{Game.AwayTeam.FullTeamName}} Hitting</h5>
+        <hr />
+        <table *ngIf="Game && Game.AwayTeam"
+          class="table table-bordered table-dark table-hover table-condensed table-responsive-md"
+          style="margin-top: 20px; opacity: 0.9;">
+          <thead>
+            <tr>
+              <th>Hitter</th>
+              <th>AB</th>
+              <th>R</th>
+              <th>H</th>
+              <th>RBI</th>
+              <th>BB</th>
+              <th>K</th>
+            </tr>
+          </thead>
+          <tbody *ngIf="Game && Game.AwayTeam">
+            <ng-container *ngFor="let lineUpNumber of lineupNumbers">
+              <tr *ngIf="Game.AwayTeam.GetBatterAtLineupPosition(lineUpNumber)"
+                [class]="((Game.AwayTeam.GetBatterAtLineupPosition(lineUpNumber).Id == Game.CurrentAtBat.Batter.Id) ? 'table-away' : undefined)">
+                <td class="text-left"> {{Game.AwayTeam.GetBatterAtLineupPosition(lineUpNumber).Name}} -
+                  {{Game.AwayTeam.GetBatterAtLineupPosition(lineUpNumber).Position}}</td>
+                <td>
+                  {{Game.GetAtBats(Game.AwayTeam.GetBatterAtLineupPosition(lineUpNumber).Id, false)}}
+                </td>
+                <td>
+                  {{Game.AwayTeam.GetBatterAtLineupPosition(lineUpNumber).RunsScored}}
+                </td>
+                <td class="text-center">
+                  {{Game.GetHits(Game.AwayTeam.GetBatterAtLineupPosition(lineUpNumber).Id, false)}}
+                </td>
+                <td>
+                  {{Game.AwayTeam.GetBatterAtLineupPosition(lineUpNumber).RBIs}}
+                </td>
+                <td class="text-center">
+                  {{Game.GetWalks(Game.AwayTeam.GetBatterAtLineupPosition(lineUpNumber).Id, false)}}
+                </td>
+                <td> {{Game.GetStrikeouts(Game.AwayTeam.GetBatterAtLineupPosition(lineUpNumber).Id, false)}}
+                </td>
+              </tr>
+            </ng-container>
+            <tr>
+              <td colspan="7">
+                <label>BENCH</label>
+              </td>
+            </tr>
+            <ng-container *ngFor="let benchPlayer of Game.AwayTeam.BenchPositionPlayers; let i = index;">
+              <tr>
+                <td class="text-left"><label class="small" *ngIf="!benchPlayer.IsEligible">X-</label>
+                  {{benchPlayer.Name}} -
+                  {{benchPlayer.Position}} <br />
+                  <label class="small">
+                    {{benchPlayer.HittingSeasonStats.avg |
+                    battingAvgPipe }}
+                    {{benchPlayer.HittingSeasonStats.hr}}HR
+                    {{benchPlayer.HittingSeasonStats.rbi}}RBI
+                  </label>
+                  <span style="float: right;" *ngIf="benchPlayer.IsEligible">
+                    <button *ngIf="benchPlayer.Position == 'C'" class="btn btn-primary btn-pos"
+                      (click)="setLineupPosition('C', false, benchPlayer, i)">C</button>
+                    <button class="btn btn-primary btn-pos"
+                      (click)="setLineupPosition('1B', false, benchPlayer, i)">1B</button>
+                    <button
+                      *ngIf="(benchPlayer.Position == '2B' || benchPlayer.Position == 'SS' || benchPlayer.Position == '3B')"
+                      class="btn btn-primary btn-pos"
+                      (click)="setLineupPosition('2B', false, benchPlayer, i)">2B</button>
+                    <button
+                      *ngIf="(benchPlayer.Position == '2B' || benchPlayer.Position == 'SS' || benchPlayer.Position == '3B')"
+                      class="btn btn-primary btn-pos"
+                      (click)="setLineupPosition('SS', false, benchPlayer, i)">SS</button>
+                    <button
+                      *ngIf="(benchPlayer.Position == '2B' || benchPlayer.Position == 'SS' || benchPlayer.Position == '3B' || benchPlayer.Position == '1B')"
+                      class="btn btn-primary btn-pos"
+                      (click)="setLineupPosition('3B', false, benchPlayer, i)">3B</button>
+                    <button
+                      *ngIf="(benchPlayer.Position == 'LF' || benchPlayer.Position == 'CF' || benchPlayer.Position == 'RF' || benchPlayer.Position == 'OF' )"
+                      class="btn btn-primary btn-pos"
+                      (click)="setLineupPosition('LF', false, benchPlayer, i)">LF</button>
+                    <button
+                      *ngIf="(benchPlayer.Position == 'LF' || benchPlayer.Position == 'CF' || benchPlayer.Position == 'RF' || benchPlayer.Position == 'OF' )"
+                      class="btn btn-primary btn-pos"
+                      (click)="setLineupPosition('CF', false, benchPlayer, i)">CF</button>
+                    <button
+                      *ngIf="(benchPlayer.Position == 'LF' || benchPlayer.Position == 'CF' || benchPlayer.Position == 'RF' || benchPlayer.Position == 'OF' )"
+                      class="btn btn-primary btn-pos"
+                      (click)="setLineupPosition('RF', false, benchPlayer, i)">RF</button>
+                  </span>
+                </td>
+                <td>
+                  {{Game.GetAtBats(benchPlayer.Id, false)}}
+                </td>
+                <td>
+                  {{benchPlayer.RunsScored}}
+                </td>
+                <td class="text-center">
+                  {{Game.GetHits(benchPlayer.Id, false)}}
+                </td>
+                <td>
+                  {{benchPlayer.RBIs}}
+                </td>
+                <td class="text-center">
+                  {{Game.GetWalks(benchPlayer.Id, false)}}
+                </td>
+                <td> {{Game.GetStrikeouts(benchPlayer.Id, false)}}
+                </td>
+              </tr>
+            </ng-container>
+          </tbody>
+        </table>
+        <br />
+        <button class="btn btn-primary btn-pos"> </button> <label> = Substitution</label>
       </div>
     </div>
-    <hr />
-    <!-- PITCHING -->
-    <div class="row" style="margin: 0px; padding: 0px;">
-        <div class="col-md-6">
-          <div *ngIf="Game.CurrentInning.IsBottomOfInning || !Game.IsGameInProgress">
-            <h5 class="text-left"><img [src]="Game.AwayTeam.TeamLogoUrl"
-                    style="height: 50px; border: 3px solid white; margin-right: 15px;" />
-                {{Game.AwayTeam.TeamSeason}} {{Game.AwayTeam.FullTeamName}} Pitching</h5>
-            <hr />
-            <table *ngIf="Game && Game.AwayTeam"
-                class="table table-bordered table-dark table-hover table-condensed table-responsive-md"
-                style="margin-top: 20px; opacity: 0.9;">
-                <thead>
-                    <tr>
-                        <th>Pitcher</th>
-                        <th>IP</th>
-                        <th>H</th>
-                        <th>R</th>
-                        <th>BB</th>
-                        <th>K</th>
-                        <th>HR</th>
-                    </tr>
-                </thead>
-                <tbody *ngIf="Game && Game.AwayTeam">
-                    <ng-container>
-                        <tr>
-                            <td class="text-left"> {{Game.AwayTeam.Pitcher.Name}}</td>
-                            <td>
-                                {{Game.GetInningsPitched(Game.AwayTeam.Pitcher.Id, false)}}
-                            </td>
-                            <td>
-                                {{Game.GetHitsAllowed(Game.AwayTeam.Pitcher.Id, false)}}
-                            </td>
-                            <td class="text-center">
-                                {{Game.GetRunsAllowed(Game.AwayTeam.Pitcher.Id, false)}}
-                            </td>
-                            <td class="text-center">
-                                {{Game.GetHitsAllowed(Game.AwayTeam.Pitcher.Id, false)}}
-                            </td>
-                            <td>
-                                {{Game.GetStrikeoutsByPitcher(Game.AwayTeam.Pitcher.Id, false)}}
-                            </td>
-                            <td class="text-center">
-                                {{Game.GetHomeRunsAllowed(Game.AwayTeam.Pitcher.Id, false)}}
-                            </td>
-                        </tr>
-                    </ng-container>
-                    <tr>
-                        <td colspan="9">
-                            <label>BULLPEN</label>
-                        </td>
-                    </tr>
-                    <ng-container *ngFor="let benchPlayer of Game.AwayTeam.BenchPitchers; let i = index;">
-                        <tr>
-                            <td class="text-left"><label class="small" *ngIf="!benchPlayer.IsEligible">X-</label>
-                                {{benchPlayer.Name}} <br />
-                                <label class="small">
-                                  {{benchPlayer.PitchingSeasonStats.wins + "-" + benchPlayer.PitchingSeasonStats.losses}}
-                                  {{benchPlayer.PitchingSeasonStats.era}}ERA
-                                  {{benchPlayer.PitchingSeasonStats.whip}}WHIP
-                              </label>
-                                <span style="float: right;" *ngIf="benchPlayer.IsEligible">
-                                    <button *ngIf="benchPlayer.Position == 'P' || benchPlayer.Position == 'SP'"
-                                        class="btn btn-primary btn-pos"
-                                        (click)="setLineupPosition('P', false, benchPlayer, i)">P</button>
-                                </span>
-                            </td>
-                            <td>
-                                {{Game.GetInningsPitched(benchPlayer.Id, false)}}
-                            </td>
-                            <td>
-                                {{Game.GetHitsAllowed(benchPlayer.Id, false)}}
-                            </td>
-                            <td class="text-center">
-                                {{Game.GetRunsAllowed(benchPlayer.Id, false)}}
-                            </td>
-                            <td class="text-center">
-                                {{Game.GetHitsAllowed(benchPlayer.Id, false)}}
-                            </td>
-                            <td>
-                                {{Game.GetStrikeoutsByPitcher(benchPlayer.Id, false)}}
-                            </td>
-                            <td class="text-center">
-                                {{Game.GetHomeRunsAllowed(benchPlayer.Id, false)}}
-                            </td>
-                        </tr>
-                    </ng-container>
-                </tbody>
-            </table>
-            <br />
-            <button class="btn btn-primary btn-pos"> </button> <label> = Substitution</label>
-          </div>
-        </div>
-        <div class="col-md-6">
-          <div *ngIf="!Game.CurrentInning.IsBottomOfInning || !Game.IsGameInProgress">
-            <h5 class="text-left"><img [src]="Game.HomeTeam.TeamLogoUrl"
-                    style="height: 50px; border: 3px solid white; margin-right: 15px;" />
-                {{Game.HomeTeam.TeamSeason}} {{Game.HomeTeam.FullTeamName}} Pitching</h5>
-            <hr />
-            <table *ngIf="Game && Game.HomeTeam"
-                class="table table-bordered table-dark table-hover table-condensed table-responsive-md"
-                style="margin-top: 20px; opacity: 0.9;">
-                <thead>
-                    <tr>
-                        <th>Pitcher</th>
-                        <th>IP</th>
-                        <th>H</th>
-                        <th>R</th>
-                        <th>BB</th>
-                        <th>K</th>
-                        <th>HR</th>
-                    </tr>
-                </thead>
-                <tbody *ngIf="Game && Game.HomeTeam">
-                    <ng-container>
-                        <tr>
-                            <td class="text-left"> {{Game.HomeTeam.Pitcher.Name}}</td>
-                            <td>
-                                {{Game.GetInningsPitched(Game.HomeTeam.Pitcher.Id, true)}}
-                            </td>
-                            <td>
-                                {{Game.GetHitsAllowed(Game.HomeTeam.Pitcher.Id, true)}}
-                            </td>
-                            <td class="text-center">
-                                {{Game.GetRunsAllowed(Game.HomeTeam.Pitcher.Id, true)}}
-                            </td>
-                            <td class="text-center">
-                                {{Game.GetHitsAllowed(Game.HomeTeam.Pitcher.Id, true)}}
-                            </td>
-                            <td>
-                                {{Game.GetStrikeoutsByPitcher(Game.HomeTeam.Pitcher.Id, true)}}
-                            </td>
-                            <td class="text-center">
-                                {{Game.GetHomeRunsAllowed(Game.HomeTeam.Pitcher.Id, true)}}
-                            </td>
-                        </tr>
-                    </ng-container>
-                    <tr>
-                        <td colspan="9">
-                            <label>BULLPEN</label>
-                        </td>
-                    </tr>
-                    <ng-container *ngFor="let benchPlayer of Game.HomeTeam.BenchPitchers; let i = index;">
-                        <tr>
-                            <td class="text-left"><label class="small" *ngIf="!benchPlayer.IsEligible">X-</label>
-                                {{benchPlayer.Name}} <br />
-                                <label class="small">
-                                  {{benchPlayer.PitchingSeasonStats.wins + "-" + benchPlayer.PitchingSeasonStats.losses}}
-                                  {{benchPlayer.PitchingSeasonStats.era}}ERA
-                                  {{benchPlayer.PitchingSeasonStats.whip}}WHIP
-                              </label>
-                                <span style="float: right;" *ngIf="benchPlayer.IsEligible">
-                                    <button *ngIf="benchPlayer.Position == 'P' || benchPlayer.Position == 'SP'"
-                                        class="btn btn-danger btn-pos"
-                                        (click)="setLineupPosition('P', true, benchPlayer, i)">P</button>
-                                </span>
-                            </td>
-                            <td>
-                                {{Game.GetInningsPitched(benchPlayer.Id, true)}}
-                            </td>
-                            <td>
-                                {{Game.GetHitsAllowed(benchPlayer.Id, true)}}
-                            </td>
-                            <td class="text-center">
-                                {{Game.GetRunsAllowed(benchPlayer.Id, true)}}
-                            </td>
-                            <td class="text-center">
-                                {{Game.GetHitsAllowed(benchPlayer.Id, true)}}
-                            </td>
-                            <td>
-                                {{Game.GetStrikeoutsByPitcher(benchPlayer.Id, true)}}
-                            </td>
-                            <td class="text-center">
-                                {{Game.GetHomeRunsAllowed(benchPlayer.Id, true)}}
-                            </td>
-                        </tr>
-                    </ng-container>
-                </tbody>
-            </table>
-            <br />
-            <button class="btn btn-danger btn-pos"> </button> <label> = Substitution</label>
-          </div>
-        </div>
+    <div class="col-md-6">
+      <div *ngIf="Game.CurrentInning.IsBottomOfInning || !Game.IsGameInProgress">
+        <h5 class="text-left"><img [src]="Game.HomeTeam.TeamLogoUrl"
+            style="height: 50px; border: 3px solid white; margin-right: 15px;" />
+          {{Game.HomeTeam.TeamSeason}} {{Game.HomeTeam.FullTeamName}} Hitting</h5>
+        <hr />
+        <table *ngIf="Game && Game.HomeTeam"
+          class="table table-bordered table-dark table-hover table-condensed table-responsive-md"
+          style="margin-top: 20px; opacity: 0.9;">
+          <thead>
+            <tr>
+              <th>Hitter</th>
+              <th>AB</th>
+              <th>R</th>
+              <th>H</th>
+              <th>RBI</th>
+              <th>BB</th>
+              <th>K</th>
+            </tr>
+          </thead>
+          <tbody *ngIf="Game && Game.HomeTeam">
+            <ng-container *ngFor="let lineUpNumber of lineupNumbers">
+              <tr *ngIf="Game.HomeTeam.GetBatterAtLineupPosition(lineUpNumber)"
+                [class]="((Game.HomeTeam.GetBatterAtLineupPosition(lineUpNumber).Id == Game.CurrentAtBat.Batter.Id) ? 'table-away' : undefined)">
+                <td class="text-left"> {{Game.HomeTeam.GetBatterAtLineupPosition(lineUpNumber).Name}} -
+                  {{Game.HomeTeam.GetBatterAtLineupPosition(lineUpNumber).Position}}</td>
+                <td>
+                  {{Game.GetAtBats(Game.HomeTeam.GetBatterAtLineupPosition(lineUpNumber).Id, true)}}
+                </td>
+                <td>
+                  {{Game.HomeTeam.GetBatterAtLineupPosition(lineUpNumber).RunsScored}}
+                </td>
+                <td class="text-center">
+                  {{Game.GetHits(Game.HomeTeam.GetBatterAtLineupPosition(lineUpNumber).Id, true)}}
+                </td>
+                <td>
+                  {{Game.HomeTeam.GetBatterAtLineupPosition(lineUpNumber).RBIs}}
+                </td>
+                <td class="text-center">
+                  {{Game.GetWalks(Game.HomeTeam.GetBatterAtLineupPosition(lineUpNumber).Id, true)}}
+                </td>
+                <td> {{Game.GetStrikeouts(Game.HomeTeam.GetBatterAtLineupPosition(lineUpNumber).Id, true)}}
+                </td>
+              </tr>
+            </ng-container>
+            <tr>
+              <td colspan="7">
+                <label>BENCH</label>
+              </td>
+            </tr>
 
+            <ng-container *ngFor="let benchPlayer of Game.HomeTeam.BenchPositionPlayers; let i = index;">
+              <tr>
+                <td class="text-left"><label class="small" *ngIf="!benchPlayer.IsEligible">X-</label>
+                  {{benchPlayer.Name}} -
+                  {{benchPlayer.Position}} <br />
+                  <label class="small">
+                    {{benchPlayer.HittingSeasonStats.avg |
+                    battingAvgPipe }}
+                    {{benchPlayer.HittingSeasonStats.hr}}HR
+                    {{benchPlayer.HittingSeasonStats.rbi}}RBI
+                  </label>
+                  <span style="float: right;" *ngIf="benchPlayer.IsEligible">
+                    <button *ngIf="benchPlayer.Position == 'C'" class="btn btn-danger btn-pos"
+                      (click)="setLineupPosition('C', true, benchPlayer, i)">C</button>
+                    <button class="btn btn-danger btn-pos"
+                      (click)="setLineupPosition('1B', true, benchPlayer, i)">1B</button>
+                    <button
+                      *ngIf="(benchPlayer.Position == '2B' || benchPlayer.Position == 'SS' || benchPlayer.Position == '3B')"
+                      class="btn btn-danger btn-pos" (click)="setLineupPosition('2B', true, benchPlayer, i)">2B</button>
+                    <button
+                      *ngIf="(benchPlayer.Position == '2B' || benchPlayer.Position == 'SS' || benchPlayer.Position == '3B')"
+                      class="btn btn-danger btn-pos" (click)="setLineupPosition('SS', true, benchPlayer, i)">SS</button>
+                    <button
+                      *ngIf="(benchPlayer.Position == '2B' || benchPlayer.Position == 'SS' || benchPlayer.Position == '3B' || benchPlayer.Position == '1B')"
+                      class="btn btn-danger btn-pos" (click)="setLineupPosition('3B', true, benchPlayer, i)">3B</button>
+                    <button
+                      *ngIf="(benchPlayer.Position == 'LF' || benchPlayer.Position == 'CF' || benchPlayer.Position == 'RF' || benchPlayer.Position == 'OF' )"
+                      class="btn btn-danger btn-pos" (click)="setLineupPosition('LF', true, benchPlayer, i)">LF</button>
+                    <button
+                      *ngIf="(benchPlayer.Position == 'LF' || benchPlayer.Position == 'CF' || benchPlayer.Position == 'RF' || benchPlayer.Position == 'OF' )"
+                      class="btn btn-danger btn-pos" (click)="setLineupPosition('CF', true, benchPlayer, i)">CF</button>
+                    <button
+                      *ngIf="(benchPlayer.Position == 'LF' || benchPlayer.Position == 'CF' || benchPlayer.Position == 'RF' || benchPlayer.Position == 'OF' )"
+                      class="btn btn-danger btn-pos" (click)="setLineupPosition('RF', true, benchPlayer, i)">RF</button>
+                  </span>
+                </td>
+                <td>
+                  {{Game.GetAtBats(benchPlayer.Id, false)}}
+                </td>
+                <td>
+                  {{benchPlayer.RunsScored}}
+                </td>
+                <td class="text-center">
+                  {{Game.GetHits(benchPlayer.Id, false)}}
+                </td>
+                <td>
+                  {{benchPlayer.RBIs}}
+                </td>
+                <td class="text-center">
+                  {{Game.GetWalks(benchPlayer.Id, false)}}
+                </td>
+                <td> {{Game.GetStrikeouts(benchPlayer.Id, false)}}
+                </td>
+              </tr>
+            </ng-container>
+          </tbody>
+        </table>
+        <br />
+        <button class="btn btn-danger btn-pos"> </button> <label> = Substitution</label>
+      </div>
     </div>
+  </div>
+  <hr />
+  <!-- PITCHING -->
+  <div class="row" style="margin: 0px; padding: 0px;">
+    <div class="col-md-6">
+      <div *ngIf="Game.CurrentInning.IsBottomOfInning || !Game.IsGameInProgress">
+        <h5 class="text-left"><img [src]="Game.AwayTeam.TeamLogoUrl"
+            style="height: 50px; border: 3px solid white; margin-right: 15px;" />
+          {{Game.AwayTeam.TeamSeason}} {{Game.AwayTeam.FullTeamName}} Pitching</h5>
+        <hr />
+        <table *ngIf="Game && Game.AwayTeam"
+          class="table table-bordered table-dark table-hover table-condensed table-responsive-md"
+          style="margin-top: 20px; opacity: 0.9;">
+          <thead>
+            <tr>
+              <th>Pitcher</th>
+              <th>IP</th>
+              <th>H</th>
+              <th>R</th>
+              <th>BB</th>
+              <th>K</th>
+              <th>HR</th>
+            </tr>
+          </thead>
+          <tbody *ngIf="Game && Game.AwayTeam">
+            <ng-container>
+              <tr>
+                <td class="text-left"> {{Game.AwayTeam.Pitcher.Name}}</td>
+                <td>
+                  {{Game.GetInningsPitched(Game.AwayTeam.Pitcher.Id, false)}}
+                </td>
+                <td>
+                  {{Game.GetHitsAllowed(Game.AwayTeam.Pitcher.Id, false)}}
+                </td>
+                <td class="text-center">
+                  {{Game.GetRunsAllowed(Game.AwayTeam.Pitcher.Id, false)}}
+                </td>
+                <td class="text-center">
+                  {{Game.GetHitsAllowed(Game.AwayTeam.Pitcher.Id, false)}}
+                </td>
+                <td>
+                  {{Game.GetStrikeoutsByPitcher(Game.AwayTeam.Pitcher.Id, false)}}
+                </td>
+                <td class="text-center">
+                  {{Game.GetHomeRunsAllowed(Game.AwayTeam.Pitcher.Id, false)}}
+                </td>
+              </tr>
+            </ng-container>
+            <tr>
+              <td colspan="9">
+                <label>BULLPEN</label>
+              </td>
+            </tr>
+            <ng-container *ngFor="let benchPlayer of Game.AwayTeam.BenchPitchers; let i = index;">
+              <tr>
+                <td class="text-left"><label class="small" *ngIf="!benchPlayer.IsEligible">X-</label>
+                  {{benchPlayer.Name}} <br />
+                  <label class="small">
+                    {{benchPlayer.PitchingSeasonStats.wins + "-" + benchPlayer.PitchingSeasonStats.losses}}
+                    {{benchPlayer.PitchingSeasonStats.era}}ERA
+                    {{benchPlayer.PitchingSeasonStats.whip}}WHIP
+                  </label>
+                  <span style="float: right;" *ngIf="benchPlayer.IsEligible">
+                    <button *ngIf="benchPlayer.Position == 'P' || benchPlayer.Position == 'SP'"
+                      class="btn btn-primary btn-pos" (click)="setLineupPosition('P', false, benchPlayer, i)">P</button>
+                  </span>
+                </td>
+                <td>
+                  {{Game.GetInningsPitched(benchPlayer.Id, false)}}
+                </td>
+                <td>
+                  {{Game.GetHitsAllowed(benchPlayer.Id, false)}}
+                </td>
+                <td class="text-center">
+                  {{Game.GetRunsAllowed(benchPlayer.Id, false)}}
+                </td>
+                <td class="text-center">
+                  {{Game.GetHitsAllowed(benchPlayer.Id, false)}}
+                </td>
+                <td>
+                  {{Game.GetStrikeoutsByPitcher(benchPlayer.Id, false)}}
+                </td>
+                <td class="text-center">
+                  {{Game.GetHomeRunsAllowed(benchPlayer.Id, false)}}
+                </td>
+              </tr>
+            </ng-container>
+          </tbody>
+        </table>
+        <br />
+        <button class="btn btn-primary btn-pos"> </button> <label> = Substitution</label>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div *ngIf="!Game.CurrentInning.IsBottomOfInning || !Game.IsGameInProgress">
+        <h5 class="text-left"><img [src]="Game.HomeTeam.TeamLogoUrl"
+            style="height: 50px; border: 3px solid white; margin-right: 15px;" />
+          {{Game.HomeTeam.TeamSeason}} {{Game.HomeTeam.FullTeamName}} Pitching</h5>
+        <hr />
+        <table *ngIf="Game && Game.HomeTeam"
+          class="table table-bordered table-dark table-hover table-condensed table-responsive-md"
+          style="margin-top: 20px; opacity: 0.9;">
+          <thead>
+            <tr>
+              <th>Pitcher</th>
+              <th>IP</th>
+              <th>H</th>
+              <th>R</th>
+              <th>BB</th>
+              <th>K</th>
+              <th>HR</th>
+            </tr>
+          </thead>
+          <tbody *ngIf="Game && Game.HomeTeam">
+            <ng-container>
+              <tr>
+                <td class="text-left"> {{Game.HomeTeam.Pitcher.Name}}</td>
+                <td>
+                  {{Game.GetInningsPitched(Game.HomeTeam.Pitcher.Id, true)}}
+                </td>
+                <td>
+                  {{Game.GetHitsAllowed(Game.HomeTeam.Pitcher.Id, true)}}
+                </td>
+                <td class="text-center">
+                  {{Game.GetRunsAllowed(Game.HomeTeam.Pitcher.Id, true)}}
+                </td>
+                <td class="text-center">
+                  {{Game.GetHitsAllowed(Game.HomeTeam.Pitcher.Id, true)}}
+                </td>
+                <td>
+                  {{Game.GetStrikeoutsByPitcher(Game.HomeTeam.Pitcher.Id, true)}}
+                </td>
+                <td class="text-center">
+                  {{Game.GetHomeRunsAllowed(Game.HomeTeam.Pitcher.Id, true)}}
+                </td>
+              </tr>
+            </ng-container>
+            <tr>
+              <td colspan="9">
+                <label>BULLPEN</label>
+              </td>
+            </tr>
+            <ng-container *ngFor="let benchPlayer of Game.HomeTeam.BenchPitchers; let i = index;">
+              <tr>
+                <td class="text-left"><label class="small" *ngIf="!benchPlayer.IsEligible">X-</label>
+                  {{benchPlayer.Name}} <br />
+                  <label class="small">
+                    {{benchPlayer.PitchingSeasonStats.wins + "-" + benchPlayer.PitchingSeasonStats.losses}}
+                    {{benchPlayer.PitchingSeasonStats.era}}ERA
+                    {{benchPlayer.PitchingSeasonStats.whip}}WHIP
+                  </label>
+                  <span style="float: right;" *ngIf="benchPlayer.IsEligible">
+                    <button *ngIf="benchPlayer.Position == 'P' || benchPlayer.Position == 'SP'"
+                      class="btn btn-danger btn-pos" (click)="setLineupPosition('P', true, benchPlayer, i)">P</button>
+                  </span>
+                </td>
+                <td>
+                  {{Game.GetInningsPitched(benchPlayer.Id, true)}}
+                </td>
+                <td>
+                  {{Game.GetHitsAllowed(benchPlayer.Id, true)}}
+                </td>
+                <td class="text-center">
+                  {{Game.GetRunsAllowed(benchPlayer.Id, true)}}
+                </td>
+                <td class="text-center">
+                  {{Game.GetHitsAllowed(benchPlayer.Id, true)}}
+                </td>
+                <td>
+                  {{Game.GetStrikeoutsByPitcher(benchPlayer.Id, true)}}
+                </td>
+                <td class="text-center">
+                  {{Game.GetHomeRunsAllowed(benchPlayer.Id, true)}}
+                </td>
+              </tr>
+            </ng-container>
+          </tbody>
+        </table>
+        <br />
+        <button class="btn btn-danger btn-pos"> </button> <label> = Substitution</label>
+      </div>
+    </div>
+
+  </div>
 </div>
