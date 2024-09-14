@@ -2421,6 +2421,7 @@ export class GameplayComponent implements OnInit {
         }
 
         if (this.Game.RunnerOnFirst) {
+          this.AttemptFiveFourThreeDoublePlay();
         }
       } else if (numberOfOuts == 1) {
         if (this.Game.RunnerOnFirst) {
@@ -2535,9 +2536,11 @@ export class GameplayComponent implements OnInit {
     } else if (diceRoll > 76) {
       //Out at second only
       if (this.Game.RunnerOnThird) {
-        //Player from third scores
-        this.Game.RunnersWhoScoredOnPlay.push(this.Game.RunnerOnThird);
-        this.Game.RunnerOnThird = null;
+        if(this.GetCurrentNumberOfOuts() == 0){
+           //Player from third scores
+           this.Game.RunnersWhoScoredOnPlay.push(this.Game.RunnerOnThird);
+           this.Game.RunnerOnThird = null;
+        }
       }
 
       if (this.Game.RunnerOnSecond) {
@@ -2584,20 +2587,15 @@ export class GameplayComponent implements OnInit {
       this.ShortToFirstSingleGroundOut(); //Just get the regular out
     } else {
       if (numberOfOuts == 0) {
-        if (this.IsForcePlayAtHome()) {
-          //TODO
-           return;
-         }
+        if (this.Game.RunnerOnThird) {
+        }
 
-         if (this.IsForcePlayAtThird()) {
-          //TODO
-           return;
-         }
+        if (this.Game.RunnerOnSecond) {
+        }
 
-         if (this.IsForcePlayAtSecond()) {
-           this.AttemptSixFourThreeDoublePlay();
-           return;
-         }
+        if (this.Game.RunnerOnFirst) {
+          this.AttemptSixFourThreeDoublePlay();
+        }
       } else if (numberOfOuts == 1) {
         if (this.Game.RunnerOnFirst) {
           this.AttemptSixFourThreeDoublePlay();
@@ -2661,9 +2659,11 @@ export class GameplayComponent implements OnInit {
     else if (diceRoll > 76) {
       //Out at second only
       if (this.Game.RunnerOnThird) {
-        //Player from third scores
-        this.Game.RunnersWhoScoredOnPlay.push(this.Game.RunnerOnThird);
-        this.Game.RunnerOnThird = null;
+        if(this.GetCurrentNumberOfOuts() == 0){
+          //Player from third scores
+          this.Game.RunnersWhoScoredOnPlay.push(this.Game.RunnerOnThird);
+          this.Game.RunnerOnThird = null;
+       }
       }
 
       if (this.Game.RunnerOnSecond) {
@@ -2720,20 +2720,15 @@ export class GameplayComponent implements OnInit {
       this.SecondToFirstSingleGroundOut(); //Just get the regular out
     } else {
       if (numberOfOuts == 0) {
-        if (this.IsForcePlayAtHome()) {
-          //TODO
-           return;
-         }
+        if (this.Game.RunnerOnThird) {
+        }
 
-         if (this.IsForcePlayAtThird()) {
-          //TODO
-           return;
-         }
+        if (this.Game.RunnerOnSecond) {
+        }
 
-         if (this.IsForcePlayAtSecond()) {
+        if (this.Game.RunnerOnFirst) {
           this.AttemptFourSixThreeDoublePlay();
-           return;
-         }
+        }
       } else if (numberOfOuts == 1) {
         if (this.Game.RunnerOnFirst) {
           this.AttemptFourSixThreeDoublePlay();
@@ -2797,9 +2792,11 @@ export class GameplayComponent implements OnInit {
  else if (diceRoll > 76) {
    //Out at second only
    if (this.Game.RunnerOnThird) {
-     //Player from third scores
-     this.Game.RunnersWhoScoredOnPlay.push(this.Game.RunnerOnThird);
-     this.Game.RunnerOnThird = null;
+    if(this.GetCurrentNumberOfOuts() == 0){
+      //Player from third scores
+      this.Game.RunnersWhoScoredOnPlay.push(this.Game.RunnerOnThird);
+      this.Game.RunnerOnThird = null;
+   }
    }
 
    if (this.Game.RunnerOnSecond) {

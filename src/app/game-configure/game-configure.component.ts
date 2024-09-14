@@ -2368,33 +2368,24 @@ export class GameConfigureComponent implements OnInit {
 
     var numberOfOuts = this.GetCurrentNumberOfOuts();
     if (numberOfOuts == 2) {
-      this.ThirdToFirstSingleGroundOut();
-    }
-    else {
+      this.ThirdToFirstSingleGroundOut(); //Just get the regular out
+    } else {
       if (numberOfOuts == 0) {
-        if (this.IsForcePlayAtHome()) {
-          this.AttemptFiveOneThreeDoublePlay();
-          return;
+        if (this.Game.RunnerOnThird) {
         }
 
-        if (this.IsForcePlayAtThird()) {
-          this.AttemptFiveThreeDoublePlay();
-          return;
+        if (this.Game.RunnerOnSecond) {
         }
 
-        if (this.IsForcePlayAtSecond()) {
-          this.AttemptFiveFourThreeDoublePlay();
-          return;
-        }
-      }
-      else if (numberOfOuts == 1) {
         if (this.Game.RunnerOnFirst) {
           this.AttemptFiveFourThreeDoublePlay();
         }
-        else {
+      } else if (numberOfOuts == 1) {
+        if (this.Game.RunnerOnFirst) {
+          this.AttemptFiveFourThreeDoublePlay();
+        } else {
           this.ThirdToFirstSingleGroundOut();
         }
-
       }
     }
   }
@@ -2529,13 +2520,14 @@ export class GameConfigureComponent implements OnInit {
       this.newOuts = 0;
 
       this.showInfo("All baserunners safe after double-play attempt.");
-    }
-    else if (diceRoll > 76) {
+    } else if (diceRoll > 76) {
       //Out at second only
       if (this.Game.RunnerOnThird) {
-        //Player from third scores
-        this.Game.RunnersWhoScoredOnPlay.push(this.Game.RunnerOnThird);
-        this.Game.RunnerOnThird = null;
+        if(this.GetCurrentNumberOfOuts() == 0){
+           //Player from third scores
+           this.Game.RunnersWhoScoredOnPlay.push(this.Game.RunnerOnThird);
+           this.Game.RunnerOnThird = null;
+        }
       }
 
       if (this.Game.RunnerOnSecond) {
@@ -2546,14 +2538,17 @@ export class GameConfigureComponent implements OnInit {
       this.Game.RunnerOnFirst = this.Game.CurrentAtBat.Batter;
       this.newOuts = 1;
 
-      this.showInfo("Baserunner at second is out and baserunner at first is safe after double-play attempt.");
-    }
-    else {
+      this.showInfo(
+        "Baserunner at second is out and baserunner at first is safe after double-play attempt."
+      );
+    } else {
       //Both out
       this.Game.RunnerOnSecond = null;
       this.Game.RunnerOnFirst = null;
       this.newOuts = 2;
-      this.showError("Twin-killing! 5-4-3 Double-play. Both baserunners are out!");
+      this.showError(
+        "Twin-killing! 5-4-3 Double-play. Both baserunners are out!"
+      );
     }
   }
 
@@ -2581,19 +2576,14 @@ export class GameConfigureComponent implements OnInit {
       this.ShortToFirstSingleGroundOut(); //Just get the regular out
     } else {
       if (numberOfOuts == 0) {
-        if (this.IsForcePlayAtHome()) {
-         //TODO
-          return;
+        if (this.Game.RunnerOnThird) {
         }
 
-        if (this.IsForcePlayAtThird()) {
-         //TODO
-          return;
+        if (this.Game.RunnerOnSecond) {
         }
 
-        if (this.IsForcePlayAtSecond()) {
+        if (this.Game.RunnerOnFirst) {
           this.AttemptSixFourThreeDoublePlay();
-          return;
         }
       } else if (numberOfOuts == 1) {
         if (this.Game.RunnerOnFirst) {
@@ -2658,9 +2648,11 @@ export class GameConfigureComponent implements OnInit {
     else if (diceRoll > 76) {
       //Out at second only
       if (this.Game.RunnerOnThird) {
-        //Player from third scores
-        this.Game.RunnersWhoScoredOnPlay.push(this.Game.RunnerOnThird);
-        this.Game.RunnerOnThird = null;
+        if(this.GetCurrentNumberOfOuts() == 0){
+          //Player from third scores
+          this.Game.RunnersWhoScoredOnPlay.push(this.Game.RunnerOnThird);
+          this.Game.RunnerOnThird = null;
+       }
       }
 
       if (this.Game.RunnerOnSecond) {
@@ -2714,20 +2706,15 @@ export class GameConfigureComponent implements OnInit {
       this.SecondToFirstSingleGroundOut(); //Just get the regular out
     } else {
       if (numberOfOuts == 0) {
-        if (this.IsForcePlayAtHome()) {
-          //TODO
-           return;
-         }
+        if (this.Game.RunnerOnThird) {
+        }
 
-         if (this.IsForcePlayAtThird()) {
-          //TODO
-           return;
-         }
+        if (this.Game.RunnerOnSecond) {
+        }
 
-         if (this.IsForcePlayAtSecond()) {
+        if (this.Game.RunnerOnFirst) {
           this.AttemptFourSixThreeDoublePlay();
-           return;
-         }
+        }
       } else if (numberOfOuts == 1) {
         if (this.Game.RunnerOnFirst) {
           this.AttemptFourSixThreeDoublePlay();
@@ -2765,55 +2752,57 @@ export class GameConfigureComponent implements OnInit {
   }
 
   AttemptFourSixThreeDoublePlay(){
- //Drawing part
- this.SecondToShortToFirstDoublePlayGroundOut();
+    //Drawing part
+    this.SecondToShortToFirstDoublePlayGroundOut();
 
- //Actual Outcome
- let diceRoll = this.GenerateRandomNumber(1, 100);
- if (diceRoll > 90) {
-   //Both Safe
-   if (this.Game.RunnerOnThird) {
-     //Player from third scores
-     this.Game.RunnersWhoScoredOnPlay.push(this.Game.RunnerOnThird);
-     this.Game.RunnerOnThird = null;
-   }
+    //Actual Outcome
+    let diceRoll = this.GenerateRandomNumber(1, 100);
+    if (diceRoll > 90) {
+      //Both Safe
+      if (this.Game.RunnerOnThird) {
+        //Player from third scores
+        this.Game.RunnersWhoScoredOnPlay.push(this.Game.RunnerOnThird);
+        this.Game.RunnerOnThird = null;
+      }
 
-   if (this.Game.RunnerOnSecond) {
-     this.Game.RunnerOnThird = this.Game.RunnerOnSecond;
-   }
+      if (this.Game.RunnerOnSecond) {
+        this.Game.RunnerOnThird = this.Game.RunnerOnSecond;
+      }
 
-   this.Game.RunnerOnSecond = this.Game.RunnerOnFirst;
-   this.Game.RunnerOnFirst = this.Game.CurrentAtBat.Batter;
-   this.newOuts = 0;
+      this.Game.RunnerOnSecond = this.Game.RunnerOnFirst;
+      this.Game.RunnerOnFirst = this.Game.CurrentAtBat.Batter;
+      this.newOuts = 0;
 
-   this.showInfo("All baserunners safe after double-play attempt.");
- }
- else if (diceRoll > 76) {
-   //Out at second only
-   if (this.Game.RunnerOnThird) {
-     //Player from third scores
-     this.Game.RunnersWhoScoredOnPlay.push(this.Game.RunnerOnThird);
-     this.Game.RunnerOnThird = null;
-   }
+      this.showInfo("All baserunners safe after double-play attempt.");
+    }
+    else if (diceRoll > 76) {
+      //Out at second only
+      if (this.Game.RunnerOnThird) {
+       if(this.GetCurrentNumberOfOuts() == 0){
+         //Player from third scores
+         this.Game.RunnersWhoScoredOnPlay.push(this.Game.RunnerOnThird);
+         this.Game.RunnerOnThird = null;
+      }
+      }
 
-   if (this.Game.RunnerOnSecond) {
-     this.Game.RunnerOnThird = this.Game.RunnerOnSecond;
-   }
+      if (this.Game.RunnerOnSecond) {
+        this.Game.RunnerOnThird = this.Game.RunnerOnSecond;
+      }
 
-   this.Game.RunnerOnSecond = null;
-   this.Game.RunnerOnFirst = this.Game.CurrentAtBat.Batter;
-   this.newOuts = 1;
+      this.Game.RunnerOnSecond = null;
+      this.Game.RunnerOnFirst = this.Game.CurrentAtBat.Batter;
+      this.newOuts = 1;
 
-   this.showInfo("Baserunner at second is out and baserunner at first is safe after double-play attempt.");
- }
- else {
-   //Both out
-   this.Game.RunnerOnSecond = null;
-   this.Game.RunnerOnFirst = null;
-   this.newOuts = 2;
-   this.showError("Twin-killing! 6-4-3 Double-play. Both baserunners are out!");
- }
-  }
+      this.showInfo("Baserunner at second is out and baserunner at first is safe after double-play attempt.");
+    }
+    else {
+      //Both out
+      this.Game.RunnerOnSecond = null;
+      this.Game.RunnerOnFirst = null;
+      this.newOuts = 2;
+      this.showError("Twin-killing! 6-4-3 Double-play. Both baserunners are out!");
+    }
+     }
 
   SecondToFirstSingleGroundOut() {
     this.PlayBatHittingBallSound();
