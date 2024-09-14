@@ -2564,6 +2564,18 @@ export class GameplayComponent implements OnInit {
 
   AttemptOneTwoThreeDoublePlay() {}
 
+  IsForcePlayAtHome() {
+    return this.Game.RunnerOnThird && this.Game.RunnerOnSecond && this.Game.RunnerOnFirst;
+  }
+
+  IsForcePlayAtThird() {
+    return this.Game.RunnerOnSecond && this.Game.RunnerOnFirst;
+  }
+
+  IsForcePlayAtSecond() {
+    return this.Game.RunnerOnFirst;
+  }
+
   GroundBallOutToShort() {
     this.PlayBatHittingBallSound();
 
@@ -2572,17 +2584,20 @@ export class GameplayComponent implements OnInit {
       this.ShortToFirstSingleGroundOut(); //Just get the regular out
     } else {
       if (numberOfOuts == 0) {
-        if (this.Game.RunnerOnThird) {
+        if (this.IsForcePlayAtHome()) {
           //TODO
-        }
+           return;
+         }
 
-        if (this.Game.RunnerOnSecond) {
+         if (this.IsForcePlayAtThird()) {
           //TODO
-        }
+           return;
+         }
 
-        if (this.Game.RunnerOnFirst) {
-          this.AttemptSixFourThreeDoublePlay();
-        }
+         if (this.IsForcePlayAtSecond()) {
+           this.AttemptSixFourThreeDoublePlay();
+           return;
+         }
       } else if (numberOfOuts == 1) {
         if (this.Game.RunnerOnFirst) {
           this.AttemptSixFourThreeDoublePlay();
@@ -2705,17 +2720,20 @@ export class GameplayComponent implements OnInit {
       this.SecondToFirstSingleGroundOut(); //Just get the regular out
     } else {
       if (numberOfOuts == 0) {
-        if (this.Game.RunnerOnThird) {
+        if (this.IsForcePlayAtHome()) {
           //TODO
-        }
+           return;
+         }
 
-        if (this.Game.RunnerOnSecond) {
+         if (this.IsForcePlayAtThird()) {
           //TODO
-        }
+           return;
+         }
 
-        if (this.Game.RunnerOnFirst) {
+         if (this.IsForcePlayAtSecond()) {
           this.AttemptFourSixThreeDoublePlay();
-        }
+           return;
+         }
       } else if (numberOfOuts == 1) {
         if (this.Game.RunnerOnFirst) {
           this.AttemptFourSixThreeDoublePlay();
