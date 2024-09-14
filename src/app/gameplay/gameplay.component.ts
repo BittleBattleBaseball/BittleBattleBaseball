@@ -97,7 +97,7 @@ export class GameplayComponent implements OnInit {
   IsAutoPlayEnabled: boolean;
 
   ngAfterViewInit(): void {
-    this.SetPlayingField();
+
     let position = "toast-top-center";
     let msg =
       "Today's ballgame is between the " +
@@ -108,6 +108,9 @@ export class GameplayComponent implements OnInit {
       this.Game.AwayTeam.TeamSeason +
       " " +
       this.Game.AwayTeam.TeamName;
+
+      this.SetPlayingField();
+
     this.toastr.success(
       msg,
       "Welcome to " + this.Game.Ballpark + " in " + this.Game.HomeTeam.TeamCity,
