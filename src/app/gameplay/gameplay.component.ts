@@ -2861,6 +2861,131 @@ export class GameplayComponent implements OnInit {
   GroundBallOutToPitcher() {
     this.PlayBatHittingBallSound();
 
+    var numberOfOuts = this.GetCurrentNumberOfOuts();
+    if (numberOfOuts == 2) {
+      this.PitcherToFirstSingleGroundOut(); //Just get the regular out
+    } else {
+      if (numberOfOuts == 0) {
+        if (this.Game.RunnerOnThird) {
+        }
+
+        if (this.Game.RunnerOnSecond) {
+        }
+
+        if (this.Game.RunnerOnFirst) {
+          this.AttemptOneSixThreeDoublePlay();
+        }
+      } else if (numberOfOuts == 1) {
+        if (this.Game.RunnerOnFirst) {
+          this.AttemptOneSixThreeDoublePlay();
+        } else {
+          this.PitcherToFirstSingleGroundOut();
+        }
+      }
+    }
+  }
+
+  AttemptOneSixThreeDoublePlay(){
+     //Drawing part
+      this.PitcherToSecondToFirstDoublePlayGroundOut();
+
+       //Actual Outcome
+ let diceRoll = this.GenerateRandomNumber(1, 100);
+ if (diceRoll > 90) {
+   //Both Safe
+   if (this.Game.RunnerOnThird) {
+     //Player from third scores
+     this.Game.RunnersWhoScoredOnPlay.push(this.Game.RunnerOnThird);
+     this.Game.RunnerOnThird = null;
+   }
+
+   if (this.Game.RunnerOnSecond) {
+     this.Game.RunnerOnThird = this.Game.RunnerOnSecond;
+   }
+
+   this.Game.RunnerOnSecond = this.Game.RunnerOnFirst;
+   this.Game.RunnerOnFirst = this.Game.CurrentAtBat.Batter;
+   this.newOuts = 0;
+
+   this.showInfo("All baserunners safe after double-play attempt.");
+ } else if (diceRoll > 76) {
+   //Out at second only
+   if (this.Game.RunnerOnThird) {
+     if(this.GetCurrentNumberOfOuts() == 0){
+        //Player from third scores
+        this.Game.RunnersWhoScoredOnPlay.push(this.Game.RunnerOnThird);
+        this.Game.RunnerOnThird = null;
+     }
+   }
+
+   if (this.Game.RunnerOnSecond) {
+     this.Game.RunnerOnThird = this.Game.RunnerOnSecond;
+   }
+
+   this.Game.RunnerOnSecond = null;
+   this.Game.RunnerOnFirst = this.Game.CurrentAtBat.Batter;
+   this.newOuts = 1;
+
+   this.showInfo(
+     "Baserunner at second is out and baserunner at first is safe after double-play attempt."
+   );
+ } else {
+   //Both out
+   this.Game.RunnerOnSecond = null;
+   this.Game.RunnerOnFirst = null;
+   this.newOuts = 2;
+   this.showError(
+     "Twin-killing! 5-4-3 Double-play. Both baserunners are out!"
+   );
+ }
+  }
+
+  PitcherToSecondToFirstDoublePlayGroundOut(){
+    this.ctx.beginPath();
+    this.ctx.moveTo(this.homePlateX, this.homePlateY);
+
+    this.ctx.lineWidth = 2;
+    this.ctx.lineTo(
+      this.pitcherX + this.playerFieldImgAvatarWidth / 2 + 15,
+      this.pitcherY + this.playerFieldImgAvatarHeight / 2 + 15
+    );
+    // line color
+    this.ctx.strokeStyle = "white";
+    this.ctx.stroke();
+
+    this.timers.push(
+      setTimeout(() => {
+        this.ctx.moveTo(
+          this.pitcherX + this.playerFieldImgAvatarWidth / 2 + 15,
+          this.pitcherY + this.playerFieldImgAvatarHeight / 2 + 15
+        );
+
+        this.ctx.lineTo(
+          this.secondBaseX + this.playerFieldImgAvatarWidth / 2,
+          this.secondBaseY + this.playerFieldImgAvatarHeight / 2
+        );
+
+        this.ctx.moveTo(
+          this.secondBaseX + this.playerFieldImgAvatarWidth / 2 + 15,
+          this.secondBaseY + this.playerFieldImgAvatarHeight / 2 + 15
+        );
+
+        this.ctx.lineWidth = 2;
+        this.ctx.lineTo(
+          this.firstBaseX + this.playerFieldImgAvatarWidth / 2,
+          this.firstBaseY + this.playerFieldImgAvatarHeight / 2
+        );
+        // line color
+        this.ctx.strokeStyle = "white";
+        this.ctx.stroke();
+      }, 200)
+    );
+  }
+
+
+  PitcherToFirstSingleGroundOut() {
+    this.PlayBatHittingBallSound();
+
     this.ctx.beginPath();
     this.ctx.moveTo(this.homePlateX, this.homePlateY);
 
