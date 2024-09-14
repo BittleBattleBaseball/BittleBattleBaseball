@@ -2546,10 +2546,6 @@ export class GameConfigureComponent implements OnInit {
     }
   }
 
-  AttemptSixFourThreeDoublePlay() {
-
-  }
-
   AttemptFourSixThreeDoublePlay() {
 
   }
@@ -2573,6 +2569,109 @@ export class GameConfigureComponent implements OnInit {
   GroundBallOutToShort() {
     this.PlayBatHittingBallSound();
 
+    var numberOfOuts = this.GetCurrentNumberOfOuts();
+    if (numberOfOuts == 2) {
+      this.ShortToFirstSingleGroundOut(); //Just get the regular out
+    } else {
+      if (numberOfOuts == 0) {
+        if (this.Game.RunnerOnThird) {
+        }
+
+        if (this.Game.RunnerOnSecond) {
+        }
+
+        if (this.Game.RunnerOnFirst) {
+        }
+      } else if (numberOfOuts == 1) {
+        if (this.Game.RunnerOnFirst) {
+          this.AttemptSixFourThreeDoublePlay();
+        } else {
+          this.ShortToFirstSingleGroundOut();
+        }
+      }
+    }
+  }
+
+  ShortToSecondToFirstDoublePlayGroundOut(){
+    this.ctx.beginPath();
+    this.ctx.moveTo(this.homePlateX, this.homePlateY);
+
+    this.ctx.lineWidth = 2;
+    this.ctx.lineTo(this.shortstopX + (this.playerFieldImgAvatarWidth / 2) + 15, this.shortstopY + (this.playerFieldImgAvatarHeight / 2) + 15);
+    // line color
+    this.ctx.strokeStyle = 'white';
+    this.ctx.stroke();
+
+    setTimeout(() => {
+
+      this.ctx.moveTo(this.shortstopX + (this.playerFieldImgAvatarWidth / 2) + 15, this.shortstopY + (this.playerFieldImgAvatarHeight / 2) + 15);
+
+      this.ctx.lineTo(this.secondBaseX + (this.playerFieldImgAvatarWidth / 2), this.secondBaseY + (this.playerFieldImgAvatarHeight / 2));
+
+      this.ctx.moveTo(this.secondBaseX + (this.playerFieldImgAvatarWidth / 2) + 15, this.secondBaseY + (this.playerFieldImgAvatarHeight / 2) + 15);
+
+      this.ctx.lineWidth = 2;
+      this.ctx.lineTo(this.firstBaseX + (this.playerFieldImgAvatarWidth / 2), this.firstBaseY + (this.playerFieldImgAvatarHeight / 2));
+      // line color
+      this.ctx.strokeStyle = 'white';
+      this.ctx.stroke();
+    }, 200);
+  }
+
+  AttemptSixFourThreeDoublePlay(){
+    //Drawing part
+    this.ShortToSecondToFirstDoublePlayGroundOut();
+
+    //Actual Outcome
+    let diceRoll = this.GenerateRandomNumber(1, 100);
+    if (diceRoll > 90) {
+      //Both Safe
+      if (this.Game.RunnerOnThird) {
+        //Player from third scores
+        this.Game.RunnersWhoScoredOnPlay.push(this.Game.RunnerOnThird);
+        this.Game.RunnerOnThird = null;
+      }
+
+      if (this.Game.RunnerOnSecond) {
+        this.Game.RunnerOnThird = this.Game.RunnerOnSecond;
+      }
+
+      this.Game.RunnerOnSecond = this.Game.RunnerOnFirst;
+      this.Game.RunnerOnFirst = this.Game.CurrentAtBat.Batter;
+      this.newOuts = 0;
+
+      this.showInfo("All baserunners safe after double-play attempt.");
+    }
+    else if (diceRoll > 76) {
+      //Out at second only
+      if (this.Game.RunnerOnThird) {
+        //Player from third scores
+        this.Game.RunnersWhoScoredOnPlay.push(this.Game.RunnerOnThird);
+        this.Game.RunnerOnThird = null;
+      }
+
+      if (this.Game.RunnerOnSecond) {
+        this.Game.RunnerOnThird = this.Game.RunnerOnSecond;
+      }
+
+      this.Game.RunnerOnSecond = null;
+      this.Game.RunnerOnFirst = this.Game.CurrentAtBat.Batter;
+      this.newOuts = 1;
+
+      this.showInfo("Baserunner at second is out and baserunner at first is safe after double-play attempt.");
+    }
+    else {
+      //Both out
+      this.Game.RunnerOnSecond = null;
+      this.Game.RunnerOnFirst = null;
+      this.newOuts = 2;
+      this.showError("Twin-killing! 6-4-3 Double-play. Both baserunners are out!");
+    }
+    }
+
+  ShortToFirstSingleGroundOut(){
+  this.PlayBatHittingBallSound();
+
     this.ctx.beginPath();
     this.ctx.moveTo(this.homePlateX, this.homePlateY);
 
@@ -2593,6 +2692,8 @@ export class GameConfigureComponent implements OnInit {
       this.ctx.stroke();
     }, 200);
   }
+
+
 
   GroundBallOutToSecond() {
     this.PlayBatHittingBallSound();
