@@ -1921,7 +1921,7 @@ export class GameConfigureComponent implements OnInit {
 
         this.ctx.fillStyle = grd;
       }
-      else  if (left <= 292 && left > 260) {
+      else  if (left <= 292 && left > 265) {
         var grd = this.ctx.createLinearGradient(0, 0, left, 15);
         // dark orange
         grd.addColorStop(0, "#ff8c00");
