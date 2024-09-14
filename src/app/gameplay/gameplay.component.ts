@@ -1020,7 +1020,7 @@ export class GameplayComponent implements OnInit {
         this.Game.IsGameInProgress = false;
 
         this.ClearTimers();
-        this.activatedRoute = null;
+        localStorage.clear();
       } else {
         if (this.Game.CurrentInning.HomeOuts == 3) {
           if (this.Game.CurrentInning.InningNumber >= 9) {
@@ -1086,7 +1086,7 @@ export class GameplayComponent implements OnInit {
           this.Game.IsGameInProgress = false;
 
           this.ClearTimers();
-          this.activatedRoute = null;
+          localStorage.clear();
         } else {
           this.Game.CurrentInning.IsBottomOfInning = true;
           this.Game.RunnerOnFirst = null;

@@ -22,7 +22,7 @@ import { ToastrService } from 'ngx-toastr';
   styleUrls: ['./game-configure.component.scss']
 })
 export class GameConfigureComponent implements OnInit {
-
+  timers = [];
   canvas: HTMLCanvasElement;
   ballCanvas: HTMLCanvasElement;
   ctx: CanvasRenderingContext2D;
@@ -1322,15 +1322,50 @@ export class GameConfigureComponent implements OnInit {
     if (this.Game.CurrentInning.IsBottomOfInning) {
       this.Game.CurrentInning.HomeOuts += this.newOuts;
       if (this.Game.CurrentInning.InningNumber >= 9 && this.Game.AwayTeamRuns != this.Game.HomeTeamRuns && this.Game.CurrentInning.HomeOuts == 3) {
-        // swal({
-        //   title: "Game Over!",
-        //   text: this.Game.HomeTeam.TeamSeason + " " + this.Game.HomeTeam.TeamName + " " + this.Game.HomeTeamRuns + " to " + this.Game.AwayTeam.TeamSeason + " " + this.Game.AwayTeam.TeamName + " " + this.Game.AwayTeamRuns,
-        //   icon: "success",
-        //   dangerMode: true,
-        // })
-        //   .then(() => {
-            this.Game.IsGameInProgress = false;
-          //});
+        let position = "toast-top-center";
+
+        let msg = "";
+        if (this.Game.HomeTeamRuns > this.Game.AwayTeamRuns) {
+          msg =
+            "The " +
+            this.Game.HomeTeam.TeamSeason +
+            " " +
+            this.Game.HomeTeam.TeamName +
+            " beat the " +
+            this.Game.AwayTeam.TeamSeason +
+            " " +
+            this.Game.AwayTeam.TeamName +
+            " " +
+            this.Game.HomeTeamRuns +
+            " to " +
+            this.Game.AwayTeamRuns;
+        } else {
+          msg =
+            "The " +
+            this.Game.AwayTeam.TeamSeason +
+            " " +
+            this.Game.AwayTeam.TeamName +
+            " beat the " +
+            this.Game.HomeTeam.TeamSeason +
+            " " +
+            this.Game.HomeTeam.TeamName +
+            " " +
+            this.Game.AwayTeamRuns +
+            " to " +
+            this.Game.HomeTeamRuns;
+        }
+        this.toastr.success(msg, "Game Over!", {
+          timeOut: 0,
+          extendedTimeOut: 0,
+          positionClass: position,
+          messageClass: "toast-message",
+        });
+
+        this.Game.PlayByPlays.push(msg);
+        this.Game.IsGameInProgress = false;
+
+        this.ClearTimers();
+        localStorage.clear();
       }
       else {
         if (this.Game.CurrentInning.HomeOuts == 3) {
@@ -1353,15 +1388,50 @@ export class GameConfigureComponent implements OnInit {
       if (this.Game.CurrentInning.AwayOuts == 3) {
 
         if (this.Game.CurrentInning.InningNumber >= 9 && this.Game.AwayTeamRuns < this.Game.HomeTeamRuns) {
-          // swal({
-          //   title: "Game Over!",
-          //   text: this.Game.HomeTeam.TeamSeason + " " + this.Game.HomeTeam.TeamName + " " + this.Game.HomeTeamRuns + " to " + this.Game.AwayTeam.TeamSeason + " " + this.Game.AwayTeam.TeamName + " " + this.Game.AwayTeamRuns,
-          //   icon: "success",
-          //   dangerMode: true,
-          // })
-          //   .then(() => {
-              this.Game.IsGameInProgress = false;
-          //  });
+          let position = "toast-top-center";
+          let msg = "";
+          if (this.Game.HomeTeamRuns > this.Game.AwayTeamRuns) {
+            msg =
+              "The " +
+              this.Game.HomeTeam.TeamSeason +
+              " " +
+              this.Game.HomeTeam.TeamName +
+              " beat the " +
+              this.Game.AwayTeam.TeamSeason +
+              " " +
+              this.Game.AwayTeam.TeamName +
+              " " +
+              this.Game.HomeTeamRuns +
+              " to " +
+              this.Game.AwayTeamRuns;
+          } else {
+            msg =
+              "The " +
+              this.Game.AwayTeam.TeamSeason +
+              " " +
+              this.Game.AwayTeam.TeamName +
+              " beat the " +
+              this.Game.HomeTeam.TeamSeason +
+              " " +
+              this.Game.HomeTeam.TeamName +
+              " " +
+              this.Game.AwayTeamRuns +
+              " to " +
+              this.Game.HomeTeamRuns;
+          }
+
+          this.toastr.success(msg, "Game Over!", {
+            timeOut: 0,
+            extendedTimeOut: 0,
+            positionClass: position,
+            messageClass: "toast-message",
+          });
+
+          this.Game.PlayByPlays.push(msg);
+          this.Game.IsGameInProgress = false;
+
+          this.ClearTimers();
+          localStorage.clear();
         } else {
 
           this.Game.CurrentInning.IsBottomOfInning = true;
@@ -3164,5 +3234,12 @@ export class GameConfigureComponent implements OnInit {
     this.requestAnimFrame(() => {
       this.animate(myBaseball, startTime);
     });
+  }
+
+  ClearTimers() {
+    // clear all timers in the array
+    for (var i = 0; i < this.timers.length; i++) {
+      clearTimeout(this.timers[i]);
+    }
   }
 }
