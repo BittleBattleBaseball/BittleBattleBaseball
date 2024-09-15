@@ -2857,7 +2857,7 @@ export class GameplayComponent implements OnInit {
       this.Game.RunnerOnFirst = null;
       this.newOuts = 2;
       this.showError(
-        "Twin-killing! 6-4-3 Double-play. Both baserunners are out!"
+        "Twin-killing! 4-6-3 Double-play. Both baserunners are out!"
       );
     }
   }
@@ -3013,7 +3013,7 @@ export class GameplayComponent implements OnInit {
       this.Game.RunnerOnFirst = null;
       this.newOuts = 2;
       this.showError(
-        "Twin-killing! 5-4-3 Double-play. Both baserunners are out!"
+        "Twin-killing! 3-6-3 Double-play. Both baserunners are out!"
       );
     }
   }
@@ -3111,7 +3111,7 @@ export class GameplayComponent implements OnInit {
       this.Game.RunnerOnFirst = null;
       this.newOuts = 2;
       this.showError(
-        "Twin-killing! 5-4-3 Double-play. Both baserunners are out!"
+        "Twin-killing! 1-6-3 Double-play. Both baserunners are out!"
       );
     }
   }
