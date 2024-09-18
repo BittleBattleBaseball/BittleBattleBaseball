@@ -43,48 +43,48 @@
         <div class="col-lg-8 col-md-12">
             <div>
                 <table [style.visibility]="IsPlayInProgress ? 'hidden' : 'visible'"
-                    class="table table-bordered table-dark table-hover table-condensed table-responsive-md"
-                    style="margin-left: 5px; margin-right: 5px; margin-bottom: -11.7%; opacity: 0.8;">
-                    <thead>
-                        <tr>
-                            <th>{{ Game.Ballpark }}</th>
-                            <ng-container *ngFor="let inning of Game.Innings">
-                                <th>{{inning.InningNumber}}</th>
-                            </ng-container>
-                            <th>R</th>
-                            <th>H</th>
-                            <th>E</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-
-                            <td class="text-left"><img [src]="Game.AwayTeam.TeamLogoUrl"
-                                    style="height: 50px; border: 3px solid white; margin-right: 15px;" />
-                                {{Game.AwayTeam.TeamSeason}}
-                                {{Game.AwayTeam.FullTeamName}}</td>
-                            <ng-container *ngFor="let inning of Game.Innings">
-                                <td>{{inning.AwayRunsScored}}</td>
-                            </ng-container>
-                            <td>{{Game.AwayTeamRuns}}</td>
-                            <td>{{Game.AwayTeamHits}}</td>
-                            <td>{{Game.AwayTeamErrors}}</td>
-                        </tr>
-                        <tr>
-                            <td class="text-left"><img [src]="Game.HomeTeam.TeamLogoUrl"
-                                    style="height: 50px; border: 3px solid white; margin-right: 15px;" />
-                                {{Game.HomeTeam.TeamSeason}}
-                                {{Game.HomeTeam.FullTeamName}}</td>
-                            <ng-container *ngFor="let inning of Game.Innings">
-                                <td> {{inning.HomeRunsScored}}</td>
-                            </ng-container>
-                            <td>{{Game.HomeTeamRuns}}</td>
-                            <td>{{Game.HomeTeamHits}}</td>
-                            <td>{{Game.HomeTeamErrors}}</td>
-                        </tr>
-                    </tbody>
+                  class="table table-bordered table-dark table-hover table-condensed table-responsive-md"
+                  style="margin-left: 5px; margin-right: 5px; margin-bottom: -11.7%; opacity: 0.8;">
+                  <thead>
+                    <tr>
+                      <th colspan="2"> <a [href]="'https://www.ballparksofbaseball.com/ballparks/' + Game.Ballpark.replace(' ', '-')"
+                          target="_blank">{{Game.Ballpark}}</a></th>
+                      <ng-container *ngFor="let inning of Game.Innings">
+                        <th>{{inning.InningNumber}}</th>
+                      </ng-container>
+                      <th>R</th>
+                      <th>H</th>
+                      <th>E</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><img [src]="Game.AwayTeam.TeamLogoUrl" style="height: 3.125em; border: 3px solid white;" />
+                      </td>
+                      <td class="text-left" style="font-size: x-small; font-weight: bold;"> {{Game.AwayTeam.TeamSeason}}
+                        {{Game.AwayTeam.FullTeamName}}</td>
+                      <ng-container *ngFor="let inning of Game.Innings">
+                        <td>{{inning.AwayRunsScored}}</td>
+                      </ng-container>
+                      <td style="font-weight: bold;">{{Game.AwayTeamRuns}}</td>
+                      <td>{{Game.AwayTeamHits}}</td>
+                      <td>{{Game.AwayTeamErrors}}</td>
+                    </tr>
+                    <tr>
+                      <td><img [src]="Game.HomeTeam.TeamLogoUrl" style="height: 3.125em; border: 3px solid white;" />
+                      </td>
+                      <td class="text-left" style="font-size: x-small; font-weight: bold;"> {{Game.HomeTeam.TeamSeason}}
+                        {{Game.HomeTeam.FullTeamName}}</td>
+                      <ng-container *ngFor="let inning of Game.Innings">
+                        <td> {{inning.HomeRunsScored}}</td>
+                      </ng-container>
+                      <td style="font-weight: bold;">{{Game.HomeTeamRuns}}</td>
+                      <td>{{Game.HomeTeamHits}}</td>
+                      <td>{{Game.HomeTeamErrors}}</td>
+                    </tr>
+                  </tbody>
                 </table>
-            </div>
+                </div>
             <br />
             <div style="position: relative;">
                 <canvas *ngIf="Game.IsGameInProgress" id="ballparkCanvas"
