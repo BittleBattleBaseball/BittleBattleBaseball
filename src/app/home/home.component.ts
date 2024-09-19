@@ -170,7 +170,7 @@ export class HomeComponent implements OnInit {
     this.ImageURLs.push("../assets/images/coolpapabell1.jpg");
     this.ImageURLs.push("../assets/images/grover2.jpg");
     this.ImageURLs.push("../assets/images/roberts1.jpg");
-    this.ImageURLs.push("../assets/images/brock2.jpg");
+    this.ImageURLs.push("../assets/images/brock2.JPG");
     this.ImageURLs.push("../assets/images/koufax2.jpg");
     this.ImageURLs.push("../assets/images/fisk1.jpg");
     this.ImageURLs.push("../assets/images/athletics.png");
