@@ -1,4 +1,4 @@
-import { Component, OnInit, PipeTransform } from "@angular/core";
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { GameViewModel } from "../game-view-model";
 import { MLBYearByYearBattingStatsViewModel } from "../mlbyear-by-year-batting-stats-view-model";
 import { MLBYearByYearPitchingStatsViewModel } from "../mlbyear-by-year-pitching-stats-view-model";
@@ -20,7 +20,8 @@ import { BattingAvgPipePipe } from "../batting-avg-pipe.pipe";
 export class GameplayComponent implements OnInit {
   timers = [];
 
-  canvas: HTMLCanvasElement;
+  // canvas: HTMLCanvasElement;
+  @ViewChild('fieldCanvas', {static: false}) canvas: ElementRef;
   ctx: CanvasRenderingContext2D;
   batHittingBallSound = new Audio("../assets/audio/batHittingBall.mp3");
   pitchSound = new Audio("../assets/assets/audio/caughtball.mp3");
@@ -1165,13 +1166,9 @@ export class GameplayComponent implements OnInit {
   }
 
   SetPlayingField() {
-    this.canvas = <HTMLCanvasElement>document.getElementById("ballparkCanvas");
-    if (this.canvas)
-      this.canvas = <HTMLCanvasElement>(
-        document.getElementById("ballparkCanvas")
-      );
+   // this.canvas = <HTMLCanvasElement>document.getElementById("ballparkCanvas");
 
-    this.ctx = this.canvas.getContext("2d");
+    this.ctx = this.canvas.nativeElement.getContext("2d");
 
     let img = new Image();
     img.src = "../assets/images/GenericField2.png";
@@ -3569,7 +3566,7 @@ export class GameplayComponent implements OnInit {
   }
 
   ClearCanvas() {
-    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    this.ctx.clearRect(0, 0, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
 
     this.SetPlayingField();
     //this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);

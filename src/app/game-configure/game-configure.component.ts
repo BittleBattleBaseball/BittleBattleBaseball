@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { GameViewModel } from '../game-view-model';
 import { MLBYearByYearBattingStatsViewModel } from '../mlbyear-by-year-batting-stats-view-model';
 import { MLBYearByYearPitchingStatsViewModel } from '../mlbyear-by-year-pitching-stats-view-model';
@@ -23,7 +23,10 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class GameConfigureComponent implements OnInit {
   timers = [];
-  canvas: HTMLCanvasElement;
+  //canvas: HTMLCanvasElement;
+
+  @ViewChild('fieldCanvas', {static: false}) canvas: ElementRef;
+
   ballCanvas: HTMLCanvasElement;
   ctx: CanvasRenderingContext2D;
   ballCtx: CanvasRenderingContext2D;
@@ -1482,8 +1485,8 @@ export class GameConfigureComponent implements OnInit {
 
   SetPlayingField() {
 
-    this.canvas = <HTMLCanvasElement>document.getElementById("ballparkCanvas");
-    this.ctx = this.canvas.getContext("2d");
+   // this.canvas = <HTMLCanvasElement>document.getElementById("ballparkCanvas");
+    this.ctx = this.canvas.nativeElement.getContext("2d");
 
     this.ballCanvas = <HTMLCanvasElement>document.getElementById("ballCanvas");
     this.ballCtx = this.ballCanvas.getContext("2d");
@@ -3114,7 +3117,7 @@ export class GameConfigureComponent implements OnInit {
 
 
   ClearCanvas() {
-    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    this.ctx.clearRect(0, 0, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
     this.ballCtx.clearRect(0, 0, this.ballCanvas.width, this.ballCanvas.height);
     this.SetPlayingField();
     //this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -3475,7 +3478,7 @@ export class GameConfigureComponent implements OnInit {
     // pixels / second
     var newY = myBaseball.y + (linearSpeed * time / 1000);
 
-    if (newY < this.canvas.height - myBaseball.height / 2) {
+    if (newY < this.canvas.nativeElement.height - myBaseball.height / 2) {
       myBaseball.y = newY;
 
     }

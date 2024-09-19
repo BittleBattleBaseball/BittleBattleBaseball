@@ -87,7 +87,7 @@
                 </div>
             <br />
             <div style="position: relative;">
-                <canvas *ngIf="Game.IsGameInProgress" id="ballparkCanvas"
+                <canvas #fieldCanvas *ngIf="Game.IsGameInProgress" id="ballparkCanvas"
                     style="max-width: 100%; margin-top: -10%; z-index: 0;" [width]="canvasWidth"
                     [height]="canvasHeight">
                 </canvas>

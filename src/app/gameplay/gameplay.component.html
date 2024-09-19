@@ -86,7 +86,7 @@
       </table>
       </div>
       <br />
-      <canvas *ngIf="Game.IsGameInProgress" id="ballparkCanvas" style="max-width: 100%; margin-top: -10%;"
+      <canvas #fieldCanvas *ngIf="Game.IsGameInProgress" id="ballparkCanvas" style="max-width: 100%; margin-top: -10%;"
         [width]="canvasWidth" [height]="canvasHeight">
       </canvas>
       <button class="btn btn-success btn-block" *ngIf="!IsAutoPlayEnabled && Game.IsGameInProgress && !IsPlayInProgress"
