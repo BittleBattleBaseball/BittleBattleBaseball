@@ -9,13 +9,13 @@ import { GameConfigureComponent } from './game-configure/game-configure.componen
 import { ErrorPageComponent } from './error-page/error-page.component';
 
 const routes: Routes = [
-  { path: "", component: HomeComponent },
   { path: "home", component: HomeComponent },
   { path: "searchteams", component: SearchTeamsComponent },
   { path: "setlineups/:newGameId", component: SetStartingLineupsComponent },
   { path: "game/:gameId", component: GameplayComponent },
   { path: "ballparkconfigure", component: BallParkCoordinatesConfiguratorComponent },
   { path: "gameconfigure", component: GameConfigureComponent },
+  { path: "", component: HomeComponent },
   { path: "**", component: ErrorPageComponent }
 ];
 
