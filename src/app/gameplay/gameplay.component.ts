@@ -1226,6 +1226,7 @@ export class GameplayComponent implements OnInit {
     this.DrawLeftfielder();
     this.DrawCenterfielder();
     this.DrawRightfielder();
+    this.DrawCurrentDefenseLogo();
   }
 
   DrawOffensivePlayers() {
@@ -1235,6 +1236,7 @@ export class GameplayComponent implements OnInit {
     this.DrawRunnerOnFirst();
     this.DrawRunnerOnSecond();
     this.DrawRunnerOnThird();
+    this.DrawCurrentOffenseLogo();
   }
 
   DrawBatter() {
@@ -1624,6 +1626,38 @@ export class GameplayComponent implements OnInit {
       };
     }
   }
+
+  DrawCurrentOffenseLogo() {
+    let img = new Image();
+    if (this.Game.CurrentInning.IsBottomOfInning) {
+      img.src = this.Game.HomeTeam.TeamLogoUrl;
+    }
+    else{
+      img.src = this.Game.AwayTeam.TeamLogoUrl;
+    }
+      img.onload = () => {
+        this.ctx.beginPath();
+        this.ctx.rect(1080, this.homeOnDeckBatterY, 80, 80);
+        this.ctx.drawImage(img, 1080, this.homeOnDeckBatterY, 80, 80);
+      }
+  }
+
+  DrawCurrentDefenseLogo() {
+    let img = new Image();
+    if (!this.Game.CurrentInning.IsBottomOfInning) {
+      img.src = this.Game.HomeTeam.TeamLogoUrl;
+    }
+    else{
+      img.src = this.Game.AwayTeam.TeamLogoUrl;
+    }
+      img.onload = () => {
+        this.ctx.beginPath();
+        this.ctx.rect(80, this.homeOnDeckBatterY, 80, 80);
+        this.ctx.drawImage(img, 80, this.homeOnDeckBatterY, 80, 80);
+      }
+  }
+
+
 
   DrawHitterOnAwayDeck() {
     let img = new Image();
