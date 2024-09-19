@@ -85,7 +85,6 @@ export class HomeComponent implements OnInit {
     this.ImageURLs.push("../assets/images/cabrera1.jpg");
     this.ImageURLs.push("../assets/images/valenzuela1.jpg");
     this.ImageURLs.push("../assets/images/rizzo1.jpg");
-    this.ImageURLs.push("../assets/images/story1.JPG");
     this.ImageURLs.push("../assets/images/santo1.jpeg");
     this.ImageURLs.push("../assets/images/sandberg1.jpg");
     this.ImageURLs.push("../assets/images/dean1.jpg");
@@ -159,9 +158,15 @@ export class HomeComponent implements OnInit {
     this.ImageURLs.push("../assets/images/pujols700.jpg");
     this.ImageURLs.push("../assets/images/walterjohnson1.jpg");
     this.ImageURLs.push("../assets/images/collins2.jpg");
-    this.ImageURLs.push("../assets/images/anson1.jpg");
+    this.ImageURLs.push("../assets/images/anson1.jpeg");
     this.ImageURLs.push("../assets/images/lajoie1.jpg");
     this.ImageURLs.push("../assets/images/perry1.jpg");
+    this.ImageURLs.push("../assets/images/frisch1.jpg");
+    this.ImageURLs.push("../assets/images/witt1.jpg");
+    this.ImageURLs.push("../assets/images/gunnar1.jpeg");
+    this.ImageURLs.push("../assets/images/rolen1.jpg");
+    this.ImageURLs.push("../assets/images/freeman1.jpg");
+    this.ImageURLs.push("../assets/images/ramirez1.jpg");
     document.body.style.backgroundImage = "url('../assets/images/BaseballFieldBackground.jpg')";
 
     this.setNewImage();
