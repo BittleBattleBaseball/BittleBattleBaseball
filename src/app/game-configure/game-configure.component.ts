@@ -3125,7 +3125,7 @@ export class GameConfigureComponent implements OnInit {
 
   PlayBatHittingBallSound() {
     if (!this.IsSoundMuted) {
-      this.batHittingBallSound.play();
+    //  this.batHittingBallSound.play();
     }
   }
 
