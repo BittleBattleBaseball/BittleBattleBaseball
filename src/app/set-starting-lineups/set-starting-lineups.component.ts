@@ -30,6 +30,7 @@ export class SetStartingLineupsComponent implements OnInit {
 
     this.GameId = activatedRoute.snapshot.params["newGameId"];
     this.NewGameSetup = JSON.parse(localStorage.getItem('game_setup_' + this.GameId)) as NewGameSetupViewModel;
+    localStorage.clear();
     this.League = this.NewGameSetup.League;
     this.Game = game;
     this.Game.SetValues(this.GameId, this.NewGameSetup.HomeTeamSelection, this.NewGameSetup.AwayTeamSelection, this.NewGameSetup.IsDesignatedHitterEnabled);

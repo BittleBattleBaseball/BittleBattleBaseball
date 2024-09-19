@@ -11,10 +11,10 @@ import { ErrorPageComponent } from './error-page/error-page.component';
 const routes: Routes = [
   { path: "home", component: HomeComponent },
   { path: "searchteams", component: SearchTeamsComponent },
-  { path: "setlineups/:newGameId", component: SetStartingLineupsComponent },
-  { path: "game/:gameId", component: GameplayComponent },
   { path: "ballparkconfigure", component: BallParkCoordinatesConfiguratorComponent },
   { path: "gameconfigure", component: GameConfigureComponent },
+  { path: "setlineups/:newGameId", component: SetStartingLineupsComponent },
+  { path: "game/:gameId", component: GameplayComponent },
   { path: "", component: HomeComponent },
   { path: "**", component: ErrorPageComponent }
 ];
