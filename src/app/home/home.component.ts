@@ -100,7 +100,6 @@ export class HomeComponent implements OnInit {
     this.ImageURLs.push("../assets/images/aaron2.jpg");
     this.ImageURLs.push("../assets/images/aaron715.jpg");
     this.ImageURLs.push("../assets/images/maris61.jpg");
-    this.ImageURLs.push("../assets/images/ryan2.jpg");
     this.ImageURLs.push("../assets/images/gehrig2.jpg");
     this.ImageURLs.push("../assets/images/williams2.jpg");
     this.ImageURLs.push("../assets/images/musial2.jpg");
@@ -174,6 +173,9 @@ export class HomeComponent implements OnInit {
     this.ImageURLs.push("../assets/images/brock2.jpg");
     this.ImageURLs.push("../assets/images/koufax2.jpg");
     this.ImageURLs.push("../assets/images/fisk1.jpg");
+    this.ImageURLs.push("../assets/images/athletics.png");
+    this.ImageURLs.push("../assets/images/thirties.jpg");
+    this.ImageURLs.push("../assets/images/cobb2.jpg");
 
     document.body.style.backgroundImage = "url('../assets/images/BaseballFieldBackground.jpg')";
 
