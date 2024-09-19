@@ -1627,21 +1627,6 @@ export class GameplayComponent implements OnInit {
     }
   }
 
-  DrawCurrentOffenseLogo() {
-    let img = new Image();
-    if (this.Game.CurrentInning.IsBottomOfInning) {
-      img.src = this.Game.HomeTeam.TeamLogoUrl;
-    }
-    else{
-      img.src = this.Game.AwayTeam.TeamLogoUrl;
-    }
-      img.onload = () => {
-        this.ctx.beginPath();
-        this.ctx.rect(1080, this.homeOnDeckBatterY, 80, 80);
-        this.ctx.drawImage(img, 1080, this.homeOnDeckBatterY, 80, 80);
-      }
-  }
-
   DrawCurrentDefenseLogo() {
     let img = new Image();
     if (!this.Game.CurrentInning.IsBottomOfInning) {
@@ -1652,12 +1637,37 @@ export class GameplayComponent implements OnInit {
     }
       img.onload = () => {
         this.ctx.beginPath();
-        this.ctx.rect(80, this.homeOnDeckBatterY, 80, 80);
-        this.ctx.drawImage(img, 80, this.homeOnDeckBatterY, 80, 80);
+        this.ctx.rect(80, this.homeOnDeckBatterY - 15, 76, 76);
+        this.ctx.fillStyle = "white";
+        this.ctx.fill();
+        this.ctx.lineWidth = 6;
+        this.ctx.strokeStyle = "white";
+        this.ctx.stroke();
+        this.ctx.rect(80, this.homeOnDeckBatterY - 15, 76, 76);
+        this.ctx.drawImage(img, 80, this.homeOnDeckBatterY - 15, 76, 76);
       }
   }
 
-
+  DrawCurrentOffenseLogo() {
+    let img = new Image();
+    if (this.Game.CurrentInning.IsBottomOfInning) {
+      img.src = this.Game.HomeTeam.TeamLogoUrl;
+    }
+    else{
+      img.src = this.Game.AwayTeam.TeamLogoUrl;
+    }
+      img.onload = () => {
+        this.ctx.beginPath();
+        this.ctx.rect(1080, this.homeOnDeckBatterY - 15, 76, 76);
+        this.ctx.fillStyle = "white";
+        this.ctx.fill();
+        this.ctx.lineWidth = 6;
+        this.ctx.strokeStyle = "white";
+        this.ctx.stroke();
+        this.ctx.rect(1080, this.homeOnDeckBatterY - 15, 76, 76);
+        this.ctx.drawImage(img, 1080, this.homeOnDeckBatterY - 15, 76, 76);
+      }
+  }
 
   DrawHitterOnAwayDeck() {
     let img = new Image();

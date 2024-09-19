@@ -1822,8 +1822,14 @@ export class GameConfigureComponent implements OnInit {
     }
       img.onload = () => {
         this.ctx.beginPath();
-        this.ctx.rect(80, this.homeOnDeckBatterY, 80, 80);
-        this.ctx.drawImage(img, 80, this.homeOnDeckBatterY, 80, 80);
+        this.ctx.rect(80, this.homeOnDeckBatterY - 15, 76, 76);
+        this.ctx.fillStyle = "white";
+        this.ctx.fill();
+        this.ctx.lineWidth = 6;
+        this.ctx.strokeStyle = "white";
+        this.ctx.stroke();
+        this.ctx.rect(80, this.homeOnDeckBatterY - 15, 76, 76);
+        this.ctx.drawImage(img, 80, this.homeOnDeckBatterY - 15, 76, 76);
       }
   }
 
@@ -1837,8 +1843,14 @@ export class GameConfigureComponent implements OnInit {
     }
       img.onload = () => {
         this.ctx.beginPath();
-        this.ctx.rect(1080, this.homeOnDeckBatterY, 80, 80);
-        this.ctx.drawImage(img, 1080, this.homeOnDeckBatterY, 80, 80);
+        this.ctx.rect(1080, this.homeOnDeckBatterY - 15, 76, 76);
+        this.ctx.fillStyle = "white";
+        this.ctx.fill();
+        this.ctx.lineWidth = 6;
+        this.ctx.strokeStyle = "white";
+        this.ctx.stroke();
+        this.ctx.rect(1080, this.homeOnDeckBatterY - 15, 76, 76);
+        this.ctx.drawImage(img, 1080, this.homeOnDeckBatterY - 15, 76, 76);
       }
   }
 
