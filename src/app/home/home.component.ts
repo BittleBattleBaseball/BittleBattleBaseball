@@ -13,6 +13,7 @@ export class HomeComponent implements OnInit {
   constructor() {
     this.ImageURLs = new Array<string>();
     this.ImageURLs.push("../assets/images/ruth1.jpg");
+    this.ImageURLs.push("../assets/images/wagner2.jpg");
     this.ImageURLs.push("../assets/images/musial1.jpg");
     this.ImageURLs.push("../assets/images/jeter1.jpg");
     this.ImageURLs.push("../assets/images/spahn1.jpg");
@@ -184,7 +185,7 @@ export class HomeComponent implements OnInit {
     this.ImageURLs.push("../assets/images/puckett2.jpg");
     this.ImageURLs.push("../assets/images/ozzie3.jpg");
     this.ImageURLs.push("../assets/images/ruth60th.jpg");
-
+    this.ImageURLs.push("../assets/images/wagner2.jpg");
     document.body.style.backgroundImage = "url('../assets/images/BaseballFieldBackground.jpg')";
 
     this.setNewImage();
