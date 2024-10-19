@@ -5,7 +5,7 @@ export enum EnumAtBatResult {
     Triple,
     HR,
     Out,
-    StrikeOut,
+    K,
     GIDP,
     GITP,
     HBP,

@@ -285,7 +285,7 @@ export class GameViewModel {
             for (let inning of this.Innings) {
                 for (let ab of (isHome ? inning.HomeAtBats : inning.AwayAtBats)) {
                     if (ab.Batter.Id == playerId) {
-                        if (ab.Result == EnumAtBatResult.StrikeOut) {
+                        if (ab.Result == EnumAtBatResult.K) {
                             returnVal++;
                         }
                     }
@@ -304,7 +304,7 @@ export class GameViewModel {
                 for (let ab of (isHome ? inning.AwayAtBats : inning.HomeAtBats)) {
                     if (ab.Pitcher.Id == playerId && (ab.Result == EnumAtBatResult.FieldersChoice
                         || ab.Result == EnumAtBatResult.GIDP || ab.Result == EnumAtBatResult.GITP || ab.Result == EnumAtBatResult.Out
-                        || ab.Result == EnumAtBatResult.Sacrifce || ab.Result == EnumAtBatResult.StrikeOut)) {
+                        || ab.Result == EnumAtBatResult.Sacrifce || ab.Result == EnumAtBatResult.K)) {
 
                         if (ab.Result == EnumAtBatResult.GITP) {
                             outsRecorded += 3;
@@ -371,7 +371,7 @@ export class GameViewModel {
             for (let inning of this.Innings) {
                 for (let ab of (isHome ? inning.AwayAtBats : inning.HomeAtBats)) {
                     if (ab.Pitcher.Id == playerId) {
-                        if (ab.Result == EnumAtBatResult.StrikeOut) {
+                        if (ab.Result == EnumAtBatResult.K) {
                             returnVal++;
                         }
                     }

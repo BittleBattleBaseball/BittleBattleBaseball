@@ -861,12 +861,12 @@ export class GameplayComponent implements OnInit {
       this.showError(
         this.Game.CurrentAtBat.Batter.Name + " strikes out swinging."
       );
-      this.Game.CurrentAtBat.Result = EnumAtBatResult.StrikeOut;
+      this.Game.CurrentAtBat.Result = EnumAtBatResult.K;
     } else if (diceRoll == 11) {
       this.showError(
         this.Game.CurrentAtBat.Batter.Name + " strikes out looking."
       );
-      this.Game.CurrentAtBat.Result = EnumAtBatResult.StrikeOut;
+      this.Game.CurrentAtBat.Result = EnumAtBatResult.K;
     } else if (diceRoll == 12) {
       this.GroundBallOutToThird();
     } else if (diceRoll == 13) {
@@ -1374,7 +1374,7 @@ export class GameplayComponent implements OnInit {
       color = "#B30000";
     }
 
-    this.ctx.font = "18pt Calibri";
+    this.ctx.font = "16pt Calibri";
     this.ctx.textAlign = "right";
     this.ctx.fillStyle = "white";
     this.ctx.fillText(
@@ -1404,12 +1404,12 @@ export class GameplayComponent implements OnInit {
       715
     );
 
-       //**Draw game stats */
-       this.ctx.font = '14pt Calibri';
-       this.ctx.fillText(this.Game.GetHits(this.Game.CurrentAtBat.Batter.Id, this.Game.CurrentInning.IsBottomOfInning) +
-       " for " +
-       (this.Game.GetAtBats(this.Game.CurrentAtBat.Batter.Id, this.Game.CurrentInning.IsBottomOfInning) - 1)
-        + " " + this.Game.GetBatterGameSummary(this.Game.CurrentAtBat.Batter.Id, this.Game.CurrentInning.IsBottomOfInning) , 1000 + ((this.playerFieldImgAvatarWidth * 3) / 2), 740);
+      //**Draw game stats */
+      this.ctx.font = '14pt Calibri';
+      this.ctx.fillText(this.Game.GetHits(this.Game.CurrentAtBat.Batter.Id, this.Game.CurrentInning.IsBottomOfInning) +
+      " for " +
+      (this.Game.GetAtBats(this.Game.CurrentAtBat.Batter.Id, this.Game.CurrentInning.IsBottomOfInning) - 1)
+       + " " + this.Game.GetBatterGameSummary(this.Game.CurrentAtBat.Batter.Id, this.Game.CurrentInning.IsBottomOfInning) , 1010 + ((this.playerFieldImgAvatarWidth * 3) / 2), 740);
 
     //Draw Current Batter Info
     this.ctx.beginPath();
