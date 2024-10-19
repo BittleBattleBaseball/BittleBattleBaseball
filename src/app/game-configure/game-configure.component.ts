@@ -1861,6 +1861,24 @@ export class GameConfigureComponent implements OnInit {
         this.ctx.rect(1080, this.homeOnDeckBatterY - 15, 76, 76);
         this.ctx.drawImage(img, 1080, this.homeOnDeckBatterY - 15, 76, 76);
       }
+
+       //Offense Team Runs
+       this.ctx.font = "56pt Calibri";
+       this.ctx.textAlign = 'center';
+       this.ctx.fillStyle = 'white';
+       if (this.Game.CurrentInning.IsBottomOfInning) {
+         this.ctx.fillText(
+           this.Game.HomeTeamRuns.toString(),
+           960 + (this.playerFieldImgAvatarWidth * 3) / 2,
+           815
+         );
+       } else {
+         this.ctx.fillText(
+           this.Game.AwayTeamRuns.toString(),
+           960 + (this.playerFieldImgAvatarWidth * 3) / 2,
+           815
+         );
+       }
   }
 
   DrawHitterOnAwayDeck() {
@@ -1946,11 +1964,34 @@ export class GameConfigureComponent implements OnInit {
       this.ctx.fillText(img.title, 110 + ((this.playerFieldImgAvatarWidth * 3) / 2), 650);
       this.ctx.fillText(this.Game.CurrentAtBat.Pitcher.PitchingSeasonStats.season + " STATS", 110 + ((this.playerFieldImgAvatarWidth * 3) / 2), 690);
 
-      this.ctx.fillText(this.Game.CurrentAtBat.Pitcher.PitchingSeasonStats.wins + "-" + this.Game.CurrentAtBat.Pitcher.PitchingSeasonStats.losses + " " +
-        this.Game.CurrentAtBat.Pitcher.PitchingSeasonStats.era + "ERA " +
-        this.Game.CurrentAtBat.Pitcher.PitchingSeasonStats.whip + "WHIP"
-        , 110 + ((this.playerFieldImgAvatarWidth * 3) / 2), 715);
+      this.ctx.fillText(
+        this.Game.CurrentAtBat.Pitcher.PitchingSeasonStats.wins +
+          "-" +
+          this.Game.CurrentAtBat.Pitcher.PitchingSeasonStats.losses +
+          " " +
+          this.Game.CurrentAtBat.Pitcher.PitchingSeasonStats.era +
+          "ERA " +
+          this.Game.CurrentAtBat.Pitcher.PitchingSeasonStats.whip +
+          "WHIP",
+        110 + (this.playerFieldImgAvatarWidth * 3) / 2,
+        715
+      );
 
+      //Defense Team Runs
+      this.ctx.font = "56pt Calibri";
+      if (this.Game.CurrentInning.IsBottomOfInning) {
+        this.ctx.fillText(
+          this.Game.AwayTeamRuns.toString(),
+          120 + (this.playerFieldImgAvatarWidth * 3) / 2,
+          815
+        );
+      } else {
+        this.ctx.fillText(
+          this.Game.HomeTeamRuns.toString(),
+          120 + (this.playerFieldImgAvatarWidth * 3) / 2,
+          815
+        );
+      }
 
       //Draw pitcher tired percentage
       let pctLeft = this.Game.CurrentAtBat.Pitcher.PitchingSeasonStats.StartingPX / this.Game.CurrentAtBat.Pitcher.PitchingSeasonStats.PX;

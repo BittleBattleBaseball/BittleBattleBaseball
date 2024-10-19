@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from "@angular/core";
 import { GameViewModel } from "../game-view-model";
 import { MLBYearByYearBattingStatsViewModel } from "../mlbyear-by-year-batting-stats-view-model";
 import { MLBYearByYearPitchingStatsViewModel } from "../mlbyear-by-year-pitching-stats-view-model";
@@ -21,7 +21,7 @@ export class GameplayComponent implements OnInit {
   timers = [];
 
   // canvas: HTMLCanvasElement;
-  @ViewChild('fieldCanvas', {static: false}) canvas: ElementRef;
+  @ViewChild("fieldCanvas", { static: false }) canvas: ElementRef;
   ctx: CanvasRenderingContext2D;
   batHittingBallSound = new Audio("../assets/audio/batHittingBall.mp3");
   pitchSound = new Audio("../assets/assets/audio/caughtball.mp3");
@@ -98,7 +98,6 @@ export class GameplayComponent implements OnInit {
   IsAutoPlayEnabled: boolean;
 
   ngAfterViewInit(): void {
-
     let position = "toast-top-center";
     let msg =
       "Today's ballgame is between the " +
@@ -110,7 +109,7 @@ export class GameplayComponent implements OnInit {
       " " +
       this.Game.AwayTeam.TeamName;
 
-      this.SetPlayingField();
+    this.SetPlayingField();
 
     this.toastr.success(
       msg,
@@ -1166,7 +1165,7 @@ export class GameplayComponent implements OnInit {
   }
 
   SetPlayingField() {
-   // this.canvas = <HTMLCanvasElement>document.getElementById("ballparkCanvas");
+    // this.canvas = <HTMLCanvasElement>document.getElementById("ballparkCanvas");
 
     this.ctx = this.canvas.nativeElement.getContext("2d");
 
@@ -1240,7 +1239,10 @@ export class GameplayComponent implements OnInit {
     let img = new Image();
     let color = "#00004E";
     img.src = this.Game.CurrentAtBat.Batter.PlayerImageURL;
-    img.title =  this.Game.CurrentAtBat.Batter.Name + " - " + this.Game.CurrentAtBat.Batter.Position;
+    img.title =
+      this.Game.CurrentAtBat.Batter.Name +
+      " - " +
+      this.Game.CurrentAtBat.Batter.Position;
     if (this.Game.CurrentInning.IsBottomOfInning) {
       color = "#B30000";
     }
@@ -1404,12 +1406,27 @@ export class GameplayComponent implements OnInit {
       715
     );
 
-      //**Draw game stats */
-      this.ctx.font = '14pt Calibri';
-      this.ctx.fillText(this.Game.GetHits(this.Game.CurrentAtBat.Batter.Id, this.Game.CurrentInning.IsBottomOfInning) +
-      " for " +
-      (this.Game.GetAtBats(this.Game.CurrentAtBat.Batter.Id, this.Game.CurrentInning.IsBottomOfInning) - 1)
-       + " " + this.Game.GetBatterGameSummary(this.Game.CurrentAtBat.Batter.Id, this.Game.CurrentInning.IsBottomOfInning) , 1010 + ((this.playerFieldImgAvatarWidth * 3) / 2), 740);
+    //**Draw game stats */
+    this.ctx.font = "14pt Calibri";
+    this.ctx.fillText(
+      this.Game.GetHits(
+        this.Game.CurrentAtBat.Batter.Id,
+        this.Game.CurrentInning.IsBottomOfInning
+      ) +
+        " for " +
+        (this.Game.GetAtBats(
+          this.Game.CurrentAtBat.Batter.Id,
+          this.Game.CurrentInning.IsBottomOfInning
+        ) -
+          1) +
+        " " +
+        this.Game.GetBatterGameSummary(
+          this.Game.CurrentAtBat.Batter.Id,
+          this.Game.CurrentInning.IsBottomOfInning
+        ),
+      1010 + (this.playerFieldImgAvatarWidth * 3) / 2,
+      740
+    );
 
     //Draw Current Batter Info
     this.ctx.beginPath();
@@ -1635,42 +1652,58 @@ export class GameplayComponent implements OnInit {
     let img = new Image();
     if (!this.Game.CurrentInning.IsBottomOfInning) {
       img.src = this.Game.HomeTeam.TeamLogoUrl;
-    }
-    else{
+    } else {
       img.src = this.Game.AwayTeam.TeamLogoUrl;
     }
-      img.onload = () => {
-        this.ctx.beginPath();
-        this.ctx.rect(80, this.homeOnDeckBatterY - 15, 76, 76);
-        this.ctx.fillStyle = "white";
-        this.ctx.fill();
-        this.ctx.lineWidth = 6;
-        this.ctx.strokeStyle = "white";
-        this.ctx.stroke();
-        this.ctx.rect(80, this.homeOnDeckBatterY - 15, 76, 76);
-        this.ctx.drawImage(img, 80, this.homeOnDeckBatterY - 15, 76, 76);
-      }
+    img.onload = () => {
+      this.ctx.beginPath();
+      this.ctx.rect(80, this.homeOnDeckBatterY - 15, 76, 76);
+      this.ctx.fillStyle = "white";
+      this.ctx.fill();
+      this.ctx.lineWidth = 6;
+      this.ctx.strokeStyle = "white";
+      this.ctx.stroke();
+      this.ctx.rect(80, this.homeOnDeckBatterY - 15, 76, 76);
+      this.ctx.drawImage(img, 80, this.homeOnDeckBatterY - 15, 76, 76);
+    };
   }
 
   DrawCurrentOffenseLogo() {
     let img = new Image();
     if (this.Game.CurrentInning.IsBottomOfInning) {
       img.src = this.Game.HomeTeam.TeamLogoUrl;
-    }
-    else{
+    } else {
       img.src = this.Game.AwayTeam.TeamLogoUrl;
     }
-      img.onload = () => {
-        this.ctx.beginPath();
-        this.ctx.rect(1080, this.homeOnDeckBatterY - 15, 76, 76);
-        this.ctx.fillStyle = "white";
-        this.ctx.fill();
-        this.ctx.lineWidth = 6;
-        this.ctx.strokeStyle = "white";
-        this.ctx.stroke();
-        this.ctx.rect(1080, this.homeOnDeckBatterY - 15, 76, 76);
-        this.ctx.drawImage(img, 1080, this.homeOnDeckBatterY - 15, 76, 76);
-      }
+    img.onload = () => {
+      this.ctx.beginPath();
+      this.ctx.rect(1080, this.homeOnDeckBatterY - 15, 76, 76);
+      this.ctx.fillStyle = "white";
+      this.ctx.fill();
+      this.ctx.lineWidth = 6;
+      this.ctx.strokeStyle = "white";
+      this.ctx.stroke();
+      this.ctx.rect(1080, this.homeOnDeckBatterY - 15, 76, 76);
+      this.ctx.drawImage(img, 1080, this.homeOnDeckBatterY - 15, 76, 76);
+    };
+
+    //Offense Team Runs
+    this.ctx.font = "56pt Calibri";
+    this.ctx.textAlign = "center";
+    this.ctx.fillStyle = "white";
+    if (this.Game.CurrentInning.IsBottomOfInning) {
+      this.ctx.fillText(
+        this.Game.HomeTeamRuns.toString(),
+        960 + (this.playerFieldImgAvatarWidth * 3) / 2,
+        815
+      );
+    } else {
+      this.ctx.fillText(
+        this.Game.AwayTeamRuns.toString(),
+        960 + (this.playerFieldImgAvatarWidth * 3) / 2,
+        815
+      );
+    }
   }
 
   DrawHitterOnAwayDeck() {
@@ -1817,6 +1850,22 @@ export class GameplayComponent implements OnInit {
         110 + (this.playerFieldImgAvatarWidth * 3) / 2,
         715
       );
+
+      //Defense Team Runs
+      this.ctx.font = "56pt Calibri";
+      if (this.Game.CurrentInning.IsBottomOfInning) {
+        this.ctx.fillText(
+          this.Game.AwayTeamRuns.toString(),
+          120 + (this.playerFieldImgAvatarWidth * 3) / 2,
+          815
+        );
+      } else {
+        this.ctx.fillText(
+          this.Game.HomeTeamRuns.toString(),
+          120 + (this.playerFieldImgAvatarWidth * 3) / 2,
+          815
+        );
+      }
 
       //Draw pitcher tired percentage
       let pctLeft =
@@ -3573,7 +3622,12 @@ export class GameplayComponent implements OnInit {
   }
 
   ClearCanvas() {
-    this.ctx.clearRect(0, 0, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
+    this.ctx.clearRect(
+      0,
+      0,
+      this.canvas.nativeElement.width,
+      this.canvas.nativeElement.height
+    );
 
     this.SetPlayingField();
     //this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
