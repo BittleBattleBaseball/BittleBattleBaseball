@@ -553,7 +553,7 @@ export class GameplayComponent implements OnInit {
         );
       }
 
-      this.Game.CurrentAtBat.Result = EnumAtBatResult.HomeRun;
+      this.Game.CurrentAtBat.Result = EnumAtBatResult.HR;
 
       if (this.Game.RunnerOnThird) {
         this.Game.RunnersWhoScoredOnPlay.push(this.Game.RunnerOnThird);
@@ -1240,7 +1240,7 @@ export class GameplayComponent implements OnInit {
     let img = new Image();
     let color = "#00004E";
     img.src = this.Game.CurrentAtBat.Batter.PlayerImageURL;
-    img.title = this.Game.CurrentAtBat.Batter.Name;
+    img.title =  this.Game.CurrentAtBat.Batter.Name + " - " + this.Game.CurrentAtBat.Batter.Position;
     if (this.Game.CurrentInning.IsBottomOfInning) {
       color = "#B30000";
     }
@@ -1403,6 +1403,13 @@ export class GameplayComponent implements OnInit {
       1010 + (this.playerFieldImgAvatarWidth * 3) / 2,
       715
     );
+
+       //**Draw game stats */
+       this.ctx.font = '14pt Calibri';
+       this.ctx.fillText(this.Game.GetHits(this.Game.CurrentAtBat.Batter.Id, this.Game.CurrentInning.IsBottomOfInning) +
+       " for " +
+       (this.Game.GetAtBats(this.Game.CurrentAtBat.Batter.Id, this.Game.CurrentInning.IsBottomOfInning) - 1)
+        + " " + this.Game.GetBatterGameSummary(this.Game.CurrentAtBat.Batter.Id, this.Game.CurrentInning.IsBottomOfInning) , 1000 + ((this.playerFieldImgAvatarWidth * 3) / 2), 740);
 
     //Draw Current Batter Info
     this.ctx.beginPath();

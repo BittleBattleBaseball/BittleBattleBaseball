@@ -3,7 +3,7 @@ export enum EnumAtBatResult {
     Single,
     Double,
     Triple,
-    HomeRun,
+    HR,
     Out,
     StrikeOut,
     GIDP,

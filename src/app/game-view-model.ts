@@ -105,7 +105,7 @@ export class GameViewModel {
 
         /*
           this.AwayTeam.Pitcher.HittingSeasonStats.OBRP = this.HomeTeam.Pitcher.PitchingSeasonStats.PX * .225;//TODO - FIX.AwayTeam.FirstBaseman.HittingSeasonStats.obp;
-        
+
         this.AwayTeam.Catcher.HittingSeasonStats.OBRP = this.HomeTeam.Pitcher.PitchingSeasonStats.PX * this.AwayTeam.Catcher.HittingSeasonStats.obp;
         this.AwayTeam.FirstBaseman.HittingSeasonStats.OBRP = this.HomeTeam.Pitcher.PitchingSeasonStats.PX * this.AwayTeam.FirstBaseman.HittingSeasonStats.obp;
         this.AwayTeam.SecondBaseman.HittingSeasonStats.OBRP = this.HomeTeam.Pitcher.PitchingSeasonStats.PX * this.AwayTeam.SecondBaseman.HittingSeasonStats.obp;
@@ -219,6 +219,29 @@ export class GameViewModel {
         return returnVal;
     }
 
+    GetBatterGameSummary(playerId: number, isHome: boolean): string {
+      let returnVal = '';
+
+      if (this.Innings) {
+          for (let inning of this.Innings) {
+
+              for (let ab of (isHome ? inning.HomeAtBats : inning.AwayAtBats)) {
+                  if (ab.Batter.Id == playerId) {
+                    if(ab.Result && EnumAtBatResult[ab.Result] != 'Out'){
+                    returnVal += EnumAtBatResult[ab.Result] + ", ";
+                    }
+                  }
+              }
+          }
+      }
+
+      if(!returnVal)
+        return '';
+
+      returnVal = returnVal.slice(0, -2);
+      return returnVal;
+  }
+
     GetHits(playerId: number, isHome: boolean): number {
         let returnVal = 0;
 
@@ -226,7 +249,7 @@ export class GameViewModel {
             for (let inning of this.Innings) {
                 for (let ab of (isHome ? inning.HomeAtBats : inning.AwayAtBats)) {
                     if (ab.Batter.Id == playerId) {
-                        if (ab.Result == EnumAtBatResult.Single || ab.Result == EnumAtBatResult.Double || ab.Result == EnumAtBatResult.Triple || ab.Result == EnumAtBatResult.HomeRun) {
+                        if (ab.Result == EnumAtBatResult.Single || ab.Result == EnumAtBatResult.Double || ab.Result == EnumAtBatResult.Triple || ab.Result == EnumAtBatResult.HR) {
                             returnVal++;
                         }
                     }
@@ -312,7 +335,7 @@ export class GameViewModel {
                 for (let ab of (isHome ? inning.AwayAtBats : inning.HomeAtBats)) {
                     if (ab.Pitcher.Id == playerId) {
                         if (ab.Result == EnumAtBatResult.Single || ab.Result == EnumAtBatResult.Double
-                            || ab.Result == EnumAtBatResult.Triple || ab.Result == EnumAtBatResult.HomeRun) {
+                            || ab.Result == EnumAtBatResult.Triple || ab.Result == EnumAtBatResult.HR) {
                             returnVal++;
                         }
                     }
@@ -382,7 +405,7 @@ export class GameViewModel {
             for (let inning of this.Innings) {
                 for (let ab of (isHome ? inning.AwayAtBats : inning.HomeAtBats)) {
                     if (ab.Pitcher.Id == playerId) {
-                        if (ab.Result == EnumAtBatResult.HomeRun) {
+                        if (ab.Result == EnumAtBatResult.HR) {
                             returnVal++;
                         }
                     }
