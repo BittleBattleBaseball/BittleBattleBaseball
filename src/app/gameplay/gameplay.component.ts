@@ -98,6 +98,12 @@ export class GameplayComponent implements OnInit {
   IsAutoPlayEnabled: boolean;
 
   ngAfterViewInit(): void {
+    // Null check for game initialization
+    if (!this.Game || !this.Game.HomeTeam || !this.Game.AwayTeam) {
+      console.error("Game not properly initialized in ngAfterViewInit");
+      return;
+    }
+
     let position = "toast-top-center";
     let msg =
       "Today's ballgame is between the " +
@@ -196,6 +202,14 @@ export class GameplayComponent implements OnInit {
     this.Game.RunnersWhoScoredOnPlay = [];
     this.ClearCanvas();
 
+    // Null check for current at bat
+    if (!this.Game || !this.Game.CurrentAtBat || !this.Game.CurrentAtBat.Batter ||
+        !this.Game.CurrentAtBat.Batter.HittingSeasonStats || !this.Game.CurrentAtBat.Pitcher ||
+        !this.Game.CurrentAtBat.Pitcher.PitchingSeasonStats) {
+      console.error("Invalid game state in ExecuteNextPlay");
+      return;
+    }
+
     this.Game.CurrentAtBat.Batter.HittingSeasonStats.OBRP =
       this.Game.CurrentAtBat.Pitcher.PitchingSeasonStats.PX *
       this.Game.CurrentAtBat.Batter.HittingSeasonStats.obp;
@@ -235,7 +249,7 @@ export class GameplayComponent implements OnInit {
   }
 
   GenerateRandomNumber(from: number, to: number): number {
-    let randomNumber = Math.floor(Math.random() * to + from);
+    let randomNumber = Math.floor(Math.random() * (to - from + 1)) + from;
     console.log("Random # generated : " + randomNumber);
     return randomNumber;
   }
@@ -245,14 +259,14 @@ export class GameplayComponent implements OnInit {
     let typeOfReachedBase = this.GenerateRandomNumber(1, 1000);
     let diceRoll: number;
     if (this.Game.CurrentInning.IsBottomOfInning) {
-      let addedPower =
-        this.Game.CurrentAtBat.Batter.HittingSeasonStats.slg /
-        this._leagueHomeBattingStats.slg;
+      let addedPower = this._leagueHomeBattingStats && this._leagueHomeBattingStats.slg
+        ? this.Game.CurrentAtBat.Batter.HittingSeasonStats.slg / this._leagueHomeBattingStats.slg
+        : 1.0; // Default multiplier if stats unavailable
       diceRoll = addedPower * typeOfReachedBase;
     } else {
-      let addedPower =
-        this.Game.CurrentAtBat.Batter.HittingSeasonStats.slg /
-        this._leagueAwayBattingStats.slg;
+      let addedPower = this._leagueAwayBattingStats && this._leagueAwayBattingStats.slg
+        ? this.Game.CurrentAtBat.Batter.HittingSeasonStats.slg / this._leagueAwayBattingStats.slg
+        : 1.0; // Default multiplier if stats unavailable
       diceRoll = addedPower * typeOfReachedBase;
     }
 
@@ -386,7 +400,7 @@ export class GameplayComponent implements OnInit {
 
       this.Game.RunnerOnFirst = this.Game.CurrentAtBat.Batter;
       if (this.Game.CurrentInning.IsBottomOfInning) {
-        this.Game.CurrentInning.AwayHits++;
+        this.Game.CurrentInning.HomeHits++;
       } else {
         this.Game.CurrentInning.AwayHits++;
       }
@@ -453,7 +467,7 @@ export class GameplayComponent implements OnInit {
 
       this.Game.RunnerOnSecond = this.Game.CurrentAtBat.Batter;
       if (this.Game.CurrentInning.IsBottomOfInning) {
-        this.Game.CurrentInning.AwayHits++;
+        this.Game.CurrentInning.HomeHits++;
       } else {
         this.Game.CurrentInning.AwayHits++;
       }
@@ -510,7 +524,7 @@ export class GameplayComponent implements OnInit {
       this.Game.RunnerOnThird = this.Game.CurrentAtBat.Batter;
 
       if (this.Game.CurrentInning.IsBottomOfInning) {
-        this.Game.CurrentInning.AwayHits++;
+        this.Game.CurrentInning.HomeHits++;
       } else {
         this.Game.CurrentInning.AwayHits++;
       }
@@ -603,7 +617,7 @@ export class GameplayComponent implements OnInit {
       }
 
       if (this.Game.CurrentInning.IsBottomOfInning) {
-        this.Game.CurrentInning.AwayHits++;
+        this.Game.CurrentInning.HomeHits++;
       } else {
         this.Game.CurrentInning.AwayHits++;
       }
@@ -1024,11 +1038,16 @@ export class GameplayComponent implements OnInit {
   }
 
   ProcessEndOfOutPlay() {
+    // Null checks
+    if (!this.Game || !this.Game.CurrentInning) {
+      console.error("Invalid game state in ProcessEndOfOutPlay");
+      return;
+    }
+
     if (this.Game.CurrentInning.IsBottomOfInning) {
       this.Game.CurrentInning.HomeOuts += this.newOuts;
       if (
         this.Game.CurrentInning.InningNumber >= 9 &&
-        this.Game.AwayTeamRuns != this.Game.HomeTeamRuns &&
         this.Game.CurrentInning.HomeOuts == 3
       ) {
         let position = "toast-top-center";
@@ -1048,7 +1067,7 @@ export class GameplayComponent implements OnInit {
             this.Game.HomeTeamRuns +
             " to " +
             this.Game.AwayTeamRuns;
-        } else {
+        } else if (this.Game.AwayTeamRuns > this.Game.HomeTeamRuns) {
           msg =
             "The " +
             this.Game.AwayTeam.TeamSeason +
@@ -1062,6 +1081,8 @@ export class GameplayComponent implements OnInit {
             this.Game.AwayTeamRuns +
             " to " +
             this.Game.HomeTeamRuns;
+        } else {
+          msg = "The game ended in a tie " + this.Game.HomeTeamRuns + " to " + this.Game.AwayTeamRuns;
         }
         this.toastr.success(msg, "Game Over!", {
           timeOut: 0,
@@ -1272,10 +1293,14 @@ export class GameplayComponent implements OnInit {
       }
     }
 
-    // Runner on second moves to base for force out at first
+    // Runner on second is forced out at third (or tagged out)
     if (this.Game.RunnerOnSecond) {
-      this.Game.RunnerOnFirst = null;
       this.Game.RunnerOnSecond = null;
+      if (this.Game.CurrentInning.IsBottomOfInning) {
+        this.Game.CurrentInning.HomeOuts++;
+      } else {
+        this.Game.CurrentInning.AwayOuts++;
+      }
     }
 
     this.newOuts = 2; // Double play = 2 outs
