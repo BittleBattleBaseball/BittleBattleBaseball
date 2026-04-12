@@ -209,7 +209,10 @@ export class GameplayComponent implements OnInit {
             let diceRoll = this.GenerateRandomNumber(1, 1000);
             //this.showWarning("Dice Roll is " + diceRoll + " Current Batter OBRP : " + this.Game.CurrentAtBat.Batter.HittingSeasonStats.OBRP);
 
-            if (
+            // RARE: Hit By Pitch (~1% probability)
+            if (diceRoll > 990) {
+              this.ExecuteHitByPitch();
+            } else if (
               diceRoll <=
               this.Game.CurrentAtBat.Batter.HittingSeasonStats.OBRP * 1000
             ) {
@@ -253,9 +256,22 @@ export class GameplayComponent implements OnInit {
       diceRoll = addedPower * typeOfReachedBase;
     }
 
+    // EXTREMELY RARE: Triple play (only possible with bases loaded)
+    // Probability: ~0.04% (1 per 2500 games)
+    if (
+      diceRoll > 995 &&
+      this.Game.RunnerOnFirst &&
+      this.Game.RunnerOnSecond &&
+      this.Game.RunnerOnThird
+    ) {
+      this.ExecuteTriplePlay();
+      return;
+    }
+
     let basesAdded = 1;
     //TODO - Numbers based off of 2019 totals, need to pull in stats for year of batter
     if (diceRoll <= 215) {
+      // Keeping existing walk logic
       //Walks
       this.BatterWalked();
       this.showInfo(this.Game.CurrentAtBat.Batter.Name + " walked.");
@@ -614,32 +630,50 @@ export class GameplayComponent implements OnInit {
 
   ExecuteCurrentBatterIsOut() {
     this.Game.RunnersWhoScoredOnPlay = [];
-    let diceRoll = this.GenerateRandomNumber(1, 24);
-    //this.showWarning("Dice Roll is " + diceRoll);
+    let diceRoll = this.GenerateRandomNumber(1, 100);
+
+    // EXTREMELY RARE: Fielding Error (~1-2% of outs)
+    if (diceRoll > 96) {
+      this.ExecuteFieldingError();
+      return;
+    }
+
+    // RARE: Double Play (~15% of outs) - only with runners on base
+    if (
+      diceRoll > 85 &&
+      this.Game.RunnerOnFirst &&
+      (this.Game.RunnerOnSecond || this.Game.RunnerOnThird)
+    ) {
+      this.ExecuteGroundBallDoublePlay();
+      return;
+    }
+
+    // Standard out (convert to 1-24 scale for existing logic)
+    let standardDiceRoll = this.GenerateRandomNumber(1, 24);
 
     this.Game.CurrentAtBat.Result = EnumAtBatResult.Out;
 
-    if (diceRoll == 1) {
+    if (standardDiceRoll == 1) {
       this.FlyBallOutToFirst();
       this.showError(
         this.Game.CurrentAtBat.Batter.Name + " pops out to first."
       );
-    } else if (diceRoll == 2) {
+    } else if (standardDiceRoll == 2) {
       this.FlyBallOutToSecond();
       this.showError(
         this.Game.CurrentAtBat.Batter.Name + " pops out to second."
       );
-    } else if (diceRoll == 3) {
+    } else if (standardDiceRoll == 3) {
       this.FlyBallOutToThird();
       this.showError(
         this.Game.CurrentAtBat.Batter.Name + " pops out to third."
       );
-    } else if (diceRoll == 4) {
+    } else if (standardDiceRoll == 4) {
       this.FlyBallOutToShortstop();
       this.showError(
         this.Game.CurrentAtBat.Batter.Name + " pops out to shortstop."
       );
-    } else if (diceRoll == 5) {
+    } else if (standardDiceRoll == 5) {
       this.FlyBallOutToLeftField();
       this.showError(
         this.Game.CurrentAtBat.Batter.Name + " pops out to left field."
@@ -708,7 +742,7 @@ export class GameplayComponent implements OnInit {
           }
         }
       }
-    } else if (diceRoll == 6) {
+    } else if (standardDiceRoll == 6) {
       this.FlyBallOutToCenterField();
       this.showError(
         this.Game.CurrentAtBat.Batter.Name + " pops out to center field."
@@ -777,7 +811,7 @@ export class GameplayComponent implements OnInit {
           }
         }
       }
-    } else if (diceRoll == 7) {
+    } else if (standardDiceRoll == 7) {
       this.FlyBallOutToRightField();
       this.showError(
         this.Game.CurrentAtBat.Batter.Name + " pops out to right field."
@@ -846,84 +880,84 @@ export class GameplayComponent implements OnInit {
           }
         }
       }
-    } else if (diceRoll == 8) {
+    } else if (standardDiceRoll == 8) {
       this.FlyBallOutToPitcher();
       this.showError(
         this.Game.CurrentAtBat.Batter.Name + " pops out to pitcher."
       );
-    } else if (diceRoll == 9) {
+    } else if (standardDiceRoll == 9) {
       this.FlyBallOutToCatcher();
       this.showError(
         this.Game.CurrentAtBat.Batter.Name + " pops out to catcher."
       );
-    } else if (diceRoll == 10) {
+    } else if (standardDiceRoll == 10) {
       this.showError(
         this.Game.CurrentAtBat.Batter.Name + " strikes out swinging."
       );
       this.Game.CurrentAtBat.Result = EnumAtBatResult.K;
-    } else if (diceRoll == 11) {
+    } else if (standardDiceRoll == 11) {
       this.showError(
         this.Game.CurrentAtBat.Batter.Name + " strikes out looking."
       );
       this.Game.CurrentAtBat.Result = EnumAtBatResult.K;
-    } else if (diceRoll == 12) {
+    } else if (standardDiceRoll == 12) {
       this.GroundBallOutToThird();
-    } else if (diceRoll == 13) {
+    } else if (standardDiceRoll == 13) {
       this.GroundBallOutToShort();
       this.showError(
         this.Game.CurrentAtBat.Batter.Name + " grounds out to shortstop."
       );
-    } else if (diceRoll == 14) {
+    } else if (standardDiceRoll == 14) {
       this.GroundBallOutToSecond();
       this.showError(
         this.Game.CurrentAtBat.Batter.Name + " grounds out to second."
       );
-    } else if (diceRoll == 15) {
+    } else if (standardDiceRoll == 15) {
       this.GroundBallOutToFirst();
       this.showError(
         this.Game.CurrentAtBat.Batter.Name + " grounds out to first."
       );
-    } else if (diceRoll == 16) {
+    } else if (standardDiceRoll == 16) {
       this.GroundBallOutToPitcher();
       this.showError(
         this.Game.CurrentAtBat.Batter.Name + " grounds out to pitcher."
       );
-    } else if (diceRoll == 17) {
+    } else if (standardDiceRoll == 17) {
       this.LineOutToThird();
       this.showError(
         this.Game.CurrentAtBat.Batter.Name + " lines out to third."
       );
-    } else if (diceRoll == 18) {
+    } else if (standardDiceRoll == 18) {
       this.LineOutToShort();
       this.showError(
         this.Game.CurrentAtBat.Batter.Name + " lines out to short."
       );
-    } else if (diceRoll == 19) {
+    } else if (standardDiceRoll == 19) {
       this.LineOutToSecond();
       this.showError(
         this.Game.CurrentAtBat.Batter.Name + " lines out to second."
       );
-    } else if (diceRoll == 20) {
+    } else if (standardDiceRoll == 20) {
       this.LineOutToFirst();
       this.showError(
         this.Game.CurrentAtBat.Batter.Name + " lines out to first."
       );
-    } else if (diceRoll == 21) {
+    } else if (standardDiceRoll == 21) {
       this.LineOutToPitcher();
       this.showError(
         this.Game.CurrentAtBat.Batter.Name + " lines out to pitcher."
       );
-    } else if (diceRoll == 22) {
+    } else if (standardDiceRoll == 22) {
       this.LineOutToLeft();
       this.showError(
         this.Game.CurrentAtBat.Batter.Name + " lines out to left."
       );
-    } else if (diceRoll == 23) {
+    } else if (standardDiceRoll == 23) {
       this.LineOutToCenter();
       this.showError(
         this.Game.CurrentAtBat.Batter.Name + " lines out to center."
       );
-    } else if (diceRoll == 24) {
+    } else if (standardDiceRoll == 24) {
       this.LineOutToRight();
       this.showError(
         this.Game.CurrentAtBat.Batter.Name + " lines out to right."
@@ -1101,6 +1135,297 @@ export class GameplayComponent implements OnInit {
       } else {
         this.Game.NewAtBat();
       }
+    }
+  }
+
+  //=====RARE PLAY HANDLERS=====
+
+  // TRIPLE PLAY: Extremely rare (approximately 0.04% probability)
+  // Only occurs with bases loaded - about 1 per 2500 games in MLB
+  ExecuteTriplePlay() {
+    let triplePlayType = this.GenerateRandomNumber(1, 3);
+
+    this.Game.CurrentAtBat.Result = EnumAtBatResult.GITP;
+
+    if (triplePlayType <= 1) {
+      // Ground ball triple play (most common - 6-4-3 or similar)
+      this.showError(
+        this.Game.CurrentAtBat.Batter.Name +
+          " grounds into a TRIPLE PLAY! (6-4-3)"
+      );
+    } else if (triplePlayType == 2) {
+      // Line drive triple play (catch, double play)
+      this.showError(
+        this.Game.CurrentAtBat.Batter.Name +
+          " lines into a TRIPLE PLAY! (3 to 1)"
+      );
+    } else {
+      // Fly ball triple play (rare catch to double play scenario)
+      this.showError(
+        this.Game.CurrentAtBat.Batter.Name +
+          " flies into a TRIPLE PLAY! 🔥"
+      );
+    }
+
+    // All runners out on bases loaded triple play
+    if (this.Game.RunnerOnThird) {
+      this.Game.RunnerOnThird = null;
+      if (this.Game.CurrentInning.IsBottomOfInning) {
+        this.Game.CurrentInning.HomeOuts++;
+      } else {
+        this.Game.CurrentInning.AwayOuts++;
+      }
+    }
+
+    if (this.Game.RunnerOnSecond) {
+      this.Game.RunnerOnSecond = null;
+      if (this.Game.CurrentInning.IsBottomOfInning) {
+        this.Game.CurrentInning.HomeOuts++;
+      } else {
+        this.Game.CurrentInning.AwayOuts++;
+      }
+    }
+
+    if (this.Game.RunnerOnFirst) {
+      this.Game.RunnerOnFirst = null;
+      if (this.Game.CurrentInning.IsBottomOfInning) {
+        this.Game.CurrentInning.HomeOuts++;
+      } else {
+        this.Game.CurrentInning.AwayOuts++;
+      }
+    }
+
+    this.newOuts = 3; // Triple play = 3 outs
+
+    // Pitcher fatigue
+    if (this.Game.CurrentInning.IsBottomOfInning) {
+      let pitcherTiredFactor = this.Game.AwayTeam.HasReliefPitcherBeenUsed
+        ? 1.030485
+        : 1.004355;
+      this.Game.AwayTeam.Pitcher.PitchingSeasonStats.PX =
+        this.Game.AwayTeam.Pitcher.PitchingSeasonStats.PX * pitcherTiredFactor;
+    } else {
+      let pitcherTiredFactor = this.Game.HomeTeam.HasReliefPitcherBeenUsed
+        ? 1.030485
+        : 1.004355;
+      this.Game.HomeTeam.Pitcher.PitchingSeasonStats.PX =
+        this.Game.HomeTeam.Pitcher.PitchingSeasonStats.PX * pitcherTiredFactor;
+    }
+
+    this.ProcessEndOfOutPlay();
+  }
+
+  // DOUBLE PLAY: Ground ball double play (common in outs)
+  // Probability: ~15% of all outs in baseball
+  ExecuteGroundBallDoublePlay() {
+    let dpType = this.GenerateRandomNumber(1, 4);
+
+    this.Game.CurrentAtBat.Result = EnumAtBatResult.GIDP;
+
+    if (dpType <= 1) {
+      this.showError(
+        this.Game.CurrentAtBat.Batter.Name +
+          " grounds into a double play! (6-4-3)"
+      );
+    } else if (dpType == 2) {
+      this.showError(
+        this.Game.CurrentAtBat.Batter.Name +
+          " grounds into a double play! (4-6-3)"
+      );
+    } else if (dpType == 3) {
+      this.showError(
+        this.Game.CurrentAtBat.Batter.Name +
+          " grounds into a double play! (3-6-3)"
+      );
+    } else {
+      this.showError(
+        this.Game.CurrentAtBat.Batter.Name +
+          " grounds into a double play! (2-3 to 1)"
+      );
+    }
+
+    // Clear base runners appropriately for double play
+    if (this.Game.RunnerOnFirst) {
+      this.Game.RunnerOnFirst = null;
+      if (this.Game.CurrentInning.IsBottomOfInning) {
+        this.Game.CurrentInning.HomeOuts++;
+      } else {
+        this.Game.CurrentInning.AwayOuts++;
+      }
+    }
+
+    // Runner on second moves to base for force out at first
+    if (this.Game.RunnerOnSecond) {
+      this.Game.RunnerOnFirst = null;
+      this.Game.RunnerOnSecond = null;
+    }
+
+    this.newOuts = 2; // Double play = 2 outs
+
+    // Process any runners scoring before double play
+    for (let playerWhoScored of this.Game.RunnersWhoScoredOnPlay) {
+      if (this.Game.CurrentInning.IsBottomOfInning) {
+        this.Game.CurrentInning.HomeRunsScored++;
+        this.Game.HomeTeamRuns++;
+      } else {
+        this.Game.CurrentInning.AwayRunsScored++;
+        this.Game.AwayTeamRuns++;
+      }
+      playerWhoScored.RunsScored++;
+      this.showSuccess(playerWhoScored.Name + " scored!");
+    }
+
+    // Pitcher fatigue
+    if (this.Game.CurrentInning.IsBottomOfInning) {
+      let pitcherTiredFactor = this.Game.AwayTeam.HasReliefPitcherBeenUsed
+        ? 1.030485
+        : 1.004355;
+      this.Game.AwayTeam.Pitcher.PitchingSeasonStats.PX =
+        this.Game.AwayTeam.Pitcher.PitchingSeasonStats.PX * pitcherTiredFactor;
+    } else {
+      let pitcherTiredFactor = this.Game.HomeTeam.HasReliefPitcherBeenUsed
+        ? 1.030485
+        : 1.004355;
+      this.Game.HomeTeam.Pitcher.PitchingSeasonStats.PX =
+        this.Game.HomeTeam.Pitcher.PitchingSeasonStats.PX * pitcherTiredFactor;
+    }
+
+    this.ProcessEndOfOutPlay();
+  }
+
+  // HIT BY PITCH: Player hit by pitch, advances to 1B
+  ExecuteHitByPitch() {
+    this.showWarning(this.Game.CurrentAtBat.Batter.Name + " hit by pitch!");
+
+    this.Game.CurrentAtBat.Result = EnumAtBatResult.HBP;
+
+    // Advance all runners
+    if (this.Game.RunnerOnThird) {
+      this.Game.RunnersWhoScoredOnPlay.push(this.Game.RunnerOnThird);
+      this.Game.RunnerOnThird = null;
+    }
+
+    if (this.Game.RunnerOnSecond) {
+      this.Game.RunnerOnThird = this.Game.RunnerOnSecond;
+      this.Game.RunnerOnSecond = null;
+    }
+
+    if (this.Game.RunnerOnFirst) {
+      this.Game.RunnerOnSecond = this.Game.RunnerOnFirst;
+      this.Game.RunnerOnFirst = null;
+    }
+
+    // Batter takes first base
+    this.Game.RunnerOnFirst = this.Game.CurrentAtBat.Batter;
+
+    // Process runs
+    for (let playerWhoScored of this.Game.RunnersWhoScoredOnPlay) {
+      if (this.Game.CurrentInning.IsBottomOfInning) {
+        this.Game.CurrentInning.HomeRunsScored++;
+        this.Game.HomeTeamRuns++;
+      } else {
+        this.Game.CurrentInning.AwayRunsScored++;
+        this.Game.AwayTeamRuns++;
+      }
+
+      playerWhoScored.RunsScored++;
+      this.Game.CurrentAtBat.Batter.RBIs++;
+      this.Game.CurrentAtBat.RunsScored++;
+      this.showSuccess(playerWhoScored.Name + " scored!");
+    }
+
+    this.Game.NewAtBat();
+    if (this.Game.CurrentInning.IsBottomOfInning) {
+      let pitcherTiredFactor = this.Game.AwayTeam.HasReliefPitcherBeenUsed
+        ? 1.030485
+        : 1.004355;
+      this.DrawHitterOnHomeDeck();
+      this.Game.AwayTeam.Pitcher.PitchingSeasonStats.PX =
+        this.Game.AwayTeam.Pitcher.PitchingSeasonStats.PX * pitcherTiredFactor;
+    } else {
+      let pitcherTiredFactor = this.Game.HomeTeam.HasReliefPitcherBeenUsed
+        ? 1.030485
+        : 1.004355;
+      this.DrawHitterOnAwayDeck();
+      this.Game.HomeTeam.Pitcher.PitchingSeasonStats.PX =
+        this.Game.HomeTeam.Pitcher.PitchingSeasonStats.PX * pitcherTiredFactor;
+    }
+  }
+
+  // FIELDING ERROR: Defensive player makes an error
+  // Probability: ~2-3% of all outs
+  ExecuteFieldingError() {
+    let errorType = this.GenerateRandomNumber(1, 4);
+
+    this.Game.CurrentAtBat.Result = EnumAtBatResult.Error;
+
+    if (errorType <= 1) {
+      this.showWarning(
+        this.Game.CurrentAtBat.Batter.Name + " reaches on error by SS"
+      );
+    } else if (errorType == 2) {
+      this.showWarning(
+        this.Game.CurrentAtBat.Batter.Name + " reaches on error by 2B"
+      );
+    } else if (errorType == 3) {
+      this.showWarning(
+        this.Game.CurrentAtBat.Batter.Name + " reaches on error by 1B"
+      );
+    } else {
+      this.showWarning(
+        this.Game.CurrentAtBat.Batter.Name + " reaches on error by OF"
+      );
+    }
+
+    // Advance all runners one base
+    if (this.Game.RunnerOnThird) {
+      this.Game.RunnersWhoScoredOnPlay.push(this.Game.RunnerOnThird);
+      this.Game.RunnerOnThird = null;
+    }
+
+    if (this.Game.RunnerOnSecond) {
+      this.Game.RunnerOnThird = this.Game.RunnerOnSecond;
+      this.Game.RunnerOnSecond = null;
+    }
+
+    if (this.Game.RunnerOnFirst) {
+      this.Game.RunnerOnSecond = this.Game.RunnerOnFirst;
+      this.Game.RunnerOnFirst = null;
+    }
+
+    this.Game.RunnerOnFirst = this.Game.CurrentAtBat.Batter;
+
+    // Process runs
+    for (let playerWhoScored of this.Game.RunnersWhoScoredOnPlay) {
+      if (this.Game.CurrentInning.IsBottomOfInning) {
+        this.Game.CurrentInning.HomeRunsScored++;
+        this.Game.HomeTeamRuns++;
+      } else {
+        this.Game.CurrentInning.AwayRunsScored++;
+        this.Game.AwayTeamRuns++;
+      }
+
+      playerWhoScored.RunsScored++;
+      this.Game.CurrentAtBat.Batter.RBIs++;
+      this.Game.CurrentAtBat.RunsScored++;
+      this.showSuccess(playerWhoScored.Name + " scored!");
+    }
+
+    this.Game.NewAtBat();
+    if (this.Game.CurrentInning.IsBottomOfInning) {
+      let pitcherTiredFactor = this.Game.AwayTeam.HasReliefPitcherBeenUsed
+        ? 1.030485
+        : 1.004355;
+      this.DrawHitterOnHomeDeck();
+      this.Game.AwayTeam.Pitcher.PitchingSeasonStats.PX =
+        this.Game.AwayTeam.Pitcher.PitchingSeasonStats.PX * pitcherTiredFactor;
+    } else {
+      let pitcherTiredFactor = this.Game.HomeTeam.HasReliefPitcherBeenUsed
+        ? 1.030485
+        : 1.004355;
+      this.DrawHitterOnAwayDeck();
+      this.Game.HomeTeam.Pitcher.PitchingSeasonStats.PX =
+        this.Game.HomeTeam.Pitcher.PitchingSeasonStats.PX * pitcherTiredFactor;
     }
   }
 
