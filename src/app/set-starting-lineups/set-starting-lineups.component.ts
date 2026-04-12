@@ -29,7 +29,20 @@ export class SetStartingLineupsComponent implements OnInit {
     this.HomeTeamRoster = null;
 
     this.GameId = activatedRoute.snapshot.params["newGameId"];
-    this.NewGameSetup = JSON.parse(localStorage.getItem('game_setup_' + this.GameId)) as NewGameSetupViewModel;
+    const gameSetupData = localStorage.getItem('game_setup_' + this.GameId);
+    if (!gameSetupData) {
+      // Handle missing setup data, perhaps navigate back
+      console.error('Game setup data not found');
+      this.router.navigate(['/']); // or appropriate route
+      return;
+    }
+    try {
+      this.NewGameSetup = JSON.parse(gameSetupData) as NewGameSetupViewModel;
+    } catch (error) {
+      console.error('Error parsing game setup data', error);
+      this.router.navigate(['/']); // or appropriate route
+      return;
+    }
     localStorage.clear();
     this.League = this.NewGameSetup.League;
     this.Game = game;
@@ -37,16 +50,30 @@ export class SetStartingLineupsComponent implements OnInit {
 
     this.HomeTeamDataLoading = true;
     this.searchTeamsService.GetRosterBySeason(this.NewGameSetup.HomeTeamSelection.season,
-      this.NewGameSetup.HomeTeamSelection.id, this.NewGameSetup.League, this.NewGameSetup.IsDesignatedHitterEnabled).subscribe(result => {
-        this.HomeTeamRoster = result;
-        this.HomeTeamDataLoading = false;
+      this.NewGameSetup.HomeTeamSelection.id, this.NewGameSetup.League, this.NewGameSetup.IsDesignatedHitterEnabled).subscribe({
+        next: result => {
+          this.HomeTeamRoster = result;
+          this.HomeTeamDataLoading = false;
+        },
+        error: err => {
+          console.error('Error loading home team roster', err);
+          this.HomeTeamRoster = { hitters: [], pitchers: [], suggestedLineup: [], suggestedRotation: [] } as RosterSearchResultViewModel; // or handle appropriately
+          this.HomeTeamDataLoading = false;
+        }
       });
 
     this.AwayTeamDataLoading = true;
     this.searchTeamsService.GetRosterBySeason(this.NewGameSetup.AwayTeamSelection.season,
-      this.NewGameSetup.AwayTeamSelection.id, this.NewGameSetup.League, this.NewGameSetup.IsDesignatedHitterEnabled).subscribe(result => {
-        this.AwayTeamRoster = result;
-        this.AwayTeamDataLoading = false;
+      this.NewGameSetup.AwayTeamSelection.id, this.NewGameSetup.League, this.NewGameSetup.IsDesignatedHitterEnabled).subscribe({
+        next: result => {
+          this.AwayTeamRoster = result;
+          this.AwayTeamDataLoading = false;
+        },
+        error: err => {
+          console.error('Error loading away team roster', err);
+          this.AwayTeamRoster = { hitters: [], pitchers: [], suggestedLineup: [], suggestedRotation: [] } as RosterSearchResultViewModel; // or handle appropriately
+          this.AwayTeamDataLoading = false;
+        }
       });
   }
 
@@ -195,22 +222,28 @@ export class SetStartingLineupsComponent implements OnInit {
 
   UseSuggestedHomeLineup() {
     this.ClearHomeTeamLineup();
-    for (let player of this.HomeTeamRoster.suggestedLineup) {
-      this.setLineupPosition(player.player.position, true, player, null);
+    if (this.HomeTeamRoster && this.HomeTeamRoster.suggestedLineup && this.HomeTeamRoster.suggestedLineup.length > 0) {
+      for (let player of this.HomeTeamRoster.suggestedLineup) {
+        this.setLineupPosition(player.player.position, true, player, null);
+      }
     }
-
-    let firstPitcher = this.HomeTeamRoster.suggestedRotation[0];
-    this.setLineupPosition('SP', true, null, firstPitcher);
+    if (this.HomeTeamRoster && this.HomeTeamRoster.suggestedRotation && this.HomeTeamRoster.suggestedRotation.length > 0) {
+      let firstPitcher = this.HomeTeamRoster.suggestedRotation[0];
+      this.setLineupPosition('SP', true, null, firstPitcher);
+    }
   }
 
   UseSuggestedAwayLineup() {
-    this.ClearHomeAwayTeamLineup();
-    for (let player of this.AwayTeamRoster.suggestedLineup) {
-      this.setLineupPosition(player.player.position, false, player, null);
+    this.ClearAwayTeamLineup();
+    if (this.AwayTeamRoster && this.AwayTeamRoster.suggestedLineup && this.AwayTeamRoster.suggestedLineup.length > 0) {
+      for (let player of this.AwayTeamRoster.suggestedLineup) {
+        this.setLineupPosition(player.player.position, false, player, null);
+      }
     }
-
-    let firstPitcher = this.AwayTeamRoster.suggestedRotation[0];
-    this.setLineupPosition('SP', false, null, firstPitcher);
+    if (this.AwayTeamRoster && this.AwayTeamRoster.suggestedRotation && this.AwayTeamRoster.suggestedRotation.length > 0) {
+      let firstPitcher = this.AwayTeamRoster.suggestedRotation[0];
+      this.setLineupPosition('SP', false, null, firstPitcher);
+    }
   }
 
   ClearHomeTeamLineup() {
@@ -223,9 +256,12 @@ export class SetStartingLineupsComponent implements OnInit {
     this.Game.HomeTeam.LeftFielder = null;
     this.Game.HomeTeam.CenterFielder = null;
     this.Game.HomeTeam.RightFielder = null;
+    if (this.Game.IsDesignatedHitterEnabled) {
+      this.Game.HomeTeam.DesignatedHitter = null;
+    }
   }
 
-  ClearHomeAwayTeamLineup() {
+  ClearAwayTeamLineup() {
     this.Game.AwayTeam.Pitcher = null;
     this.Game.AwayTeam.Catcher = null;
     this.Game.AwayTeam.FirstBaseman = null;
@@ -235,49 +271,58 @@ export class SetStartingLineupsComponent implements OnInit {
     this.Game.AwayTeam.LeftFielder = null;
     this.Game.AwayTeam.CenterFielder = null;
     this.Game.AwayTeam.RightFielder = null;
+    if (this.Game.IsDesignatedHitterEnabled) {
+      this.Game.AwayTeam.DesignatedHitter = null;
+    }
   }
 
   SaveHomeTeamBenchPlayers() {
+    if (!this.HomeTeamRoster || !this.HomeTeamRoster.hitters) return;
     for (let player of this.HomeTeamRoster.hitters) {
-      if (this.Game.HomeTeam.Catcher.Id != player.player.id &&
-        this.Game.HomeTeam.FirstBaseman.Id != player.player.id &&
-        this.Game.HomeTeam.SecondBaseman.Id != player.player.id &&
-        this.Game.HomeTeam.Shortstop.Id != player.player.id &&
-        this.Game.HomeTeam.ThirdBaseman.Id != player.player.id &&
-        this.Game.HomeTeam.LeftFielder.Id != player.player.id &&
-        this.Game.HomeTeam.CenterFielder.Id != player.player.id &&
-        this.Game.HomeTeam.RightFielder.Id != player.player.id) {
+      if ((this.Game.HomeTeam.Catcher && this.Game.HomeTeam.Catcher.Id != player.player.id) &&
+        (this.Game.HomeTeam.FirstBaseman && this.Game.HomeTeam.FirstBaseman.Id != player.player.id) &&
+        (this.Game.HomeTeam.SecondBaseman && this.Game.HomeTeam.SecondBaseman.Id != player.player.id) &&
+        (this.Game.HomeTeam.Shortstop && this.Game.HomeTeam.Shortstop.Id != player.player.id) &&
+        (this.Game.HomeTeam.ThirdBaseman && this.Game.HomeTeam.ThirdBaseman.Id != player.player.id) &&
+        (this.Game.HomeTeam.LeftFielder && this.Game.HomeTeam.LeftFielder.Id != player.player.id) &&
+        (this.Game.HomeTeam.CenterFielder && this.Game.HomeTeam.CenterFielder.Id != player.player.id) &&
+        (this.Game.HomeTeam.RightFielder && this.Game.HomeTeam.RightFielder.Id != player.player.id) &&
+        (!this.Game.IsDesignatedHitterEnabled || !this.Game.HomeTeam.DesignatedHitter || this.Game.HomeTeam.DesignatedHitter.Id != player.player.id)) {
         this.Game.HomeTeam.SetRosterBenchPositionPlayer(new GamePlayerViewModel(player.player.position, player, null));
       }
     }
   }
 
   SaveHomeTeamBenchPitchers() {
+    if (!this.HomeTeamRoster || !this.HomeTeamRoster.pitchers) return;
     for (let player of this.HomeTeamRoster.pitchers) {
-      if (this.Game.HomeTeam.Pitcher.Id != player.player.id) {
+      if (!this.Game.HomeTeam.Pitcher || this.Game.HomeTeam.Pitcher.Id != player.player.id) {
         this.Game.HomeTeam.SetRosterBenchPitcher(new GamePlayerViewModel(player.player.position, null, player));
       }
     }
   }
 
   SaveAwayTeamBenchPlayers() {
+    if (!this.AwayTeamRoster || !this.AwayTeamRoster.hitters) return;
     for (let player of this.AwayTeamRoster.hitters) {
-      if (this.Game.AwayTeam.Catcher.Id != player.player.id &&
-        this.Game.AwayTeam.FirstBaseman.Id != player.player.id &&
-        this.Game.AwayTeam.SecondBaseman.Id != player.player.id &&
-        this.Game.AwayTeam.Shortstop.Id != player.player.id &&
-        this.Game.AwayTeam.ThirdBaseman.Id != player.player.id &&
-        this.Game.AwayTeam.LeftFielder.Id != player.player.id &&
-        this.Game.AwayTeam.CenterFielder.Id != player.player.id &&
-        this.Game.AwayTeam.RightFielder.Id != player.player.id) {
+      if ((this.Game.AwayTeam.Catcher && this.Game.AwayTeam.Catcher.Id != player.player.id) &&
+        (this.Game.AwayTeam.FirstBaseman && this.Game.AwayTeam.FirstBaseman.Id != player.player.id) &&
+        (this.Game.AwayTeam.SecondBaseman && this.Game.AwayTeam.SecondBaseman.Id != player.player.id) &&
+        (this.Game.AwayTeam.Shortstop && this.Game.AwayTeam.Shortstop.Id != player.player.id) &&
+        (this.Game.AwayTeam.ThirdBaseman && this.Game.AwayTeam.ThirdBaseman.Id != player.player.id) &&
+        (this.Game.AwayTeam.LeftFielder && this.Game.AwayTeam.LeftFielder.Id != player.player.id) &&
+        (this.Game.AwayTeam.CenterFielder && this.Game.AwayTeam.CenterFielder.Id != player.player.id) &&
+        (this.Game.AwayTeam.RightFielder && this.Game.AwayTeam.RightFielder.Id != player.player.id) &&
+        (!this.Game.IsDesignatedHitterEnabled || !this.Game.AwayTeam.DesignatedHitter || this.Game.AwayTeam.DesignatedHitter.Id != player.player.id)) {
         this.Game.AwayTeam.SetRosterBenchPositionPlayer(new GamePlayerViewModel(player.player.position, player, null));
       }
     }
   }
 
   SaveAwayTeamBenchPitchers() {
+    if (!this.AwayTeamRoster || !this.AwayTeamRoster.pitchers) return;
     for (let player of this.AwayTeamRoster.pitchers) {
-      if (this.Game.AwayTeam.Pitcher.Id != player.player.id) {
+      if (!this.Game.AwayTeam.Pitcher || this.Game.AwayTeam.Pitcher.Id != player.player.id) {
         this.Game.AwayTeam.SetRosterBenchPitcher(new GamePlayerViewModel(player.player.position, null, player));
       }
     }
@@ -291,7 +336,7 @@ export class SetStartingLineupsComponent implements OnInit {
   }
 
   RemoveAwayPlayerAtLineupNumber(lineupNumber: number) {
-    if (lineupNumber == -1 && this.Game.HomeTeam.Pitcher)
+    if (lineupNumber == -1 && this.Game.AwayTeam.Pitcher)
       this.Game.AwayTeam.Pitcher = null;
     else
       this.Game.AwayTeam.RemovePlayerAtLineupNumber(lineupNumber);
