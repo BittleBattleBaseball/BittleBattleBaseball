@@ -22,6 +22,7 @@ export class GameplayComponent implements OnInit {
 
   // canvas: HTMLCanvasElement;
   @ViewChild("fieldCanvas", { static: false }) canvas: ElementRef;
+  @ViewChild('playByPlayContainer', {static: false}) playByPlayElement: ElementRef;
   ctx: CanvasRenderingContext2D;
   batHittingBallSound = new Audio("../assets/audio/batHittingBall.mp3");
   pitchSound = new Audio("../assets/assets/audio/caughtball.mp3");
@@ -129,6 +130,14 @@ export class GameplayComponent implements OnInit {
   }
 
   ngOnInit() {}
+
+  scrollToBottom() {
+    if (this.playByPlayElement) {
+      setTimeout(() => {
+        this.playByPlayElement.nativeElement.scrollTop = this.playByPlayElement.nativeElement.scrollHeight;
+      }, 100);
+    }
+  }
 
   constructor(
     private router: Router,
@@ -1092,6 +1101,7 @@ export class GameplayComponent implements OnInit {
         });
 
         this.Game.PlayByPlays.push(msg);
+        this.scrollToBottom();
         this.Game.IsGameInProgress = false;
 
         this.ClearTimers();
@@ -1158,6 +1168,7 @@ export class GameplayComponent implements OnInit {
           });
 
           this.Game.PlayByPlays.push(msg);
+          this.scrollToBottom();
           this.Game.IsGameInProgress = false;
 
           this.ClearTimers();
@@ -4377,6 +4388,7 @@ export class GameplayComponent implements OnInit {
     });
 
     this.Game.PlayByPlays.push(msg);
+    this.scrollToBottom();
   }
 
   showInfo(msg: string) {
@@ -4391,6 +4403,7 @@ export class GameplayComponent implements OnInit {
     });
 
     this.Game.PlayByPlays.push(msg);
+    this.scrollToBottom();
   }
 
   showWarning(msg: string) {
@@ -4405,6 +4418,7 @@ export class GameplayComponent implements OnInit {
     });
 
     this.Game.PlayByPlays.push(msg);
+    this.scrollToBottom();
   }
 
   showError(msg: string) {
@@ -4419,6 +4433,7 @@ export class GameplayComponent implements OnInit {
     });
 
     this.Game.PlayByPlays.push(msg);
+    this.scrollToBottom();
   }
 
   FlipHomeAway() {
