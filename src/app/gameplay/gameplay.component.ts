@@ -630,17 +630,35 @@ export class GameplayComponent implements OnInit {
 
   ExecuteCurrentBatterIsOut() {
     this.Game.RunnersWhoScoredOnPlay = [];
-    let diceRoll = this.GenerateRandomNumber(1, 100);
+    let diceRoll = this.GenerateRandomNumber(1, 1000);
 
-    // EXTREMELY RARE: Fielding Error (~1-2% of outs)
-    if (diceRoll > 96) {
+    // VERY RARE: Catcher's Interference (~0.1% of all plays)
+    if (diceRoll > 999) {
+      this.ExecuteCatchersInterference();
+      return;
+    }
+
+    // RARE: Throwing Error (~0.5% of plays) - more damaging than other errors
+    if (diceRoll > 995) {
+      this.ExecuteThrowingError();
+      return;
+    }
+
+    // COMMON: Dropped Ball Error (~0.4% of plays)
+    if (diceRoll > 991) {
+      this.ExecuteDroppedBallError();
+      return;
+    }
+
+    // COMMON: General Fielding Error (~0.6% of plays)
+    if (diceRoll > 985) {
       this.ExecuteFieldingError();
       return;
     }
 
-    // RARE: Double Play (~15% of outs) - only with runners on base
+    // RARE: Double Play (~2% of standard outs) - only with runners on base
     if (
-      diceRoll > 85 &&
+      diceRoll > 970 &&
       this.Game.RunnerOnFirst &&
       (this.Game.RunnerOnSecond || this.Game.RunnerOnThird)
     ) {
@@ -1355,7 +1373,7 @@ export class GameplayComponent implements OnInit {
   // FIELDING ERROR: Defensive player makes an error
   // Probability: ~2-3% of all outs
   ExecuteFieldingError() {
-    let errorType = this.GenerateRandomNumber(1, 4);
+    let errorType = this.GenerateRandomNumber(1, 5);
 
     this.Game.CurrentAtBat.Result = EnumAtBatResult.Error;
 
@@ -1371,13 +1389,186 @@ export class GameplayComponent implements OnInit {
       this.showWarning(
         this.Game.CurrentAtBat.Batter.Name + " reaches on error by 1B"
       );
-    } else {
+    } else if (errorType == 4) {
       this.showWarning(
         this.Game.CurrentAtBat.Batter.Name + " reaches on error by OF"
+      );
+    } else {
+      this.showWarning(
+        this.Game.CurrentAtBat.Batter.Name + " reaches on error by 3B"
       );
     }
 
     // Advance all runners one base
+    if (this.Game.RunnerOnThird) {
+      this.Game.RunnersWhoScoredOnPlay.push(this.Game.RunnerOnThird);
+      this.Game.RunnerOnThird = null;
+    }
+
+    if (this.Game.RunnerOnSecond) {
+      this.Game.RunnerOnThird = this.Game.RunnerOnSecond;
+      this.Game.RunnerOnSecond = null;
+    }
+
+    if (this.Game.RunnerOnFirst) {
+      this.Game.RunnerOnSecond = this.Game.RunnerOnFirst;
+      this.Game.RunnerOnFirst = null;
+    }
+
+    this.Game.RunnerOnFirst = this.Game.CurrentAtBat.Batter;
+
+    // Process runs - errors don't count as RBIs for batter
+    for (let playerWhoScored of this.Game.RunnersWhoScoredOnPlay) {
+      if (this.Game.CurrentInning.IsBottomOfInning) {
+        this.Game.CurrentInning.HomeRunsScored++;
+        this.Game.HomeTeamRuns++;
+      } else {
+        this.Game.CurrentInning.AwayRunsScored++;
+        this.Game.AwayTeamRuns++;
+      }
+
+      playerWhoScored.RunsScored++;
+      this.showSuccess(playerWhoScored.Name + " scored!");
+    }
+
+    this.Game.NewAtBat();
+    if (this.Game.CurrentInning.IsBottomOfInning) {
+      let pitcherTiredFactor = this.Game.AwayTeam.HasReliefPitcherBeenUsed
+        ? 1.030485
+        : 1.004355;
+      this.DrawHitterOnHomeDeck();
+      this.Game.AwayTeam.Pitcher.PitchingSeasonStats.PX =
+        this.Game.AwayTeam.Pitcher.PitchingSeasonStats.PX * pitcherTiredFactor;
+    } else {
+      let pitcherTiredFactor = this.Game.HomeTeam.HasReliefPitcherBeenUsed
+        ? 1.030485
+        : 1.004355;
+      this.DrawHitterOnAwayDeck();
+      this.Game.HomeTeam.Pitcher.PitchingSeasonStats.PX =
+        this.Game.HomeTeam.Pitcher.PitchingSeasonStats.PX * pitcherTiredFactor;
+    }
+  }
+
+  // THROWING ERROR: Defensive player throws to wrong base or overthrows the base
+  // Probability: ~30% of all errors in baseball (~0.5% of all plays)
+  // Consequences: Runners advance extra base(s), often allows runs to score
+  ExecuteThrowingError() {
+    let throwErrorType = this.GenerateRandomNumber(1, 3);
+    let advancedBases = 2;
+
+    this.Game.CurrentAtBat.Result = EnumAtBatResult.Error;
+
+    if (throwErrorType == 1) {
+      this.showWarning(
+        this.Game.CurrentAtBat.Batter.Name +
+          " reaches on throwing error by infielder!"
+      );
+    } else if (throwErrorType == 2) {
+      this.showWarning(
+        this.Game.CurrentAtBat.Batter.Name +
+          " reaches on throwing error to wrong base!"
+      );
+      advancedBases = 3;
+    } else {
+      this.showWarning(
+        this.Game.CurrentAtBat.Batter.Name +
+          " reaches on throwing error - RUNNERS ADVANCE!"
+      );
+      advancedBases = 4;
+    }
+
+    // Throwing error allows greater advancement than fielding errors
+    if (this.Game.RunnerOnThird) {
+      this.Game.RunnersWhoScoredOnPlay.push(this.Game.RunnerOnThird);
+      this.Game.RunnerOnThird = null;
+    }
+
+    if (this.Game.RunnerOnSecond) {
+      if (advancedBases >= 3) {
+        this.Game.RunnersWhoScoredOnPlay.push(this.Game.RunnerOnSecond);
+        this.Game.RunnerOnSecond = null;
+      } else {
+        this.Game.RunnerOnThird = this.Game.RunnerOnSecond;
+        this.Game.RunnerOnSecond = null;
+      }
+    }
+
+    if (this.Game.RunnerOnFirst) {
+      if (advancedBases >= 3) {
+        this.Game.RunnersWhoScoredOnPlay.push(this.Game.RunnerOnFirst);
+        this.Game.RunnerOnFirst = null;
+      } else {
+        this.Game.RunnerOnSecond = this.Game.RunnerOnFirst;
+        this.Game.RunnerOnFirst = null;
+      }
+    }
+
+    if (advancedBases >= 4) {
+      this.Game.RunnersWhoScoredOnPlay.push(this.Game.CurrentAtBat.Batter);
+    } else if (advancedBases == 3) {
+      this.Game.RunnerOnSecond = this.Game.CurrentAtBat.Batter;
+    } else {
+      this.Game.RunnerOnFirst = this.Game.CurrentAtBat.Batter;
+    }
+
+    // Process runs
+    for (let playerWhoScored of this.Game.RunnersWhoScoredOnPlay) {
+      if (this.Game.CurrentInning.IsBottomOfInning) {
+        this.Game.CurrentInning.HomeRunsScored++;
+        this.Game.HomeTeamRuns++;
+      } else {
+        this.Game.CurrentInning.AwayRunsScored++;
+        this.Game.AwayTeamRuns++;
+      }
+
+      playerWhoScored.RunsScored++;
+      this.showSuccess(playerWhoScored.Name + " scored on throwing error!");
+    }
+
+    this.Game.NewAtBat();
+    if (this.Game.CurrentInning.IsBottomOfInning) {
+      let pitcherTiredFactor = this.Game.AwayTeam.HasReliefPitcherBeenUsed
+        ? 1.030485
+        : 1.004355;
+      this.DrawHitterOnHomeDeck();
+      this.Game.AwayTeam.Pitcher.PitchingSeasonStats.PX =
+        this.Game.AwayTeam.Pitcher.PitchingSeasonStats.PX * pitcherTiredFactor;
+    } else {
+      let pitcherTiredFactor = this.Game.HomeTeam.HasReliefPitcherBeenUsed
+        ? 1.030485
+        : 1.004355;
+      this.DrawHitterOnAwayDeck();
+      this.Game.HomeTeam.Pitcher.PitchingSeasonStats.PX =
+        this.Game.HomeTeam.Pitcher.PitchingSeasonStats.PX * pitcherTiredFactor;
+    }
+  }
+
+  // DROPPED BALL ERROR: Fielder drops an easy catch or mishandles a grounder
+  // Probability: ~25% of all errors in baseball (~0.4% of all plays)
+  // Consequences: Batter reaches base, runners advance only one base
+  ExecuteDroppedBallError() {
+    let droppedBallType = this.GenerateRandomNumber(1, 3);
+
+    this.Game.CurrentAtBat.Result = EnumAtBatResult.Error;
+
+    if (droppedBallType == 1) {
+      this.showWarning(
+        this.Game.CurrentAtBat.Batter.Name +
+          " reaches on dropped fly ball by outfielder!"
+      );
+    } else if (droppedBallType == 2) {
+      this.showWarning(
+        this.Game.CurrentAtBat.Batter.Name +
+          " reaches on mishandled grounder by infielder!"
+      );
+    } else {
+      this.showWarning(
+        this.Game.CurrentAtBat.Batter.Name +
+          " reaches on dropped pop-up in the infield!"
+      );
+    }
+
+    // Dropped ball: limited advancement
     if (this.Game.RunnerOnThird) {
       this.Game.RunnersWhoScoredOnPlay.push(this.Game.RunnerOnThird);
       this.Game.RunnerOnThird = null;
@@ -1406,8 +1597,66 @@ export class GameplayComponent implements OnInit {
       }
 
       playerWhoScored.RunsScored++;
-      this.Game.CurrentAtBat.Batter.RBIs++;
-      this.Game.CurrentAtBat.RunsScored++;
+      this.showSuccess(playerWhoScored.Name + " scored!");
+    }
+
+    this.Game.NewAtBat();
+    if (this.Game.CurrentInning.IsBottomOfInning) {
+      let pitcherTiredFactor = this.Game.AwayTeam.HasReliefPitcherBeenUsed
+        ? 1.030485
+        : 1.004355;
+      this.DrawHitterOnHomeDeck();
+      this.Game.AwayTeam.Pitcher.PitchingSeasonStats.PX =
+        this.Game.AwayTeam.Pitcher.PitchingSeasonStats.PX * pitcherTiredFactor;
+    } else {
+      let pitcherTiredFactor = this.Game.HomeTeam.HasReliefPitcherBeenUsed
+        ? 1.030485
+        : 1.004355;
+      this.DrawHitterOnAwayDeck();
+      this.Game.HomeTeam.Pitcher.PitchingSeasonStats.PX =
+        this.Game.HomeTeam.Pitcher.PitchingSeasonStats.PX * pitcherTiredFactor;
+    }
+  }
+
+  // CATCHER'S INTERFERENCE: Catcher interferes with batter's swing
+  // Probability: ~0.1% of all plays (extremely rare)
+  // Consequences: Batter automatically awarded 1B, runners advance one base
+  ExecuteCatchersInterference() {
+    this.showWarning(
+      this.Game.CurrentAtBat.Batter.Name + " reaches on catcher's interference!"
+    );
+
+    this.Game.CurrentAtBat.Result = EnumAtBatResult.Error;
+
+    // Catcher's interference: batter takes first, runners advance one base
+    if (this.Game.RunnerOnThird) {
+      this.Game.RunnersWhoScoredOnPlay.push(this.Game.RunnerOnThird);
+      this.Game.RunnerOnThird = null;
+    }
+
+    if (this.Game.RunnerOnSecond) {
+      this.Game.RunnerOnThird = this.Game.RunnerOnSecond;
+      this.Game.RunnerOnSecond = null;
+    }
+
+    if (this.Game.RunnerOnFirst) {
+      this.Game.RunnerOnSecond = this.Game.RunnerOnFirst;
+      this.Game.RunnerOnFirst = null;
+    }
+
+    this.Game.RunnerOnFirst = this.Game.CurrentAtBat.Batter;
+
+    // Process runs
+    for (let playerWhoScored of this.Game.RunnersWhoScoredOnPlay) {
+      if (this.Game.CurrentInning.IsBottomOfInning) {
+        this.Game.CurrentInning.HomeRunsScored++;
+        this.Game.HomeTeamRuns++;
+      } else {
+        this.Game.CurrentInning.AwayRunsScored++;
+        this.Game.AwayTeamRuns++;
+      }
+
+      playerWhoScored.RunsScored++;
       this.showSuccess(playerWhoScored.Name + " scored!");
     }
 
