@@ -242,7 +242,7 @@ export class GameplayComponent implements OnInit {
               this.ExecuteCurrentBatterReachedBase();
             } else {
               this.ExecuteCurrentBatterIsOut();
-            }
+            } 
 
             this.timers.push(
               setTimeout(() => {
